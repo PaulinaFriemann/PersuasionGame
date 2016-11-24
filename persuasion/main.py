@@ -12,13 +12,34 @@ class Agent:
         self.height = 5
 
     def get_rect(self):
-        return pygame.Rect(self.x - self.width/2,
-                           self.y - self.height/2,
+        return pygame.Rect(self.x - self.width / 2,
+                           self.y - self.height / 2,
                            self.width, self.height)
 
     def set_rect(self, rect):
         self.x = rect.left + self.width/2
         self.y = rect.top + self.height/2
+
+    def move(self, speed):
+        self.set_rect(self.get_rect().move(speed))
+
+
+class Player(Agent):
+
+    def __init__(self, x, y, color, screen):
+        Agent.__init__(self, x, y, color)
+        self.speed = [0, 0]
+        self.screen = screen
+
+    def moveup(self):
+        self.speed = [0, -2]
+
+    def stop(self):
+        self.speed = [0, 0]
+
+    def update(self):
+        self.move(self.speed)
+        pygame.event.pump()
 
 
 size = width, height = 320, 240
@@ -29,18 +50,23 @@ white = pygame.Color(255, 255, 255, 255)
 screen = pygame.display.set_mode(size)
 
 agents = [Agent(width/2, height - 20, white)]
+player = Player(width/2, height - 20, white, screen)
 
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
-        agents[0].set_rect( agents[0].get_rect().move(speed))
-        if agents[0].get_rect().left < 0 or agents[0].get_rect().right > width:
-            speed[0] = -speed[0]
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                player.moveup()
 
-        if agents[0].get_rect().top < 0 or agents[0].get_rect().bottom > height:
-            speed[1] = -speed[1]
+        #elif event.type == pygame.KEYUP:
+         #   if event.key == pygame.K_UP:
+          #      player.stop()
+
+        player.update()
 
         screen.fill(black)
-        pygame.draw.rect(screen, agents[0].color, agents[0].get_rect())
+
+        pygame.draw.rect(screen, player.color, player.get_rect())
         pygame.display.flip()
