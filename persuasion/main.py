@@ -32,7 +32,7 @@ class Player(Agent):
         self.screen = screen
 
     def moveup(self):
-        self.speed = [0, -2]
+        self.speed = [0, -1]
 
     def stop(self):
         self.speed = [0, 0]
@@ -42,31 +42,43 @@ class Player(Agent):
         pygame.event.pump()
 
 
-size = width, height = 320, 240
-speed = [0,2]
-black = 0, 0, 0
-white = pygame.Color(255, 255, 255, 255)
+def main():
 
-screen = pygame.display.set_mode(size)
+    pygame.key.set_repeat(True)
 
-agents = [Agent(width/2, height - 20, white)]
-player = Player(width/2, height - 20, white, screen)
+    size = width, height = 320, 240
+    black = 0, 0, 0
+    white = pygame.Color(255, 255, 255, 255)
 
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
+    screen = pygame.display.set_mode(size)
 
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.moveup()
+    agents = [Agent(width/2, height - 20, white)]
+    player = Player(width/2, height - 20, white, screen)
 
-        #elif event.type == pygame.KEYUP:
-         #   if event.key == pygame.K_UP:
-          #      player.stop()
+    clock = pygame.time.Clock()
 
-        player.update()
+    while 1:
 
-        screen.fill(black)
+        clock.tick(30)
 
-        pygame.draw.rect(screen, player.color, player.get_rect())
-        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    player.moveup()
+
+            #elif event.type == pygame.KEYUP:
+             #   if event.key == pygame.K_UP:
+              #      player.stop()
+
+            player.update()
+
+            screen.fill(black)
+
+            pygame.draw.rect(screen, player.color, player.get_rect())
+            pygame.display.flip()
+
+
+if __name__ == '__main__':
+    main()
