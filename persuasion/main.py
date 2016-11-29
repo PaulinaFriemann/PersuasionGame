@@ -8,8 +8,8 @@ class Agent:
         self.x = x
         self.y = y
         self.color = color
-        self.width = 5
-        self.height = 5
+        self.width = 6
+        self.height = 6
         self.speed = [0,0]
 
     def get_rect(self):
