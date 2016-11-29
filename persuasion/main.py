@@ -11,6 +11,7 @@ class Agent:
         self.width = 6
         self.height = 6
         self.speed = [0,0]
+        
 
     def get_rect(self):
         return pygame.Rect(self.x - self.width / 2,
@@ -27,20 +28,21 @@ class Agent:
     def update(self):
         self.move(self.speed)
 
-
 def main():
 
     pygame.key.set_repeat(True)
 
     size = width, height = 320, 240
     black = 0, 0, 0
-    white = pygame.Color(255, 255, 255, 255)
+    white = pygame.Color('White')
 
     screen = pygame.display.set_mode(size)
 
     #agents = [Agent(width/2, height - 20, white)]
     player = Agent(width/2, height - 20, white)
 
+    player.color.hsva = (180,80,50,100)
+    
     clock = pygame.time.Clock()
 
     while 1:
@@ -49,7 +51,7 @@ def main():
 
         pressed = pygame.key.get_pressed()
 
-        player.speed[1] = - int(pressed[pygame.K_UP])
+        player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
         player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
 
         for event in pygame.event.get():
@@ -58,7 +60,6 @@ def main():
         player.update()
 
         screen.fill(black)
-
         pygame.draw.rect(screen, player.color, player.get_rect())
         pygame.display.flip()
 
