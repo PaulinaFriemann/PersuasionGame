@@ -25,6 +25,11 @@ class Agent:
     def move(self, speed):
         self.set_rect(self.get_rect().move(speed))
 
+    def colorup(self, dh = 0,ds = 0,dv = 0):
+        h,s,v,a = self.color.hsva
+        if(h + dh <= 255 and s + ds <= 100 and v + dv <= 100):
+            self.color.hsva = (h+dh,s+ds,v+dv,a)
+
     def update(self):
         self.move(self.speed)
 
@@ -41,7 +46,7 @@ def main():
     #agents = [Agent(width/2, height - 20, white)]
     player = Agent(width/2, height - 20, white)
 
-    player.color.hsva = (180,80,50,100)
+    player.color.hsva = (180,0,50,100)
     
     clock = pygame.time.Clock()
 
@@ -54,6 +59,9 @@ def main():
         player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
         player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
 
+        if pressed[pygame.K_SPACE]:
+            player.colorup(0,10)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
 
