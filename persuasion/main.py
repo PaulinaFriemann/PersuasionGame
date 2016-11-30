@@ -4,12 +4,14 @@ pygame.init()
 
 class Agent:
 
-    def __init__(self, x, y, color):
+    def __init__(self, x, y, color, player = False):
+        self.player = player 
         self.x = x
         self.y = y
         self.color = color
         self.width = 6
         self.height = 6
+        self.image = pygame.Surface((self.width,self.height))
         self.speed = [0,0]
         
 
@@ -37,16 +39,18 @@ def main():
 
     pygame.key.set_repeat(True)
 
-    size = width, height = 320, 240
+    size = width, height = 640, 480
     black = 0, 0, 0
     white = pygame.Color('White')
+    pink = pygame.Color('Pink')
 
     screen = pygame.display.set_mode(size)
+    world = pygame.Surface((1000,1000))
 
-    #agents = [Agent(width/2, height - 20, white)]
-    player = Agent(width/2, height - 20, white)
+    agent = Agent(width/2, height/2 - 100, pink)
+    player = Agent(500, 500, white, True)
 
-    player.color.hsva = (180,0,50,100)
+    player.color.hsva = (50,20,50,100)
     
     clock = pygame.time.Clock()
 
@@ -56,19 +60,31 @@ def main():
 
         pressed = pygame.key.get_pressed()
 
-        player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
         player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
+        player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
 
+        world.scroll(player.speed[0],player.speed[1])
+        
         if pressed[pygame.K_SPACE]:
-            player.colorup(0,10)
+            player.colorup(0,5)
         
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit()
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
         player.update()
+        agent.update()
 
         screen.fill(black)
-        pygame.draw.rect(screen, player.color, player.get_rect())
+        world.fill(black)
+        
+        pygame.draw.rect(world, player.color, player.get_rect())
+        pygame.draw.rect(world, agent.color, agent.get_rect())
+
+        world.blit(player.image,(player.x,player.y))
+        screen.blit(world,(player.speed[0]*6,player.speed[1]*6))
+        
         pygame.display.flip()
 
 
