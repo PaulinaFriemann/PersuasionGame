@@ -108,7 +108,7 @@ def main():
         camera.move(player.speed)
 
         screen.fill([0, 0, 0])
-        blit_position = Rect(camera.position.left, -camera.position.top, camera.position.width, camera.position.width)
+        blit_position = Rect(-camera.position.left, -camera.position.top, camera.position.width, camera.position.width)
         screen.blit(world.background.image, blit_position)
 
 
