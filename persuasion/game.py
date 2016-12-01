@@ -55,9 +55,6 @@ class World:
         #self.agents.append([agent, False])
         self.agents.append(agent)
 
-    def draw(self):
-        pass
-
 
 class Camera:
 
@@ -73,7 +70,18 @@ class Camera:
         self.offset = [player.rect.left - self.position.left, player.rect.top - self.position.top]
 
     def move(self, player_speed):
-        self.position.left += player_speed[0]
+        new_left = self.position.left + player_speed[0]
+        new_right = self.position.right + player_speed[0]
+
+        if new_left < 0:
+            self.position.left = 0
+
+        elif new_right > self.world.width:
+            self.position.right = self.width
+
+        else:
+            self.position.left += player_speed[0]
+
         self.position.top += player_speed[1]
         print "camera position ", self.position
 
@@ -85,8 +93,9 @@ class Camera:
 
     def check_visibility(self, rect):
         #print rect
-        return rect.left > self.position.left or rect.top > self.position.top \
-            or rect.right < self.position.right or rect.bottom > self.position.bottom
+        #return rect.left > self.position.left or rect.top > self.position.top \
+         #   or rect.right < self.position.right or rect.bottom > self.position.bottom
+        return self.position.contains(rect)
 
     def draw(self):
         for agent in self.world.agents:

@@ -14,7 +14,7 @@ agents = [agent]
 
 player = Agent(50, 20, pygame.Color('White'), screen)
 
-w = World(agents, 200, 300)
+w = World(agents, width, height)
 
 
 def test_basic():
@@ -51,7 +51,7 @@ def test_rect():
 def test_move_camera():
     player = Agent(50, 20, pygame.Color('White'), screen)
 
-    player.speed = [2, -5]
+    player.speed = [2, 5]
 
     camera = Camera(200, 200, w, screen)
     camera.calibrate(player)
@@ -60,7 +60,16 @@ def test_move_camera():
 
     camera.move(player.speed)
 
-    assert_equal(camera.position, Rect(2, -5, 200, 200))
+    assert_equal(camera.position, Rect(2, 5, 200, 200))
+
+    player = Agent(50, 20, pygame.Color('White'), screen)
+
+    player.speed = [2, -5]
+
+    camera = Camera(200, 200, w, screen)
+    camera.calibrate(player)
+
+    assert_equal(camera.position, Rect(0, 0, 200, 200))
 
 
 def test_adjust_camera():
@@ -82,18 +91,19 @@ def test_move_adjust():
     camera = Camera(200, 200, w, screen)
     camera.calibrate(player)
 
-    player.speed = [-1,0]
+    player.speed = [1,0]
 
     player.update()
 
     camera.move(player.speed)
 
     assert_equal(camera.adjust(player), Rect(camera.offset[0], camera.offset[1], player.width, player.height))
-    assert_equal(camera.adjust(agent), get_rect(21,40,6,6))
+    assert_equal(camera.adjust(agent), get_rect(19,40,6,6))
 
 
 def test_visibility():
     player = Agent(50, 20, pygame.Color('White'), screen)
+    agent = Agent(20, 40, pygame.Color('Pink'), screen)
     camera = Camera(200, 200, w, screen, left=10, top=10)
     camera.calibrate(player)
 
