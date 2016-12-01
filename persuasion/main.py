@@ -101,14 +101,15 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        screen.fill([0, 0, 0])
-        screen.blit(world.background.image, camera.position)
 
         player.update()
         agent.update()
 
         camera.move(player.speed)
 
+        screen.fill([0, 0, 0])
+        blit_position = Rect(camera.position.left, -camera.position.top, camera.position.width, camera.position.width)
+        screen.blit(world.background.image, blit_position)
 
 
         camera.draw()

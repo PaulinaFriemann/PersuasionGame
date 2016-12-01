@@ -17,19 +17,17 @@ class Agent:
         self.width = 6
         self.height = 6
         self.player = player
-        self.left = x - self.width/2
-        self.top = y - self.height/2
         self.color = color
         self.image = pygame.Surface((self.width,self.height))
         self.speed = [0,0]
         self.screen = screen
-        self.rect = pygame.Rect(self.left, self.top, self.width, self.height)
+        self.rect = pygame.Rect(x - self.width/2, y - self.height/2, self.width, self.height)
 
     def set_rect(self, rect):
         self.rect = rect
 
     def move(self, speed):
-        speed = map(lambda x: 2*x, speed)
+        speed = map(lambda x: x, speed)
         new_x = self.rect.bottomright[0] + speed[0]
         if self.screen.get_width() > new_x > (0 + self.width):
             self.set_rect(self.rect.move(speed))
@@ -72,7 +70,7 @@ class Camera:
         self.screen = screen
 
     def calibrate(self, player):
-        self.offset = [player.left - self.position.left, player.top - self.position.top]
+        self.offset = [player.rect.left - self.position.left, player.rect.top - self.position.top]
 
     def move(self, player_speed):
         self.position.left += player_speed[0]
@@ -80,8 +78,8 @@ class Camera:
         print "camera position ", self.position
 
     def adjust(self, agent):
-        new_left = agent.left - self.position.left
-        new_top = agent.top - self.position.left
+        new_left = agent.rect.left - self.position.left
+        new_top = agent.rect.top - self.position.top
 
         return Rect(new_left, new_top, agent.width, agent.height)
 
