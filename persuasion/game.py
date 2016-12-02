@@ -2,9 +2,6 @@ import pygame
 from pygame import Rect
 
 
-WORLD_LENGTH = 500
-
-
 def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
                        y - height / 2,
@@ -23,7 +20,6 @@ class Agent:
         self.screen = screen
         self.rect = pygame.Rect(x - self.width/2, y - self.height/2, self.width, self.height)
 
-
     def move(self):
         self.speed = map(lambda x: 2*x, self.speed)
         new_x = self.rect.bottomright[0] + self.speed[0]
@@ -31,7 +27,6 @@ class Agent:
             self.rect = self.rect.move(self.speed)
         else:
             self.rect = self.rect.move([0, self.speed[1]])
-
 
     def colorup(self, dh = 0,ds = 0,dv = 0):
         h,s,v,a = self.color.hsva
@@ -42,19 +37,33 @@ class Agent:
         self.move()
 
 
-class World:
+class Game:
 
-    def __init__(self, agents, width, end):
-        # [agent, visible]
-        #self.agents = [[agent, False] for agent in agents]
+    def __init__(self, agents, screen, end_height, top_camera=0, left_camera=0):
+
         self.agents = agents
-        self.width = width
-        self.end = end
+        self.end = end_height
         self.background = Background("resources/pic.jpg", [0, -120])
+        self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
+        self.player = None
+        self.width = screen.get_width()
 
     def add_agent(self, agent):
-        #self.agents.append([agent, False])
         self.agents.append(agent)
+
+    def add_player(self, player):
+        self.agents.append(player)
+        self.player = player
+        self.camera.calibrate(player)
+
+    def update(self):
+
+        for agent in self.agents:
+            agent.update()
+
+        self.camera.move(self.player.speed)
+        self.camera.draw()
+        pygame.display.flip()
 
 
 class Camera:
@@ -84,7 +93,6 @@ class Camera:
             self.position.left += player_speed[0]
 
         self.position.top += player_speed[1]
-        print "camera position ", self.position
 
     def adjust(self, agent):
         new_left = agent.rect.left - self.position.left
@@ -93,17 +101,16 @@ class Camera:
         return Rect(new_left, new_top, agent.width, agent.height)
 
     def check_visibility(self, rect):
-        #print rect
-        #return rect.left > self.position.left or rect.top > self.position.top \
-         #   or rect.right < self.position.right or rect.bottom > self.position.bottom
         return self.position.contains(rect)
 
     def draw(self):
+
+        self.screen.fill([0, 0, 0])
+        blit_position = Rect(-self.position.left, -self.position.top, self.position.width, self.position.width)
+        self.screen.blit(self.world.background.image, blit_position)
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
-                print "true value ", agent.rect
                 pygame.draw.rect(self.screen, agent.color, self.adjust(agent))
-                print "adjusted ", self.adjust(agent)
 
 
 class Background(pygame.sprite.Sprite):
