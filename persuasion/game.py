@@ -23,14 +23,15 @@ class Agent:
         self.screen = screen
         self.rect = pygame.Rect(x - self.width/2, y - self.height/2, self.width, self.height)
 
-    def set_rect(self, rect):
-        self.rect = rect
 
-    def move(self, speed):
-        speed = map(lambda x: x, speed)
-        new_x = self.rect.bottomright[0] + speed[0]
+    def move(self):
+        self.speed = map(lambda x: 2*x, self.speed)
+        new_x = self.rect.bottomright[0] + self.speed[0]
         if self.screen.get_width() > new_x > (0 + self.width):
-            self.set_rect(self.rect.move(speed))
+            self.rect = self.rect.move(self.speed)
+        else:
+            self.rect = self.rect.move([0, self.speed[1]])
+
 
     def colorup(self, dh = 0,ds = 0,dv = 0):
         h,s,v,a = self.color.hsva
@@ -38,7 +39,7 @@ class Agent:
             self.color.hsva = (h+dh,s+ds,v+dv,a)
 
     def update(self):
-        self.move(self.speed)
+        self.move()
 
 
 class World:
