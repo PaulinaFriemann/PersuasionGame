@@ -26,7 +26,8 @@ class Agent:
         self.screen = screen
         self.rect = pygame.Rect(x - self.width/2, y - self.height/2, self.width, self.height)
         self.location = [x, y]
-        self.path = path_circle(20)
+        self.personalspace = 10
+        self.path = path_circle(40)
         self.step = 0
         self.turn = 0
 
