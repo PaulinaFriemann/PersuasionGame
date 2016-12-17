@@ -1,6 +1,6 @@
 import pygame
+import random
 from pygame import Rect
-
 
 def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
@@ -14,6 +14,26 @@ def path_circle(size):
     path.extend([[1,0]]*size)
     return path
 
+def path_route(begin,end):
+    path = []
+    dx = end[0] - begin[0]
+    dy = end[1] - begin[1]
+    signdx = -1 if dx < 0 else 1 if dx > 0 else 0
+    signdy = -1 if dy < 0 else 1 if dy > 0 else 0
+
+    while(dx != 0 and dy != 0):
+        if random.randint(1,2) == 1:
+            path.extend([[signdx,0]])
+            dx = dx - signdx
+        else:
+            path.extend([[0,signdy]])
+            dy = dy - signdy
+    if dx > 0:
+        path.extend([[signdx,0]]*abs(dx))
+    if dy > 0:
+        path.extend([[0,signdy]]*abs(dy))        
+    return path
+        
 
 class Agent:
 
