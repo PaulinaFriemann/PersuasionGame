@@ -117,7 +117,7 @@ class Game:
 
         self.agents = agents
         self.end = end_height
-        self.background = Background("resources/snow.jpg", [0, 0])
+        self.background = Background("resources/snowbig.jpg", [0, 0])
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
         self.player = None
         self.width = screen.get_width()
@@ -184,21 +184,30 @@ class Camera:
             if self.check_visibility(agent.rect):
                 pygame.draw.rect(self.screen, agent.color, self.adjust(agent))
 
+        self.draw_overlay(alpha=128)
+
     def draw_background(self):
         self.screen.fill([0, 0, 0])
         blit_position = Rect(-self.position.left, 0, self.position.width, self.position.height)
 
         area_horizontal = self.world.background.rect.width / 2 - self.width / 2
-        area_vertical   = (self.world.background.rect.height - self.height + self.position.top) % (-736)
+        area_vertical   = (self.world.background.rect.height - self.height + self.position.top) % (-self.world.background.rect.height)
 
-        self.screen.blit(self.world.background.image, blit_position,\
+        self.screen.blit(self.world.background.image, blit_position,
                          area=Rect(area_horizontal, area_vertical, self.width, self.height))
 
         if area_vertical < 0:
             blit_position.height = -area_vertical
             new_area_vertical = self.world.background.rect.height + area_vertical
-            self.screen.blit(self.world.background.image, blit_position, \
+            self.screen.blit(self.world.background.image, blit_position,
                              area=Rect(area_horizontal, new_area_vertical, self.width, -area_vertical))
+
+    def draw_overlay(self, alpha=0):
+
+        s = pygame.Surface((640, 480))  # the size of your rect
+        s.set_alpha(alpha)  # alpha level
+        s.fill((0, 0, 0))  # this fills the entire surface
+        self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
 
 
 class Background(pygame.sprite.Sprite):
