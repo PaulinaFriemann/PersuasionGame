@@ -13,7 +13,7 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    agent = Agent(width / 2, height / 2 - 100, pink, screen)
+    agent = Agent1(width / 2, height / 2 - 100, pink, screen)
     player = Agent(width/2, 400, white, screen, True)
 
     game = Game([agent], screen, 600)
@@ -41,7 +41,6 @@ def main():
                 sys.exit()
 
         game.update()
-
 
 
 if __name__ == '__main__':

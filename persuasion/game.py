@@ -1,6 +1,6 @@
 import pygame
 from pygame import Rect
-
+import math
 
 def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
@@ -19,9 +19,13 @@ class Agent:
         self.speed = [0,0]
         self.screen = screen
         self.rect = pygame.Rect(x - self.width/2, y - self.height/2, self.width, self.height)
+        self.speed_modificator = 2
+
+    def move_speed(self, speed):
+        self.rect = self.rect.move(speed)
 
     def move(self):
-        self.speed = map(lambda x: 2*x, self.speed)
+        self.speed = map(lambda x: self.speed_modificator*x, self.speed)
         new_x = self.rect.bottomright[0] + self.speed[0]
         if self.screen.get_width() > new_x > (0 + self.width):
             self.rect = self.rect.move(self.speed)
@@ -35,6 +39,26 @@ class Agent:
 
     def update(self):
         self.move()
+
+
+class Agent1 (Agent):
+
+    def __init__(self, x, y, color, screen):
+        Agent.__init__(self, x, y, color, screen, player=False)
+        self.radius = 20
+        self.speed_modificator = 2
+        self.rotation_speed = self.speed_modificator / self.radius
+        self.rotation_center = [x, y + self.radius]
+
+    def update(self):
+        rot_speed = self.speed_modificator / self.radius
+        t = math.atan2((self.rect.centery - self.rotation_center[1]), self.rect.centerx - self.rotation_center[0]) + rot_speed
+        new_x = self.rotation_center[0] + self.radius * math.cos(t)
+        new_y = self.rotation_center[1] - self.radius * math.sin(t)
+        dx = self.rect.centerx - new_x
+        dy = self.rect.centery - new_y
+        self.move_speed([dx,dy])
+        print dx, dy
 
 
 class Game:
@@ -115,7 +139,7 @@ class Camera:
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
