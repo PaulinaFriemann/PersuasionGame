@@ -113,7 +113,7 @@ class Game:
 
         self.agents = agents
         self.end = end_height
-        self.background = Background("resources/pic.jpg", [0, -120])
+        self.background = Background("resources/snow.jpg", [0, 0])
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
         self.player = None
         self.width = screen.get_width()
