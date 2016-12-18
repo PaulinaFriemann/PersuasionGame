@@ -1,12 +1,18 @@
 import pygame
 import random
 from pygame import Rect
+<<<<<<< HEAD
+=======
+from pygame import freetype
+import math
+>>>>>>> origin/master
 
 def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
                        y - height / 2,
                        width, height)
 
+<<<<<<< HEAD
 def path_circle(size):
     path = [[0,1]]*size
     path.extend([[-1,0]]*size)
@@ -95,6 +101,8 @@ class Player(Agent):
             self.color.hsva = (h+dh,s+ds,v+dv,a)
 
 
+=======
+>>>>>>> origin/master
 
 class Game:
 
@@ -102,7 +110,7 @@ class Game:
 
         self.agents = agents
         self.end = end_height
-        self.background = Background("resources/pic.jpg", [0, -120])
+        self.background = Background("resources/snowbig.jpg", [0, 0])
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
         self.player = None
         self.width = screen.get_width()
@@ -163,18 +171,59 @@ class Camera:
         return self.position.contains(rect)
 
     def draw(self):
+        self.draw_background()
 
-        self.screen.fill([0, 0, 0])
-        blit_position = Rect(-self.position.left, -self.position.top, self.position.width, self.position.width)
-        self.screen.blit(self.world.background.image, blit_position)
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
                 pygame.draw.rect(self.screen, agent.color, self.adjust(agent))
 
+        self.draw_overlay()
+        self.draw_bar()
+
+    def draw_background(self):
+        self.screen.fill([0, 0, 0])
+        blit_position = Rect(-self.position.left, 0, self.position.width, self.position.height)
+
+        area_horizontal = self.world.background.rect.width / 2 - self.width / 2
+        area_vertical   = (self.world.background.rect.height - self.height + self.position.top) % (-self.world.background.rect.height)
+
+        self.screen.blit(self.world.background.image, blit_position,
+                         area=Rect(area_horizontal, area_vertical, self.width, self.height))
+
+        if area_vertical < 0:
+            blit_position.height = -area_vertical
+            new_area_vertical = self.world.background.rect.height + area_vertical
+            self.screen.blit(self.world.background.image, blit_position,
+                             area=Rect(area_horizontal, new_area_vertical, self.width, -area_vertical))
+
+    def draw_overlay(self, alpha=20):
+
+        s = pygame.Surface((640, 480))  # the size of your rect
+        s.set_alpha(alpha)  # alpha level
+        s.fill((0, 0, 0))  # this fills the entire surface
+        self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
+
+    def draw_bar(self):
+        self.bar = pygame.image.load("resources/bar.jpg")
+        self.bar.set_alpha(100)  # alpha level
+
+        self.write_text()
+
+        self.screen.blit(self.bar, (0, 350))  # (0,0) are the top-left coordinates
+
+    def write_text(self):
+        font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        rect = self.center(font.get_rect("Hallo wie gehts?"))
+        label = font.render_to(self.bar, rect.center,"Hallo wie gehts?")
+
+    def center(self, rect):
+        return rect.move([self.width/2 - rect.width, 20])
+
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(image_file)
+        print self.image.get_rect()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location

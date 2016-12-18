@@ -1,5 +1,6 @@
 import sys, pygame
 from game import *
+from agents import *
 pygame.init()
 
 
@@ -13,10 +14,12 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    agent = Agent(width / 2, height / 2 - 100, pink, screen)
+    agent = MarcsAgent(width / 2, height / 2 - 100, pink, screen)
     player = Player(width/2, height/2, white, screen)
 
-    game = Game([agent], screen, 600)
+    avoid = AvoidantAgent(200, 300, pink, screen, player)
+
+    game = Game([agent, avoid], screen, 600)
     game.add_player(player)
 
     #player.color.hsva = (50, 20, 50, 100)
@@ -24,7 +27,7 @@ def main():
     clock = pygame.time.Clock()
 
     while True:
-        clock.tick(30)
+        clock.tick(3)
 
         pressed = pygame.key.get_pressed()
 
@@ -41,7 +44,6 @@ def main():
                 sys.exit()
 
         game.update()
-
 
 
 if __name__ == '__main__':
