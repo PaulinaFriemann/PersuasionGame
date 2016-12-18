@@ -1,5 +1,6 @@
 import sys, pygame
 from game import *
+from agents import *
 pygame.init()
 
 
@@ -26,7 +27,7 @@ def main():
     clock = pygame.time.Clock()
 
     while True:
-        clock.tick(30)
+        clock.tick(3)
 
         pressed = pygame.key.get_pressed()
 

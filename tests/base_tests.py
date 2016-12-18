@@ -1,5 +1,6 @@
 from nose.tools import *
 from persuasion.game import *
+from persuasion.agents import *
 import pygame
 from pygame import Rect
 
