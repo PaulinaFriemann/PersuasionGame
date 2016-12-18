@@ -93,8 +93,12 @@ class Player(Agent):
         Agent.__init__(self, x, y, color, screen)
         self.location = [x, y]
         self.step = 0
+        self.speed_modificator = 3
 
     def move(self):
+
+        self.speed = map(lambda x: self.speed_modificator*x, self.speed)
+
         new_x = self.rect.bottomright[0] + self.speed[0]
         if self.screen.get_width() > new_x > (0 + self.width):
             self.rect = self.rect.move(self.speed)
@@ -174,18 +178,33 @@ class Camera:
         return self.position.contains(rect)
 
     def draw(self):
+        self.draw_background()
 
-        self.screen.fill([0, 0, 0])
-        blit_position = Rect(-self.position.left, -self.position.top, self.position.width, self.position.width)
-        self.screen.blit(self.world.background.image, blit_position)
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
                 pygame.draw.rect(self.screen, agent.color, self.adjust(agent))
+
+    def draw_background(self):
+        self.screen.fill([0, 0, 0])
+        blit_position = Rect(-self.position.left, 0, self.position.width, self.position.height)
+
+        area_horizontal = self.world.background.rect.width / 2 - self.width / 2
+        area_vertical   = (self.world.background.rect.height - self.height + self.position.top) % (-736)
+
+        self.screen.blit(self.world.background.image, blit_position,\
+                         area=Rect(area_horizontal, area_vertical, self.width, self.height))
+
+        if area_vertical < 0:
+            blit_position.height = -area_vertical
+            new_area_vertical = self.world.background.rect.height + area_vertical
+            self.screen.blit(self.world.background.image, blit_position, \
+                             area=Rect(area_horizontal, new_area_vertical, self.width, -area_vertical))
 
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(image_file)
+        print self.image.get_rect()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
