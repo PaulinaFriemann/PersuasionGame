@@ -14,10 +14,10 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    agent = MarcsAgent(width / 2, height / 2 - 100, pink, screen)
+    agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.circle)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = AvoidantAgent(200, 300, pink, screen, player)
+    avoid = Agent(200, 300, pink, screen, behavior=behaviors.avoid, player=player)
 
     game = Game([agent, avoid], screen, 600)
     game.add_player(player)
