@@ -3,6 +3,7 @@ from pygame import Rect
 from pygame import freetype
 import math
 
+
 def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
                        y - height / 2,
@@ -47,6 +48,7 @@ class Camera:
         self.max_height = world.end
         self.position = Rect(left, top, width, height)
         self.screen = screen
+        self.bar = pygame.image.load("resources/bar.jpg")
 
     def calibrate(self, player):
         self.offset = [player.rect.left - self.position.left, player.rect.top - self.position.top]
@@ -109,7 +111,6 @@ class Camera:
         self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
 
     def draw_bar(self):
-        self.bar = pygame.image.load("resources/bar.jpg")
         self.bar.set_alpha(100)  # alpha level
 
         self.write_text()

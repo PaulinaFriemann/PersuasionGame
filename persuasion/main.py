@@ -27,7 +27,7 @@ def main():
     clock = pygame.time.Clock()
 
     while True:
-        clock.tick(3)
+        clock.tick(30)
 
         pressed = pygame.key.get_pressed()
 
