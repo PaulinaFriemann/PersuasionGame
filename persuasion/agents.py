@@ -1,4 +1,5 @@
 import pygame
+import random
 
 
 def path_circle(size):
@@ -6,6 +7,27 @@ def path_circle(size):
     path.extend([[-1,0]]*size)
     path.extend([[0,-1]]*size)
     path.extend([[1,0]]*size)
+    return path
+
+
+def path_route(begin,end):
+    path = []
+    dx = end[0] - begin[0]
+    dy = end[1] - begin[1]
+    signdx = -1 if dx < 0 else 1 if dx > 0 else 0
+    signdy = -1 if dy < 0 else 1 if dy > 0 else 0
+
+    while(dx != 0 and dy != 0):
+        if random.randint(1,2) == 1:
+            path.extend([[signdx,0]])
+            dx = dx - signdx
+        else:
+            path.extend([[0,signdy]])
+            dy = dy - signdy
+    if dx > 0:
+        path.extend([[signdx,0]]*abs(dx))
+    if dy > 0:
+        path.extend([[0,signdy]]*abs(dy))
     return path
 
 
@@ -19,7 +41,8 @@ class Agent:
         self.screen = screen
         self.rect = pygame.Rect(x - self.width / 2, y - self.height / 2, self.width, self.height)
         self.speed_modificator = 2
-
+        self.location = [x, y]
+        self.personalspace = 10
         self.sensor = pygame.Rect(x - self.width / 2, y - self.height / 2, self.width * 3, self.height * 3)
 
     def move_speed(self, speed):
@@ -56,6 +79,7 @@ class MarcsAgent(Agent):
         Agent.__init__(self, x, y, color, screen)
         self.location = [x, y]
         self.path = path_circle(20)
+        self.location = [x, y]
         self.step = 0
         self.turn = 0
 
@@ -81,7 +105,7 @@ class Player(Agent):
         Agent.__init__(self, x, y, color, screen)
         self.location = [x, y]
         self.step = 0
-        self.speed_modificator = 3
+        #self.speed_modificator = 3
 
     def move(self):
 
