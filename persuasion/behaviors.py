@@ -13,11 +13,11 @@ def make_happy(agent):
 
 def avoid(agent):
     dist = agent.sensor.distance(agent.player.rect)
-    print dist
-    if not agent.runaway and dist <= agent.personalspace:
-        agent.runaway = True
+    #print dist
+    if dist <= agent.personalspace:
         direction = agent.sensor.direction(agent.player.rect)
         print direction
         agent.speed = [dir / dist for dir in direction]
         print agent.speed
-    agent.path = path_direct(direction)
+        agent.path = movements.path_direct(direction)
+        agent.step = 0

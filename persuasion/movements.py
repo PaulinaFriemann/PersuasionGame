@@ -15,7 +15,7 @@ def move_path(agent):
     if agent.screen.get_width() > new_x > (0 + agent.rect.width):
         agent.move(this_move)
     else:
-        agent.rect = agent.rect.move([0, this_move[1]])
+        agent.move([0, this_move[1]])
 
     agent.step += 1
 

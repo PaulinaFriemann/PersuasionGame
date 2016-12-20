@@ -38,7 +38,7 @@ class Agent:
         self.path = [(0,0)]
         self.step=0
 
-        if movement == movements.path:
+        if movement == movements.move_path:
             self.defaultpath = movements.path_circle(20)
             self.path = movements.path_circle(20)
             self.step = 0      
@@ -46,7 +46,7 @@ class Agent:
         if behavior == behaviors.avoid:
             self.runaway = False
     
-    def move_speed(self, speed):
+    def move(self, speed):
         speed = map(lambda x: self.speed_modificator * x, speed)
         self.rect = self.rect.move(speed)
         self.sensor.update(self.rect)
