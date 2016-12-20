@@ -1,16 +1,27 @@
 import random
+import agents
 
 
 def idle(agent):
-    return [0,0]
+    agent.path = [[0,0]]
 
 
 def do_nothing(agent):
     pass
 
 
+def default(agent):
+    if agent.step == len(agent.path):
+        agent.path = agent.defaultpath
+
+
 def make_happy(agent):
-    pass
+    agent.invoke_attitude = agents.Attitude.friends
+    path = [[1,1]] * 3
+    path.extend([[-1,1]] * 3)
+    path.extend([[-1,-1]] * 3)
+    path.extend([[1,-1]] * 3)
+    agent.path = path
 
 
 def avoid(agent):
@@ -21,8 +32,13 @@ def avoid(agent):
     agent.step = 0
 
 
+def follow(agent):
+    pass
+
+
 def move_path(agent):
     if agent.step == len(agent.path):
+        agent.event()
         agent.path = agent.defaultpath
         agent.step = 0
     this_move = agent.path[agent.step]
@@ -36,7 +52,7 @@ def move_path(agent):
     agent.step += 1
 
 
-def path_circle(size):
+def circle(size):
     path = [[0,1]]*size
     path.extend([[-1,0]]*size)
     path.extend([[0,-1]]*size)
@@ -69,7 +85,9 @@ def path_direct(goal):
     return path
     
 
-def path_route(begin,end):
+def random_to_goal(agent):
+    begin = agent.rect.center
+    end = agent.goal
     path = []
     dx = end[0] - begin[0]
     dy = end[1] - begin[1]

@@ -14,14 +14,14 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.move_path)
+    #agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.random_to_goal)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = Agent(200, 300, pink, screen,movement=movements.move_path, attitude=Attitude.avoiding, player=player)
+    #avoid = Agent(200, 300, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, player=player)
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
 
-    game = Game([agent, avoid, happy], screen, 600)
+    game = Game([happy], screen, 600)
     game.add_player(player)
 
     clock = pygame.time.Clock()

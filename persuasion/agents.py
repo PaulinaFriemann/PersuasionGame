@@ -8,8 +8,9 @@ class Attitude(Enum):
     neutral = 0
     avoiding = 1
     friendly = 2
+    friends = 3
 
-attitudes = [movements.do_nothing, movements.avoid, movements.make_happy]
+attitudes = [movements.do_nothing, movements.avoid, movements.make_happy, movements.default]
 
 
 class Agent:
@@ -24,17 +25,24 @@ class Agent:
         self.attitude = attitude
         self.player = player
         self.distance_to_player = 999
+        self.invoke_attitude = self.attitude
+
+        if self.attitude == Attitude.friendly:
+            self.personalspace = 6
         
         self.path = [(0,0)]
+        self.defaultpath = self.path
         self.step=0
 
-        if movement == movements.move_path:
-            self.defaultpath = movements.path_circle(20)
-            self.path = movements.path_circle(20)
-            self.step = 0      
+        if movement == movements.circle:
+            self.defaultpath = movements.circle(20)
+            self.path = movements.circle(20)
+            self.step = 0
 
-        if attitude == Attitude.avoiding:
-            self.runaway = False
+        elif movement == movements.random_to_goal:
+            self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
+            self.path = self.movement(self)
+            self.defaultpath = movements.idle(self)
 
     def direction_to(self, rect):
         return [a - b for a,b in zip(self.rect.center, rect.center)]
@@ -44,11 +52,22 @@ class Agent:
         self.rect = self.rect.move(speed)
 
     def update(self):
-        #self.behavior(self)
-        self.movement(self)
+        print self.attitude
+        movements.move_path(self)
 
     def on_enter_personal_space(self):
         attitudes[self.attitude.value](self)
+
+    def on_collision(self, other):
+        pass
+
+    def change_attitude(self, attitude):
+        if attitude != self.attitude:
+            self.attitude = attitude
+            self.invoke_attitude = self.attitude
+
+    def event(self):
+        self.change_attitude(self.invoke_attitude)
 
 
 class Player(Agent):
@@ -58,6 +77,7 @@ class Player(Agent):
         self.blocked = False
         self.block_counter = 0
         self.bounce_speed = [0,0]
+        self.spinning = False
         #self.speed_modificator = 3
 
     def move(self, speed):
@@ -75,8 +95,13 @@ class Player(Agent):
             self.move(self.speed)
         else:
             self.block_counter -= 1
-            self.move(self.bounce_speed)
+
+            if self.spinning:
+                self.move(self.path[self.block_counter])
+            else:
+                self.move(self.bounce_speed)
             if self.block_counter == 0:
+                self.spinning = False
                 self.blocked = False
 
     def colorup(self, dh=0, ds=0, dv=0):
@@ -84,11 +109,25 @@ class Player(Agent):
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
 
     def on_collision(self, other):
-        if not self.blocked and other.attitude == Attitude.friendly:
-            self.bounce_back()
-            self.colorup(ds=1)
+        if not self.blocked:
+
+            if other.attitude == Attitude.friendly:
+                self.colorup(ds=1)
+                self.happy_spin()
+            else:
+                self.bounce_back()
 
     def bounce_back(self):
         self.blocked = True
         self.block_counter = 15
         self.bounce_speed = map(lambda x: -x, self.speed)
+
+    def happy_spin(self):
+        self.spinning = True
+        self.blocked = True
+        self.block_counter = 12
+        bounce_speed = map(lambda x: -x, self.speed)
+        self.path = [[1, 1]] * 3
+        self.path.extend([[-1, 1]] * 3)
+        self.path.extend([[-1, -1]] * 3)
+        self.path.extend([[1, -1]] * 3)
