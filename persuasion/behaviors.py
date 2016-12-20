@@ -6,17 +6,14 @@ def do_nothing(agent):
 
 
 def make_happy(agent):
-    if agent.rect.colliderect(agent.player.rect):
-        agent.player.colorup(ds=0.1)
+    pass
 
 
 def avoid(agent):
-    dist = agent.sensor.distance(agent.player.rect)
-    print dist
-    if not agent.runaway and dist <= agent.personalspace:
+    if not agent.runaway and agent.distance_to_player <= agent.personalspace:
         agent.runaway = True
         direction = agent.sensor.direction(agent.player.rect)
         print direction
-        agent.speed = [dir / dist for dir in direction]
+        agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
         print agent.speed
     agent.move(agent.speed)
