@@ -5,8 +5,10 @@ def idle(agent):
     return [0,0]
 
 
-def circle(agent):
-    if agent.step == len(agent.path): agent.step = 0
+def move_path(agent):
+    if agent.step == len(agent.path):
+        agent.path = agent.defaultpath
+        agent.step = 0
     this_move = agent.path[agent.step]
     new_x = agent.rect.centerx + this_move[0] * 2
 
@@ -25,6 +27,31 @@ def path_circle(size):
     path.extend([[1,0]]*size)
     return path
 
+def path_direct(goal):
+    dx, dy = goal
+    path = []
+    signdx = -1 if dx < 0 else 1 if dx > 0 else 0
+    signdy = -1 if dy < 0 else 1 if dy > 0 else 0
+
+    ddxdy = max(abs(dx),abs(dy)) - min(abs(dx),abs(dy))
+    direction = [signdx,0] if abs(dx) > abs(dy) else [0,signdy] if abs(dy) > abs(dx) else [0,0]
+
+    while(dx != 0 and dy != 0):
+        if ddxdy > 0 and random.randint(1,ddxdy) != 1:
+            path.extend([direction])
+            print direction
+            dx = dx - direction[0]
+            dy = dy - direction[1]
+        else:
+            path.extend([[signdx,signdy]])
+            dx = dx - signdx
+            dy = dy - signdy
+    if dx > 0:
+        path.extend([[signdx,0]]*abs(dx))
+    if dy > 0:
+        path.extend([[0,signdy]]*abs(dy))
+    return path
+    
 
 def path_route(begin,end):
     path = []

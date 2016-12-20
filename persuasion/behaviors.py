@@ -1,4 +1,5 @@
 import math
+import movements
 
 
 def do_nothing(agent):
@@ -19,4 +20,4 @@ def avoid(agent):
         print direction
         agent.speed = [dir / dist for dir in direction]
         print agent.speed
-    agent.move(agent.speed)
+    agent.path = path_direct(direction)

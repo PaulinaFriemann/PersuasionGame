@@ -20,8 +20,7 @@ class Sensor:
     def direction(self, rect):
         return [a - b for a,b in zip(self.center, rect.center)]
 
-
-
+    
 
 class Agent:
     def __init__(self, x, y, color, screen, movement=movements.idle, behavior=behaviors.do_nothing, player=None):
@@ -35,15 +34,19 @@ class Agent:
         self.movement = movement
         self.behavior = behavior
         self.player = player
+        
+        self.path = [(0,0)]
+        self.step=0
 
-        if movement == movements.circle:
+        if movement == movements.path:
+            self.defaultpath = movements.path_circle(20)
             self.path = movements.path_circle(20)
-            self.step = 0
+            self.step = 0      
 
         if behavior == behaviors.avoid:
             self.runaway = False
-
-    def move(self, speed):
+    
+    def move_speed(self, speed):
         speed = map(lambda x: self.speed_modificator * x, speed)
         self.rect = self.rect.move(speed)
         self.sensor.update(self.rect)
