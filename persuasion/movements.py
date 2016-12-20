@@ -72,6 +72,8 @@ def path_direct(goal):
     while(dx != 0 and dy != 0):
         if ddxdy > 0 and random.randint(1,ddxdy) != 1:
             path.extend([direction])
+            #print direction
+
             dx = dx - direction[0]
             dy = dy - direction[1]
         else:
@@ -83,7 +85,7 @@ def path_direct(goal):
     if dy > 0:
         path.extend([[0,signdy]]*abs(dy))
     return path
-    
+
 
 def random_to_goal(agent):
     begin = agent.rect.center

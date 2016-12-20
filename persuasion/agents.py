@@ -81,7 +81,6 @@ class Player(Agent):
         #self.speed_modificator = 3
 
     def move(self, speed):
-
         speed = map(lambda x: self.speed_modificator * x, speed)
 
         new_x = self.rect.bottomright[0] + speed[0]
@@ -100,6 +99,7 @@ class Player(Agent):
                 self.move(self.path[self.block_counter])
             else:
                 self.move(self.bounce_speed)
+
             if self.block_counter == 0:
                 self.spinning = False
                 self.blocked = False
@@ -116,6 +116,7 @@ class Player(Agent):
                 self.happy_spin()
             else:
                 self.bounce_back()
+
 
     def bounce_back(self):
         self.blocked = True
