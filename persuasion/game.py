@@ -2,6 +2,7 @@ import pygame
 from pygame import Rect
 import agents
 from pygame import freetype
+import math
 
 
 def get_rect(x, y, width, height):
@@ -27,14 +28,23 @@ class Game:
     def add_player(self, player):
         self.agents.append(player)
         self.player = player
-        self.camera.calibrate(player)
+
+    def distance(self, rect1, rect2):
+        return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
     def update(self):
 
         for agent in self.agents:
+            agent.distance_to_player = self.distance(self.player.rect, agent.rect)
+            if not isinstance(agent, agents.Player) and agent.distance_to_player <= 6:
+                self.player.on_collision(agent)
+
             agent.update()
 
-        self.camera.move(self.player.speed)
+        if not self.player.blocked:
+            self.camera.move(self.player.speed)
+        else:
+            self.camera.move(self.player.bounce_speed)
         self.camera.draw()
         pygame.display.flip()
 
@@ -49,9 +59,6 @@ class Camera:
         self.position = Rect(left, top, width, height)
         self.screen = screen
         self.bar = pygame.image.load("resources/bar.jpg")
-
-    def calibrate(self, player):
-        self.offset = [player.rect.left - self.position.left, player.rect.top - self.position.top]
 
     def move(self, player_speed):
         new_left = self.position.left + player_speed[0]
@@ -84,9 +91,6 @@ class Camera:
             if self.check_visibility(agent.rect):
                 new_rect = self.adjust(agent)
                 pygame.draw.rect(self.screen, agent.color, new_rect)
-                if not isinstance(agent, agents.Player):
-                    agent.sensor.update(agent.rect)
-                    pygame.draw.circle(self.screen, pygame.Color("White"), new_rect.center, agent.sensor.radius)
 
         self.draw_overlay()
         self.draw_bar()

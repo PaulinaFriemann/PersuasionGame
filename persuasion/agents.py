@@ -20,7 +20,6 @@ class Sensor:
     def direction(self, rect):
         return [a - b for a,b in zip(self.center, rect.center)]
 
-    
 
 class Agent:
     def __init__(self, x, y, color, screen, movement=movements.idle, behavior=behaviors.do_nothing, player=None):
@@ -34,6 +33,7 @@ class Agent:
         self.movement = movement
         self.behavior = behavior
         self.player = player
+        self.distance_to_player = 999
         
         self.path = [(0,0)]
         self.step=0
@@ -60,22 +60,44 @@ class Player(Agent):
     def __init__(self, x, y, color, screen):
 
         Agent.__init__(self, x, y, color, screen)
-        self.step = 0
+        self.blocked = False
+        self.block_counter = 0
+        self.bounce_speed = [0,0]
         #self.speed_modificator = 3
 
     def move(self, speed):
 
-        self.speed = map(lambda x: self.speed_modificator * x, self.speed)
+        print speed
 
-        new_x = self.rect.bottomright[0] + self.speed[0]
+        speed = map(lambda x: self.speed_modificator * x, speed)
+
+        new_x = self.rect.bottomright[0] + speed[0]
         if self.screen.get_width() > new_x > (0 + self.rect.width):
-            self.rect = self.rect.move(self.speed)
+            self.rect = self.rect.move(speed)
         else:
-            self.rect = self.rect.move([0, self.speed[1]])
+            self.rect = self.rect.move([0, speed[1]])
 
     def update(self):
-        self.move(self.speed)
+        if not self.blocked:
+            self.move(self.speed)
+        else:
+            self.block_counter -= 1
+            print self.bounce_speed
+            self.move(self.bounce_speed)
+            if self.block_counter == 0:
+                self.blocked = False
 
     def colorup(self, dh=0, ds=0, dv=0):
         h, s, v, a = self.color.hsva
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
+
+    def on_collision(self, other):
+        if not self.blocked and other.behavior == behaviors.make_happy:
+            self.bounce_back()
+            self.colorup(ds=1)
+
+    def bounce_back(self):
+        print "Bounce "
+        self.blocked = True
+        self.block_counter = 15
+        self.bounce_speed = map(lambda x: -x, self.speed)
