@@ -36,8 +36,12 @@ class Game:
 
         for agent in self.agents:
             agent.distance_to_player = self.distance(self.player.rect, agent.rect)
-            if not isinstance(agent, agents.Player) and agent.distance_to_player <= 6:
-                self.player.on_collision(agent)
+            if not isinstance(agent, agents.Player):
+                if agent.distance_to_player <= 6:
+                    self.player.on_collision(agent)
+                if agent.distance_to_player <= agent.personalspace:
+                    agent.on_enter_personal_space()
+
 
             agent.update()
 

@@ -5,6 +5,22 @@ def idle(agent):
     return [0,0]
 
 
+def do_nothing(agent):
+    pass
+
+
+def make_happy(agent):
+    pass
+
+
+def avoid(agent):
+
+    direction = agent.direction_to(agent.player.rect)
+    agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
+    agent.path = path_direct(direction)
+    agent.step = 0
+
+
 def move_path(agent):
     if agent.step == len(agent.path):
         agent.path = agent.defaultpath
@@ -27,6 +43,7 @@ def path_circle(size):
     path.extend([[1,0]]*size)
     return path
 
+
 def path_direct(goal):
     dx, dy = goal
     path = []
@@ -40,6 +57,7 @@ def path_direct(goal):
         if ddxdy > 0 and random.randint(1,ddxdy) != 1:
             path.extend([direction])
             #print direction
+
             dx = dx - direction[0]
             dy = dy - direction[1]
         else:
@@ -51,7 +69,7 @@ def path_direct(goal):
     if dy > 0:
         path.extend([[0,signdy]]*abs(dy))
     return path
-    
+
 
 def path_route(begin,end):
     path = []
@@ -60,7 +78,7 @@ def path_route(begin,end):
     signdx = -1 if dx < 0 else 1 if dx > 0 else 0
     signdy = -1 if dy < 0 else 1 if dy > 0 else 0
 
-    while(dx != 0 and dy != 0):
+    while dx != 0 and dy != 0:
         if random.randint(1,2) == 1:
             path.extend([[signdx,0]])
             dx = dx - signdx

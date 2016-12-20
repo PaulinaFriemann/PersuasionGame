@@ -17,9 +17,9 @@ def main():
     agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.move_path)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = Agent(200, 300, pink, screen,movement=movements.move_path, behavior=behaviors.avoid, player=player)
+    avoid = Agent(200, 300, pink, screen,movement=movements.move_path, attitude=Attitude.avoiding, player=player)
 
-    happy = Agent(380, 280, pink, screen, behavior=behaviors.make_happy, player=player)
+    happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
 
     game = Game([agent, avoid, happy], screen, 600)
     game.add_player(player)
