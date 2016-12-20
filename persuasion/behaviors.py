@@ -1,4 +1,5 @@
 import math
+import movements
 
 
 def do_nothing(agent):
@@ -16,4 +17,4 @@ def avoid(agent):
         print direction
         agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
         print agent.speed
-    agent.move(agent.speed)
+        agent.path = movements.path_direct(direction)

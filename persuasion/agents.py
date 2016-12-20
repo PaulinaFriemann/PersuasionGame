@@ -34,14 +34,18 @@ class Agent:
         self.behavior = behavior
         self.player = player
         self.distance_to_player = 999
+        
+        self.path = [(0,0)]
+        self.step=0
 
-        if movement == movements.circle:
+        if movement == movements.move_path:
+            self.defaultpath = movements.path_circle(20)
             self.path = movements.path_circle(20)
-            self.step = 0
+            self.step = 0      
 
         if behavior == behaviors.avoid:
             self.runaway = False
-
+    
     def move(self, speed):
         speed = map(lambda x: self.speed_modificator * x, speed)
         self.rect = self.rect.move(speed)

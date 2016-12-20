@@ -14,10 +14,10 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.circle)
+    agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.move_path)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = Agent(200, 300, pink, screen, behavior=behaviors.avoid, player=player)
+    avoid = Agent(200, 300, pink, screen, behavior=behaviors.avoid, movement=movements.move_path, player=player)
 
     happy = Agent(380, 280, pink, screen, behavior=behaviors.make_happy, player=player)
 
