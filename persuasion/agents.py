@@ -66,9 +66,6 @@ class Player(Agent):
         #self.speed_modificator = 3
 
     def move(self, speed):
-
-        print speed
-
         speed = map(lambda x: self.speed_modificator * x, speed)
 
         new_x = self.rect.bottomright[0] + speed[0]
@@ -82,7 +79,7 @@ class Player(Agent):
             self.move(self.speed)
         else:
             self.block_counter -= 1
-            print self.bounce_speed
+            #print self.bounce_speed
             self.move(self.bounce_speed)
             if self.block_counter == 0:
                 self.blocked = False
@@ -92,9 +89,10 @@ class Player(Agent):
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
 
     def on_collision(self, other):
-        if not self.blocked and other.behavior == behaviors.make_happy:
+        if not self.blocked:
             self.bounce_back()
-            self.colorup(ds=1)
+            if other.behavior == behaviors.make_happy:
+                self.colorup(ds=1)
 
     def bounce_back(self):
         print "Bounce "
