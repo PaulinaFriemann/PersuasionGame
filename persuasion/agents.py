@@ -1,6 +1,5 @@
 import pygame
 import movements
-import behaviors
 import math
 from enum import Enum
 
@@ -10,9 +9,11 @@ class Attitude(Enum):
     avoiding = 1
     friendly = 2
 
+attitudes = [movements.do_nothing, movements.avoid, movements.make_happy]
+
 
 class Agent:
-    def __init__(self, x, y, color, screen, movement=movements.idle, behavior=behaviors.do_nothing, player=None):
+    def __init__(self, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, player=None):
         self.color = color
         self.speed = [0, 0]
         self.screen = screen
@@ -20,7 +21,7 @@ class Agent:
         self.speed_modificator = 1
         self.personalspace = 20
         self.movement = movement
-        self.behavior = behavior
+        self.attitude = attitude
         self.player = player
         self.distance_to_player = 999
         
@@ -32,7 +33,7 @@ class Agent:
             self.path = movements.path_circle(20)
             self.step = 0      
 
-        if behavior == behaviors.avoid:
+        if attitude == Attitude.avoiding:
             self.runaway = False
 
     def direction_to(self, rect):
@@ -43,8 +44,11 @@ class Agent:
         self.rect = self.rect.move(speed)
 
     def update(self):
-        self.behavior(self)
+        #self.behavior(self)
         self.movement(self)
+
+    def on_enter_personal_space(self):
+        attitudes[self.attitude.value](self)
 
 
 class Player(Agent):
@@ -57,8 +61,6 @@ class Player(Agent):
         #self.speed_modificator = 3
 
     def move(self, speed):
-
-        print speed
 
         speed = map(lambda x: self.speed_modificator * x, speed)
 
@@ -73,7 +75,6 @@ class Player(Agent):
             self.move(self.speed)
         else:
             self.block_counter -= 1
-            print self.bounce_speed
             self.move(self.bounce_speed)
             if self.block_counter == 0:
                 self.blocked = False
@@ -83,12 +84,11 @@ class Player(Agent):
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
 
     def on_collision(self, other):
-        if not self.blocked and other.behavior == behaviors.make_happy:
+        if not self.blocked and other.attitude == Attitude.friendly:
             self.bounce_back()
             self.colorup(ds=1)
 
     def bounce_back(self):
-        print "Bounce "
         self.blocked = True
         self.block_counter = 15
         self.bounce_speed = map(lambda x: -x, self.speed)
