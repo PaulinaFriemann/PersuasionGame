@@ -19,10 +19,10 @@ def main():
 
     avoid = Agent(200, 300, pink, screen, behavior=behaviors.avoid, player=player)
 
-    game = Game([agent, avoid], screen, 600)
-    game.add_player(player)
+    happy = Agent(380, 280, pink, screen, behavior=behaviors.make_happy, player=player)
 
-    #player.color.hsva = (50, 20, 50, 100)
+    game = Game([agent, avoid, happy], screen, 600)
+    game.add_player(player)
 
     clock = pygame.time.Clock()
 

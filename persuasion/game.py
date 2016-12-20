@@ -1,5 +1,6 @@
 import pygame
 from pygame import Rect
+import agents
 from pygame import freetype
 
 
@@ -68,9 +69,9 @@ class Camera:
         self.position.top += player_speed[1]
 
     def adjust(self, agent):
+
         new_left = agent.rect.left - self.position.left
         new_top = agent.rect.top - self.position.top
-
         return Rect(new_left, new_top, agent.rect.width, agent.rect.height)
 
     def check_visibility(self, rect):
@@ -81,7 +82,11 @@ class Camera:
 
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
-                pygame.draw.rect(self.screen, agent.color, self.adjust(agent))
+                new_rect = self.adjust(agent)
+                pygame.draw.rect(self.screen, agent.color, new_rect)
+                if not isinstance(agent, agents.Player):
+                    agent.sensor.update(agent.rect)
+                    pygame.draw.circle(self.screen, pygame.Color("White"), new_rect.center, agent.sensor.radius)
 
         self.draw_overlay()
         self.draw_bar()

@@ -1,6 +1,26 @@
 import pygame
 import movements
 import behaviors
+import math
+
+
+class Sensor:
+
+    def __init__(self, personal_space, center):
+        self.radius = personal_space
+        self.center = center
+
+    def update(self, rect):
+        self.center = rect.center
+
+    def distance(self, rect):
+        center_rect = rect.center
+        return math.sqrt((center_rect[0] - self.center[0]) ** 2 + (center_rect[1] - self.center[1]) ** 2)
+
+    def direction(self, rect):
+        return [a - b for a,b in zip(self.center, rect.center)]
+
+
 
 
 class Agent:
@@ -10,11 +30,11 @@ class Agent:
         self.screen = screen
         self.rect = pygame.Rect(x - 6 / 2, y - 6 / 2, 6, 6)
         self.speed_modificator = 1
-        self.personalspace = 1000
-        self.sensor = pygame.Rect(self.rect.centerx, self.rect.centery,
-                                  self.rect.width * self.personalspace, self.rect.height * self.personalspace)
+        self.personalspace = 20
+        self.sensor = Sensor(self.personalspace, self.rect.center)
         self.movement = movement
         self.behavior = behavior
+        self.player = player
 
         if movement == movements.circle:
             self.path = movements.path_circle(20)
@@ -22,12 +42,11 @@ class Agent:
 
         if behavior == behaviors.avoid:
             self.runaway = False
-            self.player = player
 
     def move(self, speed):
         speed = map(lambda x: self.speed_modificator * x, speed)
         self.rect = self.rect.move(speed)
-        self.sensor = self.sensor.move(speed)
+        self.sensor.update(self.rect)
 
     def update(self):
         self.behavior(self)
@@ -56,5 +75,4 @@ class Player(Agent):
 
     def colorup(self, dh=0, ds=0, dv=0):
         h, s, v, a = self.color.hsva
-        if h + dh <= 255 and s + ds <= 100 and v + dv <= 100:
-            self.color.hsva = (h + dh, s + ds, v + dv, a)
+        self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
