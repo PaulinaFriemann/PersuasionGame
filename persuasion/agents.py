@@ -30,19 +30,16 @@ class Agent:
         if self.attitude == Attitude.friendly:
             self.personalspace = 6
         
-        self.path = [(0,0)]
+        self.set_path(movements.idle(self), default=True)
         self.defaultpath = self.path
-        self.step=0
 
         if movement == movements.circle:
-            self.defaultpath = movements.circle(20)
-            self.path = movements.circle(20)
-            self.step = 0
+            self.set_path(movements.circle(20), default=True)
 
         elif movement == movements.random_to_goal:
             self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
-            self.path = self.movement(self)
-            self.defaultpath = movements.idle(self)
+            self.set_path(self.movement(self))
+            self.set_default_path(movements.idle(self))
 
     def direction_to(self, rect):
         return [a - b for a,b in zip(self.rect.center, rect.center)]
@@ -52,11 +49,19 @@ class Agent:
         self.rect = self.rect.move(speed)
 
     def update(self):
-        print self.attitude
         movements.move_path(self)
 
+    def set_path(self, movement, default=False):
+        self.step = 0
+        self.path = movement
+        if default:
+            self.defaultpath = self.path
+
+    def set_default_path(self, movement):
+        self.defaultpath = movement
+
     def on_enter_personal_space(self):
-        attitudes[self.attitude.value](self)
+        self.set_path(attitudes[self.attitude.value](self))
 
     def on_collision(self, other):
         pass
@@ -74,54 +79,39 @@ class Player(Agent):
     def __init__(self, x, y, color, screen):
 
         Agent.__init__(self, x, y, color, screen)
-        self.blocked = False
-        self.block_counter = 0
-        self.bounce_speed = [0,0]
-        self.spinning = False
+
         #self.speed_modificator = 3
 
     def move(self, speed):
-        speed = map(lambda x: self.speed_modificator * x, speed)
+        self.speed = map(lambda x: self.speed_modificator * x, speed)
 
-        new_x = self.rect.bottomright[0] + speed[0]
+        new_x = self.rect.bottomright[0] + self.speed[0]
         if self.screen.get_width() > new_x > (0 + self.rect.width):
             self.rect = self.rect.move(speed)
         else:
             self.rect = self.rect.move([0, speed[1]])
 
     def update(self):
-        if not self.blocked:
+        if self.path == [[0,0]]:
             self.move(self.speed)
         else:
-            self.block_counter -= 1
-
-            if self.spinning:
-                self.move(self.path[self.block_counter])
-            else:
-                self.move(self.bounce_speed)
-
-            if self.block_counter == 0:
-                self.spinning = False
-                self.blocked = False
+            movements.move_path(self)
 
     def colorup(self, dh=0, ds=0, dv=0):
         h, s, v, a = self.color.hsva
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
 
     def on_collision(self, other):
-        if not self.blocked:
+        if self.path == [[0,0]]:
 
             if other.attitude == Attitude.friendly:
                 self.colorup(ds=1)
-                self.happy_spin()
+                self.set_path(movements.make_happy(self))
             else:
-                self.bounce_back()
+                self.set_path(movements.bounce_back(self))
 
 
-    def bounce_back(self):
-        self.blocked = True
-        self.block_counter = 15
-        self.bounce_speed = map(lambda x: -x, self.speed)
+
 
     def happy_spin(self):
         self.spinning = True

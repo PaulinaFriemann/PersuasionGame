@@ -45,10 +45,8 @@ class Game:
 
             agent.update()
 
-        if not self.player.blocked:
-            self.camera.move(self.player.speed)
-        else:
-            self.camera.move(self.player.bounce_speed)
+        self.camera.move(self.player.speed)
+
         self.camera.draw()
         pygame.display.flip()
 

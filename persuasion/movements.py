@@ -3,7 +3,7 @@ import agents
 
 
 def idle(agent):
-    agent.path = [[0,0]]
+    return [[0,0]]
 
 
 def do_nothing(agent):
@@ -12,7 +12,11 @@ def do_nothing(agent):
 
 def default(agent):
     if agent.step == len(agent.path):
-        agent.path = agent.defaultpath
+        return agent.defaultpath
+
+
+def bounce_back(self):
+    return [map(lambda x: -x, self.speed)] * 15
 
 
 def make_happy(agent):
@@ -21,14 +25,14 @@ def make_happy(agent):
     path.extend([[-1,1]] * 3)
     path.extend([[-1,-1]] * 3)
     path.extend([[1,-1]] * 3)
-    agent.path = path
+    return path
 
 
 def avoid(agent):
 
     direction = agent.direction_to(agent.player.rect)
     agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
-    agent.path = path_direct(direction)
+    agent.set_path(path_direct(direction))
     agent.step = 0
 
 
