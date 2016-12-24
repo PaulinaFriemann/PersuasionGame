@@ -21,6 +21,9 @@ def main():
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
 
+    #starting screen
+
+
     game = Game([happy], screen, 600)
     game.add_player(player)
 
@@ -30,9 +33,14 @@ def main():
         clock.tick(30)
 
         pressed = pygame.key.get_pressed()
+        mousepressed = pygame.mouse.get_pressed()
 
         player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
         player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
+
+        if mousepressed[0]:
+            print "I'm so happyyy"
+            game.add_agent(Agent(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], pink, screen, attitude=Attitude.friendly, player=player))
 
         if pressed[pygame.K_SPACE]:
             player.colorup(0, 5)
@@ -42,7 +50,6 @@ def main():
                     or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-
         game.update()
 
 

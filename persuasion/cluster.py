@@ -1,6 +1,13 @@
 import agents
 import movements
+from enum import Enum
 from agents import Attitude
+
+class Shape(Enum):
+    circle = 0
+    polygon = 1
+    elipse = 2
+    rect = 3
 
 class Cluster:
 
@@ -9,9 +16,13 @@ class Cluster:
         self.members = members
         self.clustno = clustno
 
-    def create_cluster(self, amount, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, player=None):
+    def create_cluster(self, position, shape, amount, exampleAgent):
+        if shape == Shape.circle :
+            #dosomething
+            print "something"
+
         for i in range(0,amount):
-            self.members[i] = agents.Agent(x , y, color, screen, movement, attitude, player)
+            self.members[i] = agents.Agent(exampleAgent.x , exampleAgent.y, exampleAgent.color, exampleAgent.screen, exampleAgent.movement, exampleAgent.attitude, exampleAgent.player)
 
 
     def add_member(self,member):
