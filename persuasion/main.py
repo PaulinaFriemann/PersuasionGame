@@ -1,6 +1,7 @@
 import sys, pygame
 from game import *
 from agents import *
+from cluster import *
 pygame.init()
 
 
@@ -26,6 +27,10 @@ def main():
 
     game = Game([happy], screen, 600)
     game.add_player(player)
+
+    rainbow_unicorn_cluster = Cluster(11)
+    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 50), 10, happy, game)
+
 
     clock = pygame.time.Clock()
 
