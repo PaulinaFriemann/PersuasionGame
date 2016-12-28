@@ -29,8 +29,8 @@ def main():
     game.add_player(player)
 
     rainbow_unicorn_cluster = Cluster(11)
-    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 50), 10, happy, game)
-
+    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 200), 10, avoid, game, Shape.file)
+    rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
     clock = pygame.time.Clock()
 
