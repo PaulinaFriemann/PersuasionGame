@@ -131,7 +131,7 @@ class Cluster:
             self.members.remove(member)
 
     def cluster_move(self, agent, speed):
-        for idx in range(0,self.members):
+        for idx in range(0,len(self.members)):
             self.members[idx].move(speed)
 
     def regroup_wait(self,dx = 0, dy = 0):
