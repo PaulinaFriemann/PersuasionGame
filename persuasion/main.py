@@ -1,6 +1,7 @@
 import sys, pygame
 from game import *
 from agents import *
+from cluster import *
 pygame.init()
 
 
@@ -23,9 +24,10 @@ def main():
 
     #starting screen
 
-
     game = Game([happy], screen, 600)
     game.add_player(player)
+
+    game.start_screen()
 
     clock = pygame.time.Clock()
 

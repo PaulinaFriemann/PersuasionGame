@@ -1,111 +1,59 @@
 from nose.tools import *
-from persuasion.game import *
-from persuasion.agents import *
-import pygame
-from pygame import Rect
+# from persuasion.game import *
+# from persuasion.agents import *
+# import pygame
+# from pygame import Rect
+import math
 
 
-size = width, height = 640, 480
+# size = width, height = 640, 480
+#
+# screen = pygame.display.set_mode(size)
+#
+# x_player = 50
+# y_player = 20
+#
+# agent = Agent(20, 40, pygame.Color('Pink'), screen)
+# agents = [agent]
+#
+#
+# player = Agent(50, 20, pygame.Color('White'), screen)
+#
+# w = Game(agents, screen, 600)
 
-screen = pygame.display.set_mode(size)
 
-x_player = 50
-y_player = 20
+def distance ((x_1, y_1), (x_2, y_2)):
 
-agent = Agent(20, 40, pygame.Color('Pink'), screen)
-agents = [agent]
-
-
-player = Agent(50, 20, pygame.Color('White'), screen)
-
-w = Game(agents, screen, 600)
+    dist =  math.sqrt((x_1 - x_2)**2 + (y_1 - y_2)**2)
+    print "x, y ", (x_2, y_2)
+    print "dist ", dist
+    return dist
 
 
 def test_basic():
-    assert_equal(agent.rect, Rect(17, 37, 6, 6))
+
+    diameter = 3
+    radius = diameter/2
+    dist_arr = [[0.0 for _ in range(diameter)] for _ in range(diameter)]
+    arr = [[False for _ in range(diameter)] for _ in range(diameter)]
+
+    for x in range(-radius, radius + 1):
+        for y in range(-radius, radius + 1):
+            dist = distance((0.0,0.0), (x,y))
+            print "in array pos ", (y+radius, x+radius)
+            dist_arr[y + radius][x + radius] = dist
+            if dist <= radius:
+                try:
+                    arr[y + radius][x + radius] = True
+                except IndexError:
+                    print x + radius, y+ radius
 
 
-def test_append():
-
-    w.add_agent(player)
-    print w.agents
-    #assert_equal(w.agents, [[agent, False], [player, False]])
-    assert_equal(w.agents, [agent, player])
+    print dist_arr
+    print arr
 
 
-def test_move_player():
-    player = Agent(x_player, y_player, pygame.Color('White'), screen)
-
-    player.speed = [-1, 0]
-    player.update()
-
-    assert_equal(player.rect, get_rect(x_player - player.speed_modificator, y_player, 6, 6))
 
 
-def test_rect():
 
-    assert_equal(get_rect(10, 10, 6, 10), Rect(7, 5, 6, 10))
-
-
-def test_move_camera():
-    player = Agent(x_player, y_player, pygame.Color('White'), screen)
-
-    player.speed = [2, 5]
-
-    camera = Camera(200, 200, w, screen)
-    camera.calibrate(player)
-
-    player.update()
-
-    camera.move(player.speed)
-
-    assert_equal(camera.position, Rect(2 * player.speed_modificator, 5 * player.speed_modificator, 200, 200))
-
-    player = Agent(x_player, y_player, pygame.Color('White'), screen)
-
-    player.speed = [2, -5]
-
-    camera = Camera(200, 200, w, screen)
-    camera.calibrate(player)
-
-    assert_equal(camera.position, Rect(0, 0, 200, 200))
-
-
-def test_adjust_camera():
-    player = Agent(50, 20, pygame.Color('White'), screen)
-
-    agent = Agent(20, 40, pygame.Color('Pink'), screen)
-
-    camera = Camera(200, 200, w, screen, left=10, top=10)
-    camera.calibrate(player)
-
-    assert_equal(camera.adjust(player), Rect(camera.offset[0], camera.offset[1], player.width, player.height))
-
-    assert_equal(camera.adjust(agent), Rect(7, 27, agent.width, agent.height))
-
-
-def test_move_adjust():
-    player = Agent(x_player, y_player, pygame.Color('White'), screen)
-    agent = Agent(20, 40, pygame.Color('Pink'), screen)
-    camera = Camera(200, 200, w, screen)
-    camera.calibrate(player)
-
-    player.speed = [1,0]
-
-    player.update()
-
-    camera.move(player.speed)
-
-    assert_equal(camera.adjust(player), Rect(camera.offset[0], camera.offset[1], player.width, player.height))
-    assert_equal(camera.adjust(agent), get_rect(20 - player.speed[0],40,6,6))
-
-
-def test_visibility():
-    player = Agent(50, 20, pygame.Color('White'), screen)
-    agent = Agent(20, 40, pygame.Color('Pink'), screen)
-    camera = Camera(200, 200, w, screen, left=10, top=10)
-    camera.calibrate(player)
-
-    assert_equal(camera.check_visibility(player.rect), True)
-    assert_equal(camera.check_visibility(agent.rect), True)
-
+    assert False
