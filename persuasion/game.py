@@ -4,6 +4,7 @@ import agents
 from pygame import freetype
 import math
 from utils import ActionQueue
+import sys
 
 
 def get_rect(x, y, width, height):
@@ -12,20 +13,38 @@ def get_rect(x, y, width, height):
                        width, height)
 
 
+def center_rect(inner, outer):
+
+    new_rect = Rect(inner)
+    new_rect.center = outer.center
+    return new_rect
+
+
+def center(rect, outer_width):
+    return rect.move([outer_width / 2 - rect.width, 20])
+
+
 class Button(Rect):
 
     def __init__(self, *args, **kwargs):
         super(Button, self).__init__(*args, **kwargs)
 
     def set_text(self, text):
+        print "box rect ", self
         self.text = text
 
-        font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
-        rect = self.center(font.get_rect(text))
-        label = font.render(text)
+        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        print self.font.get_rect(text)
+        self.text_rect = center_rect(self.font.get_rect(text), self)
+        #self.text_rect =self.font.get_rect(text)
+        print self.text_rect
+        #self.label = font.render_to(text, 1, (50,50,50))
+        #print self.label
 
     def draw(self, screen):
         pygame.draw.rect(screen, [200,200,200], self)
+        self.font.render_to(screen, (screen.get_rect().centerx - self.text_rect.width/2, 350),
+                            self.text, fgcolor = (150,20,255))
 
 
 class Game:
@@ -53,6 +72,10 @@ class Game:
     def distance(self, rect1, rect2):
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
+    def start(self):
+
+            self.start_screen()
+
     def update(self):
 
         self.action_queue.step()
@@ -74,16 +97,27 @@ class Game:
         pygame.display.flip()
 
     def start_screen(self):
-        button = Rect(100, 300, 50, 30)
-        self.screen.fill([255,255,255])
-        pygame.draw.rect(self.screen, [0,0,0], button)
-        #button.draw(self.screen)
 
-        while True:
-            pass
+        start_button = Button(270, 342, 100, 30)
+        start_button.set_text("Start Game")
+        started = False
+        while not started:
+            pressed = pygame.key.get_pressed()
+            mousepressed = pygame.mouse.get_pressed()
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT \
+                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pos, button = event.pos, event.button
+                    if start_button.collidepoint(*pos):
+                        started = True
 
-
+            self.screen.fill([0,0,0])
+            start_button.draw(self.screen)
+            pygame.display.flip()
 
 
 class Camera:
@@ -164,11 +198,8 @@ class Camera:
 
     def write_text(self):
         font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
-        rect = self.center(font.get_rect("Hallo wie gehts?"))
+        rect = center(font.get_rect("Hallo wie gehts?"), self.width)
         label = font.render_to(self.bar, rect.center,"Hallo wie gehts?")
-
-    def center(self, rect):
-        return rect.move([self.width/2 - rect.width, 20])
 
 
 class Background(pygame.sprite.Sprite):

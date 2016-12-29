@@ -35,7 +35,7 @@ def main():
     rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-#    game.start_screen()
+    __builtin__.game.start()
 
     clock = pygame.time.Clock()
 
@@ -50,7 +50,7 @@ def main():
 
         if mousepressed[0]:
             print "I'm so happyyy"
-            game.add_agent(Agent(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], pink, screen, attitude=Attitude.friendly, player=player))
+            __builtin__.game.add_agent(Agent(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], pink, screen, attitude=Attitude.friendly, player=player))
 
         if pressed[pygame.K_SPACE]:
             player.colorup(0, 5)
