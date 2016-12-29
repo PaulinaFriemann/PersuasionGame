@@ -78,10 +78,6 @@ class Agent:
     def change_attitude(self, attitude):
         if attitude != self.attitude:
             self.attitude = attitude
-            self.invoke_attitude = self.attitude
-
-    def event(self):
-        self.change_attitude(self.invoke_attitude)
 
 
 class Player(Agent):
