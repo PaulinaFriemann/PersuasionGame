@@ -18,7 +18,7 @@ def main():
     agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.random_to_goal)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = Agent(200, 300, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, player=player)
+    avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, player=player)
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
 
@@ -29,7 +29,7 @@ def main():
     game.add_player(player)
 
     rainbow_unicorn_cluster = Cluster(11)
-    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 200), 10, avoid, game, Shape.file)
+    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
     clock = pygame.time.Clock()
@@ -49,6 +49,9 @@ def main():
 
         if pressed[pygame.K_SPACE]:
             player.colorup(0, 5)
+
+        if pressed[pygame.K_r]:
+            rainbow_unicorn_cluster.regroup()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT \

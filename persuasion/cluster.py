@@ -134,6 +134,13 @@ class Cluster:
         for idx in range(0,self.members):
             self.members[idx].move(speed)
 
+    def regroup(self, dx = 0, dy = 0):
+        for i in range(len(self.members)):
+            target_x = self.starting_locations[i][0] + dx
+            target_y = self.starting_locations[i][1] + dy
+            current_x,current_y = self.members[i].rect.center
+            self.members[i].set_path(movements.path_direct((target_x - current_x, target_y - current_y)))
+
     def rewrite_map(self):
         arr_size = len(self.map)
         self.map = [[0] * (arr_size) for _ in range(arr_size)]

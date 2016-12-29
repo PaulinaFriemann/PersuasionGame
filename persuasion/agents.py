@@ -26,6 +26,9 @@ class Agent:
         self.player = player
         self.distance_to_player = 999
         self.invoke_attitude = self.attitude
+        self.path = []
+        self.step = 0
+        self.defaultpath = []
 
         if self.attitude == Attitude.friendly:
             self.personalspace = 6
@@ -62,9 +65,10 @@ class Agent:
 
     def on_enter_personal_space(self):
         try:
-            self.set_path(attitudes[self.attitude.value](self))
+            attitudes[self.attitude.value](self)
         except(AttributeError):
-            self.set_path(attitudes[self.attitude](self))
+            attitudes[self.attitude](self)
+
     def on_collision(self, other):
         pass
 
