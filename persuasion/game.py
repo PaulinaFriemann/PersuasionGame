@@ -43,10 +43,10 @@ class Button(Rect):
 
 class TextArea(Rect):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, font_size, *args, **kwargs):
         super(TextArea, self).__init__(*args, **kwargs)
 
-        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), font_size)
         self.text = ""
         self.text_rect = center_rect(self.font.get_rect(self.text), self)
 
@@ -54,9 +54,13 @@ class TextArea(Rect):
         self.text += letter
         self.text_rect = center_rect(self.font.get_rect(self.text), self)
 
+    def delete_letter(self):
+        self.text = self.text[:-1]
+        self.text_rect = center_rect(self.font.get_rect(self.text), self)
+
     def draw(self, screen):
         pygame.draw.rect(screen, [200,200,200], self)
-        self.font.render_to(screen, self.text_rect.topleft,
+        self.font.render_to(screen, (self.left + 2, self.top + (self.height/2 - 15/2)),
                            self.text, fgcolor = (150,20,255))
 
 
@@ -115,7 +119,7 @@ class Game:
         start_button = Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
-        text_area = TextArea(center_rect(Rect(0,0,200,30), self.screen.get_rect()))
+        text_area = TextArea(15, center_rect(Rect(0,0,200,30), self.screen.get_rect()))
         started = False
         while not started:
             pressed = pygame.key.get_pressed()
@@ -130,8 +134,11 @@ class Game:
                     pos, button = event.pos, event.button
                     if start_button.collidepoint(*pos):
                         started = True
-                if event.type == pygame.KEYDOWN and (pygame.K_a <= event.key <= pygame.K_z):
-                    text_area.add_letter(pygame.key.name(event.key))
+                if event.type == pygame.KEYUP:
+                    if pygame.K_a <= event.key <= pygame.K_z:
+                        text_area.add_letter(pygame.key.name(event.key))
+                    elif event.key == pygame.K_BACKSPACE:
+                        text_area.delete_letter()
 
             self.screen.fill([0,0,0])
             start_button.draw(self.screen)
