@@ -3,6 +3,7 @@ from pygame import Rect
 import agents
 from pygame import freetype
 import math
+from utils import ActionQueue
 
 
 def get_rect(x, y, width, height):
@@ -39,6 +40,8 @@ class Game:
         self.width = screen.get_width()
         self.screen = screen
 
+        self.action_queue = ActionQueue()
+
     def add_agent(self, agent):
         print "I created an agent <<BEEP>>"
         self.agents.append(agent)
@@ -51,6 +54,8 @@ class Game:
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
     def update(self):
+
+        self.action_queue.step()
 
         for agent in self.agents:
             agent.distance_to_player = self.distance(self.player.rect, agent.rect)

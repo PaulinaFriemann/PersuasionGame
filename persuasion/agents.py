@@ -1,7 +1,7 @@
 import pygame
 import movements
-import math
 from enum import Enum
+import __builtin__
 
 
 class Attitude(Enum):
@@ -10,7 +10,7 @@ class Attitude(Enum):
     friendly = 2
     friends = 3
 
-attitudes = [movements.do_nothing, movements.avoid, movements.make_happy, movements.default]
+attitudes = [movements.idle, movements.avoid, movements.make_happy, movements.default]
 
 
 class Agent:
@@ -25,7 +25,6 @@ class Agent:
         self.attitude = attitude
         self.player = player
         self.distance_to_player = 999
-        self.invoke_attitude = self.attitude
         self.path = []
         self.step = 0
         self.defaultpath = []
@@ -54,8 +53,8 @@ class Agent:
     def update(self):
         movements.move_path(self)
 
-    def set_path(self, movement, default=False):
-        self.step = 0
+    def set_path(self, movement, default=False, step=0):
+        self.step = step
         self.path = movement
         if default:
             self.defaultpath = self.path
@@ -66,8 +65,12 @@ class Agent:
     def on_enter_personal_space(self):
         try:
             self.set_path(attitudes[self.attitude.value](self))
+
         except(AttributeError):
             self.set_path(attitudes[self.attitude](self))
+
+        if self.attitude == Attitude.friendly:
+            __builtin__.game.action_queue.add(self.change_attitude, [Attitude.friends], len(self.path))
 
     def on_collision(self, other):
         pass

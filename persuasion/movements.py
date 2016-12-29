@@ -5,11 +5,6 @@ import agents
 def idle(agent):
     return [[0,0]]
 
-
-def do_nothing(agent):
-    pass
-
-
 def default(agent):
     if agent.step == len(agent.path):
         return agent.defaultpath
@@ -20,7 +15,6 @@ def bounce_back(self):
 
 
 def make_happy(agent):
-    agent.invoke_attitude = agents.Attitude.friends
     path = [[1,1]] * 3
     path.extend([[-1,1]] * 3)
     path.extend([[-1,-1]] * 3)
@@ -40,7 +34,6 @@ def follow(agent):
 
 def move_path(agent):
     if agent.step == len(agent.path):
-        agent.event()
         agent.path = agent.defaultpath
         agent.step = 0
     this_move = agent.path[agent.step]

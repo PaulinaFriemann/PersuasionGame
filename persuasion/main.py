@@ -2,7 +2,12 @@ import sys, pygame
 from game import *
 from agents import *
 from cluster import *
+import __builtin__
+
 pygame.init()
+
+
+__builtin__.game = None
 
 
 def main():
@@ -20,12 +25,11 @@ def main():
 
     avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, player=player)
 
-    #happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
-
+    happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
     #starting screen
 
-    game = Game([], screen, 600)
-    game.add_player(player)
+    __builtin__.game = Game([happy], screen, 600)
+    __builtin__.game.add_player(player)
 
     rainbow_unicorn_cluster = Cluster(11)
     rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)

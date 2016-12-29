@@ -3,7 +3,6 @@ import movements
 import math
 import random
 from enum import Enum
-from agents import Attitude
 
 class Shape(Enum):
     circle = 0
@@ -87,10 +86,13 @@ class Cluster:
         self.map = []
         self.cluster_starting_position = []
         self.possible_coordinates = []
-
+        self.step = 0
 
     def create_cluster(self, position, amount, exampleAgent, game, shape=Shape.circle, agent_personal_space = 12, filename = 'map.txt'):
         self.cluster_starting_position = position
+
+
+        self.len_default_path = len(exampleAgent.defaultpath)
 
         necessary_coordinates = []
         if shape == Shape.circle:
@@ -133,6 +135,7 @@ class Cluster:
     def cluster_move(self, agent, speed):
         for idx in range(0,len(self.members)):
             self.members[idx].move(speed)
+            self.step = (self.step + 1) % self.len_default_path
 
     def regroup(self, dx = 0, dy = 0):
         for i in range(len(self.members)):

@@ -3,6 +3,7 @@ from nose.tools import *
 # from persuasion.agents import *
 # import pygame
 # from pygame import Rect
+from persuasion.utils import *
 import math
 
 
@@ -53,7 +54,32 @@ def test_basic():
     print arr
 
 
+    assert True
 
 
+def hello():
+    print "hello"
+
+
+def hello2(a, b):
+
+    print "hello ", a, b
+
+
+def test_action_queue():
+    queue = ActionQueue()
+    queue.add(hello, None, 0)
+
+    assert_equals(queue.immediate, [[hello, None]])
+
+    queue.add(hello2, ["a", "b"], 2)
+
+    assert_equals(queue.to_invoke, deque([[], [], [hello2, ["a", "b"]]]))
+
+    queue.step()
+
+    queue.step()
+
+    queue.step()
 
     assert False
