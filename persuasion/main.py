@@ -37,7 +37,6 @@ def main():
 
 #    game.start_screen()
 
-
     clock = pygame.time.Clock()
 
     while True:
@@ -58,6 +57,9 @@ def main():
 
         if pressed[pygame.K_r]:
             rainbow_unicorn_cluster.regroup()
+
+        if pressed[pygame.K_t]:
+            rainbow_unicorn_cluster.regroup_wait()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT \

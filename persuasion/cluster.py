@@ -137,6 +137,22 @@ class Cluster:
             self.members[idx].move(speed)
             self.step = (self.step + 1) % self.len_default_path
 
+    def regroup_wait(self,dx = 0, dy = 0):
+        paths = []
+        longest_path = 0
+        for i in range(len(self.members)):
+            target_x = self.starting_locations[i][0] + dx
+            target_y = self.starting_locations[i][1] + dy
+            current_x,current_y = self.members[i].rect.center
+            paths.append(movements.path_direct((target_x - current_x, target_y - current_y)))
+            if len(paths[i]) > longest_path:
+                longest_path = len(paths[i])
+
+        for i in range(len(self.members)):
+            paths[i].extend([[0,0]] * (longest_path - len(paths[i])))
+            self.members[i].set_path(paths[i])
+
+
     def regroup(self, dx = 0, dy = 0):
         for i in range(len(self.members)):
             target_x = self.starting_locations[i][0] + dx
