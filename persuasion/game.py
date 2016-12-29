@@ -14,9 +14,9 @@ def get_rect(x, y, width, height):
 
 
 def center_rect(inner, outer):
-
-    new_rect = Rect(inner)
-    new_rect.center = outer.center
+    new_top = outer.top + (outer.height/2 - inner.height/2)
+    new_left = outer.left + (outer.width/2 - inner.width/2)
+    new_rect = Rect(new_left, new_top, inner.width, inner.height)
     return new_rect
 
 
@@ -30,21 +30,35 @@ class Button(Rect):
         super(Button, self).__init__(*args, **kwargs)
 
     def set_text(self, text):
-        print "box rect ", self
         self.text = text
 
         self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
-        print self.font.get_rect(text)
         self.text_rect = center_rect(self.font.get_rect(text), self)
-        #self.text_rect =self.font.get_rect(text)
-        print self.text_rect
-        #self.label = font.render_to(text, 1, (50,50,50))
-        #print self.label
 
     def draw(self, screen):
         pygame.draw.rect(screen, [200,200,200], self)
-        self.font.render_to(screen, (screen.get_rect().centerx - self.text_rect.width/2, 350),
-                            self.text, fgcolor = (150,20,255))
+        self.font.render_to(screen, self.text_rect.topleft,
+                           self.text, fgcolor = (150,20,255))
+
+
+class TextArea(Rect):
+
+    def __init__(self, *args, **kwargs):
+        super(TextArea, self).__init__(*args, **kwargs)
+
+        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        self.text = ""
+        self.text_rect = center_rect(self.font.get_rect(self.text), self)
+
+    def add_letter(self, letter):
+        self.text += letter
+        self.text_rect = center_rect(self.font.get_rect(self.text), self)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, [200,200,200], self)
+        self.font.render_to(screen, self.text_rect.topleft,
+                           self.text, fgcolor = (150,20,255))
+
 
 
 class Game:
@@ -100,6 +114,8 @@ class Game:
 
         start_button = Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
+
+        text_area = TextArea(center_rect(Rect(0,0,200,30), self.screen.get_rect()))
         started = False
         while not started:
             pressed = pygame.key.get_pressed()
@@ -114,9 +130,12 @@ class Game:
                     pos, button = event.pos, event.button
                     if start_button.collidepoint(*pos):
                         started = True
+                if event.type == pygame.KEYDOWN and (pygame.K_a <= event.key <= pygame.K_z):
+                    text_area.add_letter(pygame.key.name(event.key))
 
             self.screen.fill([0,0,0])
             start_button.draw(self.screen)
+            text_area.draw(self.screen)
             pygame.display.flip()
 
 
