@@ -13,7 +13,7 @@ class Shape(Enum):
 
 def circle_map(radius):
     arr_size = (2 * radius) + 1
-    map_circle = [[0] * (arr_size) for _ in range(arr_size)]
+    map_circle = [[0] * arr_size for _ in range(arr_size)]
 
     for x in range(arr_size):
         for y in range(arr_size):
@@ -46,7 +46,7 @@ def import_map(filename):
             for y in map_file.readline().strip():
                 try:
                     map[x].append(int(y))
-                except (ValueError):
+                except ValueError:
                     map[x].append(y)
 
     return [map, agents]
@@ -79,7 +79,9 @@ def to_coordinates(map, (center_x, center_y), agents=False):
 
 class Cluster:
 
-    def __init__(self,clustno,members = [],):
+    def __init__(self, clustno, members=None, ):
+        if members is None:
+            members = []
         self.members = members
         self.starting_locations = []
         self.clustno = clustno
@@ -123,7 +125,7 @@ class Cluster:
                 self.starting_locations.append(location)
                 self.members.append(agents.Agent(location[0], location[1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement, exampleAgent.attitude, exampleAgent.player))
                 game.add_agent(self.members[i])
-        except(ValueError):
+        except ValueError:
             print "I am sorry, there is no space left. I could only make " + str(i) + " agent(s)."
     def add_member(self,member):
         self.members.extend(member)
@@ -132,7 +134,7 @@ class Cluster:
         if member in self.members:
             self.members.remove(member)
 
-    def cluster_move(self, agent, speed):
+    def cluster_move(self, speed):
         for idx in range(0,len(self.members)):
             self.members[idx].move(speed)
             self.step = (self.step + 1) % self.len_default_path
@@ -162,7 +164,7 @@ class Cluster:
 
     def rewrite_map(self):
         arr_size = len(self.map)
-        self.map = [[0] * (arr_size) for _ in range(arr_size)]
+        self.map = [[0] * arr_size for _ in range(arr_size)]
         center_x = self.cluster_starting_position[0]
         center_y = self.cluster_starting_position[1]
         radius   = self.cluster_starting_position[2]

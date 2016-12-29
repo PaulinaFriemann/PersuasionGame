@@ -35,7 +35,7 @@ def main():
     rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-    __builtin__.game.start()
+    #__builtin__.game.start()
 
     clock = pygame.time.Clock()
 
@@ -61,11 +61,6 @@ def main():
         if pressed[pygame.K_t]:
             rainbow_unicorn_cluster.regroup_wait()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT \
-                    or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                pygame.quit()
-                sys.exit()
         game.update()
 
 

@@ -1,4 +1,5 @@
 from collections import deque
+import pygame
 
 
 class ActionQueue:
@@ -31,3 +32,20 @@ class ActionQueue:
                     action[0]()
 
         self.immediate = []
+
+
+def get_rect(x, y, width, height):
+    return pygame.Rect(x - width / 2,
+                       y - height / 2,
+                       width, height)
+
+
+def center_rect(inner, outer):
+    new_top = outer.top + (outer.height/2 - inner.height/2)
+    new_left = outer.left + (outer.width/2 - inner.width/2)
+    new_rect = pygame.Rect(new_left, new_top, inner.width, inner.height)
+    return new_rect
+
+
+def center_horizontal(rect, outer_width):
+    return rect.move([outer_width / 2 - rect.width, 0])

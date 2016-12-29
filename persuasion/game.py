@@ -3,66 +3,9 @@ from pygame import Rect
 import agents
 from pygame import freetype
 import math
-from utils import ActionQueue
+import utils
+import gui
 import sys
-
-
-def get_rect(x, y, width, height):
-    return pygame.Rect(x - width / 2,
-                       y - height / 2,
-                       width, height)
-
-
-def center_rect(inner, outer):
-    new_top = outer.top + (outer.height/2 - inner.height/2)
-    new_left = outer.left + (outer.width/2 - inner.width/2)
-    new_rect = Rect(new_left, new_top, inner.width, inner.height)
-    return new_rect
-
-
-def center(rect, outer_width):
-    return rect.move([outer_width / 2 - rect.width, 20])
-
-
-class Button(Rect):
-
-    def __init__(self, *args, **kwargs):
-        super(Button, self).__init__(*args, **kwargs)
-
-    def set_text(self, text):
-        self.text = text
-
-        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
-        self.text_rect = center_rect(self.font.get_rect(text), self)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, [200,200,200], self)
-        self.font.render_to(screen, self.text_rect.topleft,
-                           self.text, fgcolor = (150,20,255))
-
-
-class TextArea(Rect):
-
-    def __init__(self, font_size, *args, **kwargs):
-        super(TextArea, self).__init__(*args, **kwargs)
-
-        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), font_size)
-        self.text = ""
-        self.text_rect = center_rect(self.font.get_rect(self.text), self)
-
-    def add_letter(self, letter):
-        self.text += letter
-        self.text_rect = center_rect(self.font.get_rect(self.text), self)
-
-    def delete_letter(self):
-        self.text = self.text[:-1]
-        self.text_rect = center_rect(self.font.get_rect(self.text), self)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, [200,200,200], self)
-        self.font.render_to(screen, (self.left + 2, self.top + (self.height/2 - 15/2)),
-                           self.text, fgcolor = (150,20,255))
-
 
 
 class Game:
@@ -71,13 +14,13 @@ class Game:
 
         self.agents = agents
         self.end = end_height
-        self.background = Background("resources/snowbig.jpg", [0, 0])
+        self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
         self.player = None
         self.width = screen.get_width()
         self.screen = screen
 
-        self.action_queue = ActionQueue()
+        self.action_queue = utils.ActionQueue()
 
     def add_agent(self, agent):
         print "I created an agent <<BEEP>>"
@@ -96,7 +39,18 @@ class Game:
 
     def update(self):
 
+        self.check_close()
+
         self.action_queue.step()
+
+        self.update_agents()
+
+        self.camera.move(self.player.speed)
+
+        self.camera.draw()
+        pygame.display.flip()
+
+    def update_agents(self):
 
         for agent in self.agents:
             agent.distance_to_player = self.distance(self.player.rect, agent.rect)
@@ -109,21 +63,21 @@ class Game:
 
             agent.update()
 
-        self.camera.move(self.player.speed)
-
-        self.camera.draw()
-        pygame.display.flip()
+    def check_close(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT \
+                    or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                pygame.quit()
+                sys.exit()
 
     def start_screen(self):
 
-        start_button = Button(270, 342, 100, 30)
+        start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
-        text_area = TextArea(15, center_rect(Rect(0,0,200,30), self.screen.get_rect()))
+        text_area = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
         started = False
         while not started:
-            pressed = pygame.key.get_pressed()
-            mousepressed = pygame.mouse.get_pressed()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT \
@@ -155,7 +109,7 @@ class Camera:
         self.max_height = world.end
         self.position = Rect(left, top, width, height)
         self.screen = screen
-        self.bar = pygame.image.load("resources/bar.jpg")
+        self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, self.height))
 
     def move(self, player_speed):
         new_left = self.position.left + player_speed[0]
@@ -182,7 +136,7 @@ class Camera:
         return self.position.contains(rect)
 
     def draw(self):
-        self.draw_background()
+        self.world.background.draw(self.screen, self.position)
 
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
@@ -190,23 +144,7 @@ class Camera:
                 pygame.draw.rect(self.screen, agent.color, new_rect)
 
         self.draw_overlay()
-        self.draw_bar()
-
-    def draw_background(self):
-        self.screen.fill([0, 0, 0])
-        blit_position = Rect(-self.position.left, 0, self.position.width, self.position.height)
-
-        area_horizontal = self.world.background.rect.width / 2 - self.width / 2
-        area_vertical   = (self.world.background.rect.height - self.height + self.position.top) % (-self.world.background.rect.height)
-
-        self.screen.blit(self.world.background.image, blit_position,
-                         area=Rect(area_horizontal, area_vertical, self.width, self.height))
-
-        if area_vertical < 0:
-            blit_position.height = -area_vertical
-            new_area_vertical = self.world.background.rect.height + area_vertical
-            self.screen.blit(self.world.background.image, blit_position,
-                             area=Rect(area_horizontal, new_area_vertical, self.width, -area_vertical))
+        self.bar.draw(self.screen)
 
     def draw_overlay(self, alpha=20):
 
@@ -214,24 +152,3 @@ class Camera:
         s.set_alpha(alpha)  # alpha level
         s.fill((0, 0, 0))  # this fills the entire surface
         self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
-
-    def draw_bar(self):
-        self.bar.set_alpha(100)  # alpha level
-
-        self.write_text()
-
-        self.screen.blit(self.bar, (0, 350))  # (0,0) are the top-left coordinates
-
-    def write_text(self):
-        font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
-        rect = center(font.get_rect("Hallo wie gehts?"), self.width)
-        label = font.render_to(self.bar, rect.center,"Hallo wie gehts?")
-
-
-class Background(pygame.sprite.Sprite):
-    def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image_file)
-        print self.image.get_rect()
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location

@@ -64,17 +64,17 @@ def path_direct(goal):
     ddxdy = max(abs(dx),abs(dy)) - min(abs(dx),abs(dy))
     direction = [signdx,0] if abs(dx) > abs(dy) else [0,signdy] if abs(dy) > abs(dx) else [0,0]
 
-    while(dx != 0 and dy != 0):
+    while dx != 0 and dy != 0:
         if ddxdy > 0 and random.randint(1,ddxdy) != 1:
             path.extend([direction])
             #print direction
 
-            dx = dx - direction[0]
-            dy = dy - direction[1]
+            dx -= direction[0]
+            dy -= direction[1]
         else:
             path.extend([[signdx,signdy]])
-            dx = dx - signdx
-            dy = dy - signdy
+            dx -= signdx
+            dy -= signdy
     if dx > 0:
         path.extend([[signdx,0]]*abs(dx))
     if dy > 0:
@@ -94,10 +94,10 @@ def random_to_goal(agent):
     while dx != 0 and dy != 0:
         if random.randint(1,2) == 1:
             path.extend([[signdx,0]])
-            dx = dx - signdx
+            dx -= signdx
         else:
             path.extend([[0,signdy]])
-            dy = dy - signdy
+            dy -= signdy
     if dx > 0:
         path.extend([[signdx,0]]*abs(dx))
     if dy > 0:

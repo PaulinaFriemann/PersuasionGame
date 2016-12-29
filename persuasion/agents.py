@@ -66,7 +66,7 @@ class Agent:
         try:
             self.set_path(attitudes[self.attitude.value](self))
 
-        except(AttributeError):
+        except AttributeError:
             self.set_path(attitudes[self.attitude](self))
 
         if self.attitude == Attitude.friendly:
@@ -125,7 +125,6 @@ class Player(Agent):
         self.spinning = True
         self.blocked = True
         self.block_counter = 12
-        bounce_speed = map(lambda x: -x, self.speed)
         self.path = [[0, 0]]
         self.path = [[1, 1]] * 3
         self.path.extend([[-1, 1]] * 3)
