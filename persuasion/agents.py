@@ -65,9 +65,9 @@ class Agent:
 
     def on_enter_personal_space(self):
         try:
-            attitudes[self.attitude.value](self)
+            self.set_path(attitudes[self.attitude.value](self))
         except(AttributeError):
-            attitudes[self.attitude](self)
+            self.set_path(attitudes[self.attitude](self))
 
     def on_collision(self, other):
         pass
@@ -106,6 +106,9 @@ class Player(Agent):
     def colorup(self, dh=0, ds=0, dv=0):
         h, s, v, a = self.color.hsva
         self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
+
+    def on_enter_personal_space(self):
+        pass
 
     def on_collision(self, other):
         if self.path == [[0,0]]:
