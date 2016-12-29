@@ -9,7 +9,23 @@ def get_rect(x, y, width, height):
     return pygame.Rect(x - width / 2,
                        y - height / 2,
                        width, height)
-        
+
+
+class Button(Rect):
+
+    def __init__(self, *args, **kwargs):
+        super(Button, self).__init__(*args, **kwargs)
+
+    def set_text(self, text):
+        self.text = text
+
+        font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        rect = self.center(font.get_rect(text))
+        label = font.render(text)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, [200,200,200], self)
+
 
 class Game:
 
@@ -21,6 +37,7 @@ class Game:
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
         self.player = None
         self.width = screen.get_width()
+        self.screen = screen
 
     def add_agent(self, agent):
         print "I created an agent <<BEEP>>"
@@ -50,6 +67,18 @@ class Game:
 
         self.camera.draw()
         pygame.display.flip()
+
+    def start_screen(self):
+        button = Rect(100, 300, 50, 30)
+        self.screen.fill([255,255,255])
+        pygame.draw.rect(self.screen, [0,0,0], button)
+        #button.draw(self.screen)
+
+        while True:
+            pass
+
+
+
 
 
 class Camera:
