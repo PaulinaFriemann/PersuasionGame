@@ -1,6 +1,6 @@
 import pygame
 import utils
-from pygame import Rect
+from pygame import Rect, freetype
 
 
 class Background(pygame.sprite.Sprite):
@@ -36,7 +36,7 @@ class Button(Rect):
     def set_text(self, text):
         self.text = text
 
-        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 15)
+        self.font = freetype.SysFont(freetype.get_default_font(), 15)
         self.text_rect = utils.center_rect(self.font.get_rect(text), self)
 
     def draw(self, screen):
@@ -44,13 +44,16 @@ class Button(Rect):
         self.font.render_to(screen, self.text_rect.topleft,
                            self.text, fgcolor = (150,20,255))
 
+    def on_click(self):
+        pass
+
 
 class TextArea(Rect):
 
     def __init__(self, font_size, *args, **kwargs):
         super(TextArea, self).__init__(*args, **kwargs)
 
-        self.font = pygame.freetype.SysFont(pygame.freetype.get_default_font(), font_size)
+        self.font = freetype.SysFont(freetype.get_default_font(), font_size)
         self.text = ""
         self.text_top = self.top + (self.height/2 - font_size/2)
         self.text_left = self.left + 2

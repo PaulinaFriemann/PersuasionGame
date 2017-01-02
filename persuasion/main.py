@@ -1,4 +1,3 @@
-import sys, pygame
 from game import *
 from agents import *
 from cluster import *
@@ -23,7 +22,7 @@ def main():
     agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.random_to_goal)
     player = Player(width/2, height/2, white, screen)
 
-    avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, player=player)
+    avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
     #starting screen
@@ -35,7 +34,7 @@ def main():
     rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-    #__builtin__.game.start()
+    __builtin__.game.start()
 
     clock = pygame.time.Clock()
 

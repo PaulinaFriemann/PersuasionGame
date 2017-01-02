@@ -22,6 +22,7 @@ def circle_map(radius):
 
     return map_circle
 
+
 def export_map (map, filename):
     arr_size = len(map)
     with open(filename,'w') as map_file:
@@ -123,7 +124,7 @@ class Cluster:
                         self.possible_coordinates.remove(erradicate)
 
                 self.starting_locations.append(location)
-                self.members.append(agents.Agent(location[0], location[1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement, exampleAgent.attitude, exampleAgent.player))
+                self.members.append(agents.Agent(location[0], location[1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement, exampleAgent.attitude, exampleAgent.cluster_member, exampleAgent.player))
                 game.add_agent(self.members[i])
         except ValueError:
             print "I am sorry, there is no space left. I could only make " + str(i) + " agent(s)."

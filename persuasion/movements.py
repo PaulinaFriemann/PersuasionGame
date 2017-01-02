@@ -34,8 +34,7 @@ def follow(agent):
 
 def move_path(agent):
     if agent.step == len(agent.path):
-        agent.path = agent.defaultpath
-        agent.step = 0
+        agent.set_path(agent.defaultpath)
     this_move = agent.path[agent.step]
     new_x = agent.rect.centerx + this_move[0] * 2
 

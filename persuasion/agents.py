@@ -14,7 +14,7 @@ attitudes = [movements.idle, movements.avoid, movements.make_happy, movements.de
 
 
 class Agent:
-    def __init__(self, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, player=None):
+    def __init__(self, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False, player=None):
         self.color = color
         self.speed = [0, 0]
         self.screen = screen
@@ -28,6 +28,7 @@ class Agent:
         self.path = []
         self.step = 0
         self.defaultpath = []
+        self.cluster_member = cluster_member
 
         if self.attitude == Attitude.friendly:
             self.personalspace = 6
@@ -117,16 +118,3 @@ class Player(Agent):
                 self.set_path(movements.make_happy(self))
             else:
                 self.set_path(movements.bounce_back(self))
-
-
-
-
-    def happy_spin(self):
-        self.spinning = True
-        self.blocked = True
-        self.block_counter = 12
-        self.path = [[0, 0]]
-        self.path = [[1, 1]] * 3
-        self.path.extend([[-1, 1]] * 3)
-        self.path.extend([[-1, -1]] * 3)
-        self.path.extend([[1, -1]] * 3)

@@ -1,7 +1,6 @@
 import pygame
 from pygame import Rect
 import agents
-from pygame import freetype
 import math
 import utils
 import gui
