@@ -57,15 +57,21 @@ class TextArea(Rect):
         self.text = ""
         self.text_top = self.top + (self.height/2 - font_size/2)
         self.text_left = self.left + 2
+        self.changeable = False
+
+    def set_changeable(self, changeable):
+        self.changeable = changeable
 
     def set_text(self, text):
         self.text = text
 
     def add_letter(self, letter):
-        self.text += letter
+        if self.changeable:
+            self.text += letter
 
     def delete_letter(self):
-        self.text = self.text[:-1]
+        if self.changeable:
+            self.text = self.text[:-1]
 
     def draw(self, screen):
         pygame.draw.rect(screen, [200,200,200], self)

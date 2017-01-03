@@ -53,7 +53,8 @@ def center_rect(inner, outer):
 
 
 def center_horizontal(rect, outer_width):
-    return rect.move([outer_width / 2 - rect.width, 0])
+    new_rect = rect.move([outer_width / 2 - rect.width, 0])
+    return new_rect
 
 
 def random_point_circle(radius, position):

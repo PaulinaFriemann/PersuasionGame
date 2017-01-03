@@ -83,9 +83,15 @@ class Game:
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
+
+        start_text = gui.TextArea(15, utils.center_horizontal(Rect(0,20,200,30), self.screen.get_width()))
+
         self.player_name = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
+        self.player_name.set_changeable(True)
         name_entered = False
         while not name_entered:
+
+            pressed = pygame.key.get_pressed()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT \
@@ -98,7 +104,10 @@ class Game:
                         name_entered = True
                 if event.type == pygame.KEYUP:
                     if pygame.K_a <= event.key <= pygame.K_z:
-                        self.player_name.add_letter(pygame.key.name(event.key))
+                        if not pressed[pygame.K_LSHIFT]:
+                            self.player_name.add_letter(pygame.key.name(event.key))
+                        else:
+                            self.player_name.add_letter(pygame.key.name(event.key).upper())
                     elif event.key == pygame.K_BACKSPACE:
                         self.player_name.delete_letter()
                     elif event.key == pygame.K_RETURN:
@@ -106,6 +115,7 @@ class Game:
 
 
             background.draw(self.screen, self.camera.position)
+            start_text.draw(self.screen)
             #self.screen.fill([0,0,0])
             start_button.draw(self.screen)
             self.player_name.draw(self.screen)
