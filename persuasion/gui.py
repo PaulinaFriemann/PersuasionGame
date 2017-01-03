@@ -79,10 +79,18 @@ class NarratorBar(TextArea):
         self.set_text("Hallo wie gehts?")
 
     def set_text(self, text):
+        self.image = pygame.image.load("resources/bar.jpg")
+        self.image.set_alpha(100)
+
         self.text = text
-        rect = utils.center_horizontal(self.font.get_rect(text), self.width)
-        label = self.font.render_to(self.image, rect.center, text)
+        textlist = self.text.split("\n")
+        nlines = len(textlist)
+        print textlist
+
+        for i in range(len(textlist)):
+            textlist[i] = textlist[i].strip()
+            rect = utils.center_horizontal(self.font.get_rect(textlist[i]), self.width)
+            self.font.render_to(self.image, (rect.center[0], rect.center[1] + self.font.size * i + 2), textlist[i])
 
     def draw(self, screen):
-
         screen.blit(self.image, (0, 350))  # (0,0) are the top-left coordinates

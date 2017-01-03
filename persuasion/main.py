@@ -31,11 +31,11 @@ def main():
     __builtin__.game = Game([happy], screen, 600)
     __builtin__.game.add_player(player)
 
-    rainbow_unicorn_cluster = Cluster(11)
-    rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
-    rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
+#    rainbow_unicorn_cluster = Cluster(11)
+ #   rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
+  #  rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-    #__builtin__.game.start()
+    __builtin__.game.start()
 
     clock = pygame.time.Clock()
 

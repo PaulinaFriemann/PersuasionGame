@@ -34,8 +34,15 @@ class Game:
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
     def start(self):
+        self.start_screen()
+        print self.camera.bar.text
+        self.camera.bar.set_text(\
+        """Hello """ + self.player_name.text + """!
+        Welcome to the world of cubes. This world is filled with loneliness.
+        A lot of cubes feel lonely and you are no exception. How do you overcome this?
+        You can move around by using the arrow keys.
 
-            self.start_screen()
+        Good luck!""")
 
     def update(self):
 
@@ -48,6 +55,7 @@ class Game:
         self.camera.move(self.player.speed)
 
         self.camera.draw()
+        self.camera.bar.draw(self.screen)
         pygame.display.flip()
 
     def update_agents(self):
@@ -75,9 +83,9 @@ class Game:
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
-        text_area = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
-        started = False
-        while not started:
+        self.player_name = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
+        name_entered = False
+        while not name_entered:
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT \
@@ -87,16 +95,19 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos, button = event.pos, event.button
                     if start_button.collidepoint(*pos):
-                        started = True
+                        name_entered = True
                 if event.type == pygame.KEYUP:
                     if pygame.K_a <= event.key <= pygame.K_z:
-                        text_area.add_letter(pygame.key.name(event.key))
+                        self.player_name.add_letter(pygame.key.name(event.key))
                     elif event.key == pygame.K_BACKSPACE:
-                        text_area.delete_letter()
+                        self.player_name.delete_letter()
+                    elif event.key == pygame.K_RETURN:
+                        name_entered = True
+
 
             self.screen.fill([0,0,0])
             start_button.draw(self.screen)
-            text_area.draw(self.screen)
+            self.player_name.draw(self.screen)
             pygame.display.flip()
 
 
