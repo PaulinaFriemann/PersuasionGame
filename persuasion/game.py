@@ -22,7 +22,6 @@ class Game:
         self.action_queue = utils.ActionQueue()
 
     def add_agent(self, agent):
-        print "I created an agent <<BEEP>>"
         self.agents.append(agent)
 
     def add_player(self, player):

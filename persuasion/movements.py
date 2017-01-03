@@ -1,5 +1,6 @@
 import random
 import agents
+import utils
 
 
 def idle(agent):
@@ -29,12 +30,15 @@ def avoid(agent):
 
 
 def follow(agent):
-    pass
+    pos = utils.random_point_circle(50, game.player.rect.center)
+    agent.goal = pos
+    return random_to_goal(agent)
 
 
 def move_path(agent):
-    if agent.step == len(agent.path):
+    if agent.step >= len(agent.path):
         agent.set_path(agent.defaultpath)
+        agent.event = False
     this_move = agent.path[agent.step]
     new_x = agent.rect.centerx + this_move[0] * 2
 
@@ -46,7 +50,7 @@ def move_path(agent):
     agent.step += 1
 
 
-def circle(size):
+def circle(agent, size=20):
     path = [[0,1]]*size
     path.extend([[-1,0]]*size)
     path.extend([[0,-1]]*size)
