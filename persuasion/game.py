@@ -35,7 +35,7 @@ class Game:
         self.start_screen()
         print self.camera.bar.text
         self.camera.bar.set_text(\
-        """Hello """ + self.player_name.text + """!
+        """Hello """ + self.player_name.text[0] + """!
         Welcome to the world of cubes. This world is filled with loneliness.
         A lot of cubes feel lonely and you are no exception. How do you overcome this?
         You can move around by using the arrow keys.
@@ -78,13 +78,16 @@ class Game:
 
     def start_screen(self):
 
-        background = gui.Background("resources/blackwhite.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
+        background = gui.Background("resources/street.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
 
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
+        start_text = gui.TextArea(15, Rect(self.width/2 - 200,40,400,100), centered=True)
 
-        start_text = gui.TextArea(15, utils.center_horizontal(Rect(0,20,200,30), self.screen.get_width()))
+        start_text.set_text(
+        """Welcome
+        Please enter your name""")
 
         self.player_name = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
         self.player_name.set_changeable(True)

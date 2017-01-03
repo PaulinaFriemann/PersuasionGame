@@ -57,6 +57,12 @@ def center_horizontal(rect, outer_width):
     return new_rect
 
 
+def center_h(inner, outer):
+    new_left = outer.left + (outer.width / 2 - inner.width)
+    new_rect = pygame.Rect(new_left, outer.top + inner.top, inner.width, inner.height)
+    return new_rect
+
+
 def random_point_circle(radius, position):
     offset = random.randint(3, radius)
     angle = random.random() * 2 * math.pi

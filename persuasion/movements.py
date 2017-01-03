@@ -6,6 +6,7 @@ import utils
 def idle(agent):
     return [[0,0]]
 
+
 def default(agent):
     if agent.step == len(agent.path):
         return agent.defaultpath
