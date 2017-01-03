@@ -10,11 +10,11 @@ class Attitude(Enum):
     friendly = 2
     friends = 3
 
-attitudes = [movements.idle, movements.avoid, movements.make_happy, movements.default]
+attitudes = [movements.idle, movements.avoid, movements.make_happy, movements.follow]
 
 
 class Agent:
-    def __init__(self, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, player=None):
+    def __init__(self, x, y, color, screen, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False, player=None):
         self.color = color
         self.speed = [0, 0]
         self.screen = screen
@@ -28,20 +28,21 @@ class Agent:
         self.path = []
         self.step = 0
         self.defaultpath = []
+        self.cluster_member = cluster_member
+        self.event = False
 
         if self.attitude == Attitude.friendly:
             self.personalspace = 6
         
-        self.set_path(movements.idle(self), default=True)
-        self.defaultpath = self.path
+        self.set_path(movements.idle, default=True)
 
         if movement == movements.circle:
-            self.set_path(movements.circle(20), default=True)
+            self.set_path(movements.circle, default=True)
 
         elif movement == movements.random_to_goal:
             self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
-            self.set_path(self.movement(self))
-            self.set_default_path(movements.idle(self))
+            self.set_path(self.movement)
+            self.set_default_path(movements.idle)
 
     def direction_to(self, rect):
         return [a - b for a,b in zip(self.rect.center, rect.center)]
@@ -55,22 +56,30 @@ class Agent:
 
     def set_path(self, movement, default=False, step=0):
         self.step = step
-        self.path = movement
+        self.path = movement(self)
         if default:
-            self.defaultpath = self.path
+            self.defaultpath = movement
 
     def set_default_path(self, movement):
         self.defaultpath = movement
 
     def on_enter_personal_space(self):
-        try:
-            self.set_path(attitudes[self.attitude.value](self))
+        if not self.event:
+            try:
+                self.set_path(attitudes[self.attitude.value])
 
-        except AttributeError:
-            self.set_path(attitudes[self.attitude](self))
+            except AttributeError:
+                self.set_path(attitudes[self.attitude](self))
+            self.event = True
 
-        if self.attitude == Attitude.friendly:
-            __builtin__.game.action_queue.add(self.change_attitude, [Attitude.friends], len(self.path))
+            if self.attitude == Attitude.friendly:
+                game.action_queue.add(self.change_attitude, {"attitude":Attitude.friends}, len(self.path))
+                try:
+                    game.action_queue.add(self.set_path, {"movement":attitudes[Attitude.friends], "default":True}, len(self.path))
+                except TypeError:
+                    game.action_queue.add(self.set_path,
+                                                      {"movement": attitudes[Attitude.friends.value], "default": True},
+                                                      len(self.path))
 
     def on_collision(self, other):
         pass
@@ -114,19 +123,6 @@ class Player(Agent):
 
             if other.attitude == Attitude.friendly:
                 self.colorup(ds=1)
-                self.set_path(movements.make_happy(self))
+                self.set_path(movements.make_happy)
             else:
-                self.set_path(movements.bounce_back(self))
-
-
-
-
-    def happy_spin(self):
-        self.spinning = True
-        self.blocked = True
-        self.block_counter = 12
-        self.path = [[0, 0]]
-        self.path = [[1, 1]] * 3
-        self.path.extend([[-1, 1]] * 3)
-        self.path.extend([[-1, -1]] * 3)
-        self.path.extend([[1, -1]] * 3)
+                self.set_path(movements.bounce_back)

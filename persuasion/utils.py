@@ -1,5 +1,7 @@
 from collections import deque
 import pygame
+import random
+import math
 
 
 class ActionQueue:
@@ -15,21 +17,24 @@ class ActionQueue:
             if len(self.to_invoke) - 1 < frames:
                 for i in range(max(0, len(self.to_invoke) - 1), frames):
                     self.to_invoke.append([])
-                self.to_invoke.append([func,args])
+                self.to_invoke.append([[func,args]])
             else:
                 self.to_invoke[frames].append([func, args])
 
+        #print self.to_invoke
+
     def step(self):
+        #print self.to_invoke
         if len(self.to_invoke):
             next_actions = self.to_invoke.popleft()
-            self.immediate.append(next_actions)
+            for action in next_actions:
+                self.immediate.append(action)
+
+        if self.immediate: print self.immediate
 
         for action in self.immediate:
             if action:
-                if action[1]:
-                    action[0](*action[1])
-                else:
-                    action[0]()
+                action[0](**action[1])
 
         self.immediate = []
 
@@ -49,3 +54,11 @@ def center_rect(inner, outer):
 
 def center_horizontal(rect, outer_width):
     return rect.move([outer_width / 2 - rect.width, 0])
+
+
+def random_point_circle(radius, position):
+    offset = random.randint(3, radius)
+    angle = random.random() * 2 * math.pi
+    x = int(position[0] + math.cos(angle) * offset)
+    y = int(position[1] - (math.sin(angle) * offset))
+    return x,y

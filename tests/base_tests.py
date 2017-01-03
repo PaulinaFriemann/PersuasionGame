@@ -68,18 +68,20 @@ def hello2(a, b):
 
 def test_action_queue():
     queue = ActionQueue()
-    queue.add(hello, None, 0)
+    queue.add(hello, {}, 2)
 
-    assert_equals(queue.immediate, [[hello, None]])
+    #assert_equals(queue.immediate, [[hello, {}]])
 
-    queue.add(hello2, ["a", "b"], 2)
+    queue.add(hello2, {"a":"a", "b":"b"}, 2)
 
-    assert_equals(queue.to_invoke, deque([[], [], [hello2, ["a", "b"]]]))
+    assert_equals(queue.to_invoke, deque([[], [], [[hello, {}],[hello2, {"a":"a", "b":"b"}]]]))
+
+    #assert_equals(queue.immediate, [[hello, {}], [hello2, {"a":"a", "b":"b"}]])
+
+    queue.step()
 
     queue.step()
 
     queue.step()
 
-    queue.step()
-
-    assert False
+   # assert False
