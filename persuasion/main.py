@@ -25,7 +25,7 @@ def main():
    # avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
-    #starting screen
+
 
     __builtin__.game = Game([happy], screen, 600)
     __builtin__.game.add_player(player)
@@ -34,7 +34,7 @@ def main():
    # rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     #rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-    #__builtin__.game.start()
+    __builtin__.game.start()
 
     clock = pygame.time.Clock()
 

@@ -70,6 +70,8 @@ class Game:
 
     def start_screen(self):
 
+        background = gui.Background("resources/blackwhite.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
+
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
 
@@ -92,7 +94,8 @@ class Game:
                     elif event.key == pygame.K_BACKSPACE:
                         text_area.delete_letter()
 
-            self.screen.fill([0,0,0])
+            background.draw(self.screen, self.camera.position)
+            #self.screen.fill([0,0,0])
             start_button.draw(self.screen)
             text_area.draw(self.screen)
             pygame.display.flip()
