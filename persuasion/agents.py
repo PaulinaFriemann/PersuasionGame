@@ -42,7 +42,7 @@ class Agent:
         elif movement == movements.random_to_goal:
             self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
             self.set_path(self.movement)
-            self.set_default_path(movements.idle)
+            self.set_path(movements.idle, default = True)
 
     def direction_to(self, rect):
         return [a - b for a,b in zip(self.rect.center, rect.center)]
@@ -60,8 +60,8 @@ class Agent:
         if default:
             self.defaultpath = movement
 
-    def set_default_path(self, movement):
-        self.defaultpath = movement
+    # def set_default_path(self, movement):
+    #     self.defaultpath = movement
 
     def on_enter_personal_space(self):
         if not self.event:
@@ -88,6 +88,16 @@ class Agent:
         if attitude != self.attitude:
             self.attitude = attitude
 
+class Dummy(Agent):
+
+    def __init__(self, color, screen, movement=movements.idle, attitude=Attitude.neutral,
+                 cluster_member=False, player=None):
+        self.color = color
+        self.screen = screen
+        self.movement = movement
+        self.attitude = attitude
+        self.player = player
+        self.cluster_member = True
 
 class Player(Agent):
     def __init__(self, x, y, color, screen):

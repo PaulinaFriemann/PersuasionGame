@@ -25,18 +25,20 @@ def main():
    # avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
 
     happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
-
+    cluster_happy = Dummy(pink, screen, attitude=Attitude.friendly, player=player)
 
     __builtin__.game = Game([happy], screen, 600)
     __builtin__.game.add_player(player)
 
-  #  rainbow_unicorn_cluster = Cluster(11)
-   # rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
-    #rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
-
+    rainbow_unicorn_cluster = Cluster(1)
+    rainbow_unicorn_cluster.from_pickle('Rainbows.cluster', cluster_happy)
+    #rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, happy, game, Shape.circle)
+    #rainbow_unicorn_cluster.to_pickle('Rainbows.cluster')
     __builtin__.game.start()
 
     clock = pygame.time.Clock()
+
+    mouse_is_pressed = False
 
     while True:
         clock.tick(30)
@@ -48,8 +50,11 @@ def main():
         player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
 
         if mousepressed[0]:
-            print "I'm so happyyy"
-            __builtin__.game.add_agent(Agent(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], pink, screen, attitude=Attitude.friendly, player=player))
+            mouse_is_pressed = True
+
+        if not mousepressed[0] and mouse_is_pressed:
+            print pygame.mouse.get_pos()
+            mouse_is_pressed = False
 
         if pressed[pygame.K_SPACE]:
             player.colorup(0, 5)

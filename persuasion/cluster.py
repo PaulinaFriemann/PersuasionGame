@@ -2,6 +2,7 @@ import agents
 import movements
 import math
 import random
+import pickle
 from enum import Enum
 
 class Shape(Enum):
@@ -95,7 +96,7 @@ class Cluster:
         self.cluster_starting_position = position
 
 
-        self.len_default_path = len(exampleAgent.defaultpath)
+        # self.len_default_path = len(exampleAgent.defaultpath)
 
         necessary_coordinates = []
         if shape == Shape.circle:
@@ -135,10 +136,10 @@ class Cluster:
         if member in self.members:
             self.members.remove(member)
 
-    def cluster_move(self, speed):
-        for idx in range(0,len(self.members)):
-            self.members[idx].move(speed)
-            self.step = (self.step + 1) % self.len_default_path
+    # def cluster_move(self, speed):
+    #     for idx in range(0,len(self.members)):
+    #         self.members[idx].move(speed)
+    #         self.step = (self.step + 1) % self.len_default_path
 
     def regroup_wait(self,dx = 0, dy = 0):
         paths = []
@@ -176,6 +177,34 @@ class Cluster:
         for (x,y) in self.possible_coordinates:
             self.map[x - center_x + radius][ y - center_y + radius] = 1
 
+    def to_pickle(self,filename = ""):
+        if filename == "":
+            filename = str(self.clustno) + ".cluster"
+        with open(filename,"wb") as f:
+            #pickle.dump(self.members,f)
+            pickle.dump(self.starting_locations,f)
+            pickle.dump(self.clustno,f)
+            pickle.dump(self.map,f)
+            pickle.dump(self.cluster_starting_position,f)
+            pickle.dump(self.possible_coordinates,f)
+            pickle.dump(self.step,f)
+
+
+    def from_pickle(self,filename,exampleAgent):
+        with open(filename,"rb") as f:
+            #self.members = pickle.load(f)
+            self.starting_locations = pickle.load(f)
+            self.clustno = pickle.load(f)
+            self.map = pickle.load(f)
+            self.cluster_starting_position = pickle.load(f)
+            self.possible_coordinates = pickle.load(f)
+            self.step = pickle.load(f)
+        self.members = []
+        for i in range(len(self.starting_locations)):
+            self.members.append(
+                agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement,
+                             exampleAgent.attitude, exampleAgent.cluster_member, exampleAgent.player))
+            game.add_agent(self.members[i])
 
     def export_cluster(self, filename):
         arr_size = len(self.map)

@@ -107,7 +107,7 @@ class Game:
                         name_entered = True
                 if event.type == pygame.KEYUP:
                     if pygame.K_a <= event.key <= pygame.K_z:
-                        if not pressed[pygame.K_LSHIFT]:
+                        if not pressed[pygame.K_LSHIFT] and not pressed[pygame.K_RSHIFT]:
                             self.player_name.add_letter(pygame.key.name(event.key))
                         else:
                             self.player_name.add_letter(pygame.key.name(event.key).upper())
