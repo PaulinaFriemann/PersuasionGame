@@ -69,7 +69,7 @@ class Agent:
                 self.set_path(attitudes[self.attitude.value])
 
             except AttributeError:
-                self.set_path(attitudes[self.attitude](self))
+                self.set_path(attitudes[self.attitude])
             self.event = True
 
             if self.attitude == Attitude.friendly:
