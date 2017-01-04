@@ -76,6 +76,10 @@ class TextArea(Rect):
 
     def set_text(self, text):
         self.text = text.split("\n")
+        for line in self.text:
+            width = self.font.get_rect(line).width
+            if width > self.width:
+                self.width = width
 
     def add_letter(self, letter):
         if self.changeable and len(self.text) == 1:
@@ -87,8 +91,16 @@ class TextArea(Rect):
         if self.changeable and len(self.text) == 1:
             self.text[-1] = self.text[-1][:-1]
 
+    def move_ip(self, x, y):
+        super(TextArea, self).move_ip(x, y)
+        self.text_left += x
+        self.text_top += y
+
     def render(self, screen):
+        print self.width
         for i, line in enumerate(self.text):
+
+            print self.font.get_rect(line)
             if not self.centered:
                 self.font.render_to(screen, (self.text_left, self.text_top + self.font.size * i + 2), line)
             else:
@@ -119,20 +131,12 @@ class NarratorBar(TextArea):
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
 
+        self.render(self.image)
+
+    def render(self, screen):
         for i, line in enumerate(self.text):
             rect = utils.center_h(self.font.get_rect(line), self)
-            self.font.render_to(self.image, (rect.center[0], rect.center[1] + self.font.size * i + 2), line)
-
-
-    """
-        def render(self, screen):
-        for i, line in enumerate(self.text):
-            if not self.centered:
-                self.font.render_to(screen, (self.text_left, self.text_top + self.font.size * i + 2), line)
-            else:
-                rect = utils.center_h(self.font.get_rect(line), self).move([0, self.top])
-                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)
-                """
+            self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2), line)
 
     def pop_up(self):
         self.popup = True

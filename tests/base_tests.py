@@ -66,6 +66,11 @@ def hello2(a, b):
     print "hello ", a, b
 
 
+def test_sin():
+
+    assert_equals(math.sin(2* math.pi), 0)
+
+
 def test_action_queue():
     queue = ActionQueue()
     queue.add(hello, {}, 2)

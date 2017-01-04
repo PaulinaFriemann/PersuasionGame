@@ -7,11 +7,14 @@ from pygame import Rect
 import agents
 import gui
 import utils
+import settings
 
 
 class Game:
 
     def __init__(self, screen, end_height, top_camera=0, left_camera=0):
+
+        self.player_name = ""
 
         self.agents = []
         self.end = end_height
@@ -20,6 +23,7 @@ class Game:
         self.player = None
         self.width = screen.get_width()
         self.screen = screen
+
 
         self.action_queue = utils.ActionQueue()
 
@@ -63,7 +67,7 @@ class Game:
         for agent in self.agents:
             agent.distance_to_player = self.distance(self.player.rect, agent.rect)
             if not isinstance(agent, agents.Player):
-                if agent.distance_to_player <= 6:
+                if agent.distance_to_player <= agent.width:
                     self.player.on_collision(agent)
                     agent.on_collision(self.player)
                 if agent.distance_to_player <= agent.personalspace:
@@ -125,6 +129,8 @@ class Game:
             start_button.draw(self.screen)
             self.player_name.draw(self.screen)
             pygame.display.flip()
+        self.camera.nametag.set_text(self.player_name.text[0])
+        self.player.name_area.move_ip([-self.player.name_area.width/2, 0])
 
 
 class Camera:
@@ -137,6 +143,7 @@ class Camera:
         self.position = Rect(left, top, width, height)
         self.screen = screen
         self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, 350))
+        self.nametag = gui.TextArea(15, Rect(50,50,50,20), centered=True)
 
     def move(self, player_speed):
         new_left = self.position.left + player_speed[0]
@@ -153,11 +160,13 @@ class Camera:
 
         self.position.top += player_speed[1]
 
-    def adjust(self, agent):
+    def adjust_agent(self, agent):
+        return self.adjust_rect(agent.rect)
 
-        new_left = agent.rect.left - self.position.left
-        new_top = agent.rect.top - self.position.top
-        return Rect(new_left, new_top, agent.rect.width, agent.rect.height)
+    def adjust_rect(self, rect):
+        new_left = rect.left - self.position.left
+        new_top = rect.top - self.position.top
+        return Rect(new_left, new_top, rect.width, rect.height)
 
     def check_visibility(self, rect):
         return self.position.contains(rect)
@@ -167,11 +176,24 @@ class Camera:
 
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
-                new_rect = self.adjust(agent)
+                new_rect = self.adjust_agent(agent)
                 pygame.draw.rect(self.screen, agent.color, new_rect)
 
+        self.draw_nametag()
         self.draw_overlay()
         self.bar.draw(self.screen)
+
+    def draw_nametag(self):
+        name_area = settings.game.player.name_area
+        new_rect = self.adjust_rect(name_area)
+        self.nametag.move_ip(new_rect.centerx - self.nametag.centerx, new_rect.centery - self.nametag.centery)
+        #nametag.center = new_rect.center
+        self.nametag.draw(self.screen)
+        #player_pos = settings.game.player.rect
+        #new_rect = Rect(player_pos).move([0,15])
+        #self.nametag.center = self.adjust_rect(new_rect).center
+        #self.nametag.draw(self.screen)
+
 
     def draw_overlay(self, alpha=20):
 

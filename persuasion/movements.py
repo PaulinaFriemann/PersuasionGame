@@ -31,7 +31,8 @@ def make_happy(agent):
 def avoid(agent):
     direction = agent.direction_to(settings.game.player.rect)
     #agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
-    return path_direct(direction)
+    agent.goal = direction
+    return path_direct(agent)
 
 
 def follow(agent):
@@ -63,8 +64,8 @@ def circle(agent, size=20):
     return path
 
 
-def path_direct(goal):
-    dx, dy = goal
+def path_direct(agent):
+    dx, dy = agent.goal
     path = []
     signdx = -1 if dx < 0 else 1 if dx > 0 else 0
     signdy = -1 if dy < 0 else 1 if dy > 0 else 0
