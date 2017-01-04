@@ -52,14 +52,9 @@ def center_rect(inner, outer):
     return new_rect
 
 
-def center_horizontal(rect, outer_width):
-    new_rect = rect.move([outer_width / 2 - rect.width, 0])
-    return new_rect
-
-
 def center_h(inner, outer):
     new_left = outer.left + (outer.width / 2 - inner.width)
-    new_rect = pygame.Rect(new_left, outer.top + inner.top, inner.width, inner.height)
+    new_rect = pygame.Rect(new_left, inner.top, inner.width, inner.height)
     return new_rect
 
 

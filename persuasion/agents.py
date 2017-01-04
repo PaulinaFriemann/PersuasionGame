@@ -1,8 +1,8 @@
 import pygame
 from enum import Enum
 import settings
-
 import movements
+import gui
 
 
 class Attitude(Enum):
@@ -20,10 +20,10 @@ class Agent:
     def __init__(self, x, y, color, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
         self.color = color
         self.speed = [0, 0]
-        self.width = 6
+        self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
         self.speed_modificator = 1
-        self.personalspace = self.width*3
+        self.personalspace = self.width*4
         self.default_movement = movement
         self.attitude = attitude
         self.distance_to_player = 999
@@ -31,6 +31,7 @@ class Agent:
         self.step = 0
         self.cluster_member = cluster_member
         self.event = False
+        self.goal = None
 
         self.set_path(self.default_movement, default=True)
 
@@ -90,6 +91,7 @@ class Agent:
         if attitude != self.attitude:
             self.attitude = attitude
 
+
 class Dummy(Agent):
 
     def __init__(self, color, movement=movements.idle, attitude=Attitude.neutral,
@@ -102,6 +104,7 @@ class Player(Agent):
     def __init__(self, x, y, color):
 
         Agent.__init__(self, x, y, color)
+        self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
 
         # self.speed_modificator = 3
 
@@ -111,8 +114,11 @@ class Player(Agent):
         new_x = self.rect.bottomright[0] + self.speed[0]
         if settings.screen_width > new_x > (0 + self.rect.width):
             self.rect = self.rect.move(speed)
+
+            self.name_area = self.name_area.move(speed)
         else:
             self.rect = self.rect.move([0, speed[1]])
+            self.name_area.move_ip([0, speed[1]])
 
     def update(self):
         if self.path == [[0, 0]]:

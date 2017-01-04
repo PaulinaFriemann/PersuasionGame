@@ -210,7 +210,7 @@ class Cluster:
 
                 self.starting_locations.append(location)
                 self.members.append(agents.Agent(location[0], location[1], exampleAgent.color, exampleAgent.default_movement, exampleAgent.attitude, exampleAgent.cluster_member))
-                game.add_agent(self.members[i])
+                settings.game.add_agent(self.members[i])
         except ValueError:
             print "I am sorry, there is no space left. I could only make " + str(i) + " agent(s)."
 
@@ -247,7 +247,8 @@ class Cluster:
             target_x = self.starting_locations[i][0] + dx
             target_y = self.starting_locations[i][1] + dy
             current_x,current_y = self.members[i].rect.center
-            self.members[i].set_path(movements.path_direct((target_x - current_x, target_y - current_y)))
+            self.members[i].goal = (target_x - current_x, target_y - current_y)
+            self.members[i].set_path(movements.path_direct)
 
     def rewrite_map(self):
         arr_size = len(self.map)

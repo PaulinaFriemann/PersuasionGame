@@ -1,10 +1,8 @@
-from nose.tools import *
-# from persuasion.game import *
-# from persuasion.agents import *
-# import pygame
-# from pygame import Rect
-from persuasion.utils import *
 import math
+
+from nose.tools import *
+
+from persuasion.utils import *
 
 
 # size = width, height = 640, 480
@@ -64,6 +62,11 @@ def hello():
 def hello2(a, b):
 
     print "hello ", a, b
+
+
+def test_sin():
+
+    assert_equals(math.sin(2* math.pi), 0)
 
 
 def test_action_queue():

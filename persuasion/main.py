@@ -28,21 +28,21 @@ def main():
     #agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.random_to_goal)
     player = Player(settings.screen_width/2, settings.screen_height/2, white)
 
-   # avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
+    avoid = Agent(300, 200, pink, movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True)
 
     happy = Agent(380, 280, pink, attitude=Attitude.friendly)
     settings.game.add_agent(happy)
     settings.game.add_player(player)
 
-  #  rainbow_unicorn_cluster = Cluster(11)
-   # rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
-    #rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
+    rainbow_unicorn_cluster = Cluster(11)
+    rainbow_unicorn_cluster.create_cluster((settings.screen_width / 2, settings.screen_height / 2 - 200, 40), 10, avoid, Shape.circle)
+    rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
 
     settings.game.start()
 
-    cluster_happy = Dummy(pink, attitude=Attitude.friendly)
-    cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
+   # cluster_happy = Dummy(pink, attitude=Attitude.friendly)
+  #  cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
 
     rainbow_unicorn_cluster = Cluster(11)
     rainbow_unicorn_cluster.evenly_distributed((200, 0), 9, 10, cluster_avoid, settings.game)
@@ -53,11 +53,11 @@ def main():
 
     mouse_is_pressed = False
 
-    agentlist = [
-        cluster_avoid, cluster_avoid, cluster_happy,
-    ]
+  #  agentlist = [
+   #     cluster_avoid, cluster_avoid, cluster_happy,
+   # ]
 
-    # initialize_clusters(agentlist, settings.game)
+#    initialize_clusters(agentlist, settings.game)
 
     while True:
         clock.tick(30)
