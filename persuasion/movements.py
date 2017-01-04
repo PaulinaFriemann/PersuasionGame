@@ -45,7 +45,15 @@ def move_path(agent):
     if agent.step >= len(agent.path):
         agent.set_path(agent.default_movement)
         agent.event = False
-    this_move = agent.path[agent.step]
+    try:
+        this_move = agent.path[agent.step]
+    except IndexError:
+        print agent.path
+        print agent.step
+        print agent.attitude
+        print agent.default_movement
+        print agent.color
+
     new_x = agent.rect.centerx + this_move[0] * 2
 
     if settings.screen_width > new_x > (0 + agent.rect.width):
@@ -107,8 +115,19 @@ def random_to_goal(agent):
         else:
             path.extend([[0,signdy]])
             dy -= signdy
-    if dx > 0:
+    if dx != 0:
         path.extend([[signdx,0]]*abs(dx))
-    if dy > 0:
+    if dy != 0:
         path.extend([[0,signdy]]*abs(dy))
+
+    if path == []:
+        print "LOL"
+        print begin
+        print end
+        print dx
+        print dy
+        print signdx
+        print signdy
+        print "LOLOLOL"
+
     return path

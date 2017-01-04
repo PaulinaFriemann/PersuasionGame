@@ -172,7 +172,7 @@ class Cluster:
 
         for i in range(n_agents):
             self.members.append(
-                agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.color, exampleAgent.default_movement,
+                agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.happiness, exampleAgent.default_movement,
                              exampleAgent.attitude, exampleAgent.cluster_member))
             game.add_agent(self.members[i])
 
