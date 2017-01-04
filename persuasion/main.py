@@ -81,19 +81,19 @@ def main():
 
     settings.game.start()
 
-    cluster_happy = Dummy(pink, attitude=Attitude.friendly)
-    cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
+   # cluster_happy = Dummy(pink, attitude=Attitude.friendly)
+  #  cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
 
     clock = pygame.time.Clock()
     settings.game.camera.bar.pop_up()
 
     mouse_is_pressed = False
 
-    agentlist = [
-        cluster_avoid, cluster_avoid, cluster_happy,
-    ]
+  #  agentlist = [
+   #     cluster_avoid, cluster_avoid, cluster_happy,
+   # ]
 
-    initialize_clusters(agentlist, settings.game)
+#    initialize_clusters(agentlist, settings.game)
 
     while True:
         clock.tick(30)
