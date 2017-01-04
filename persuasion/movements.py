@@ -3,10 +3,6 @@ import utils
 import settings
 
 
-screen_width  = 0
-screen_height = 0
-
-
 def idle(agent):
     return [[0,0]]
 

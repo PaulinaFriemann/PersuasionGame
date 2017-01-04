@@ -73,11 +73,7 @@ class TextArea(Rect):
         self.changeable = changeable
 
     def set_text(self, text):
-        print text
-        if "\n" not in text:
-            self.text = [text]
-        else:
-            self.text = text.split("\n")
+        self.text = text.split("\n")
 
     def add_letter(self, letter):
         if self.changeable and len(self.text) == 1:
@@ -89,10 +85,8 @@ class TextArea(Rect):
         if self.changeable and len(self.text) == 1:
             self.text[-1] = self.text[-1][:-1]
 
-    def draw(self, screen):
-        screen.blit(self.s, self.topleft)
+    def render(self, screen):
         for i, line in enumerate(self.text):
-            line = line.strip()
             if not self.centered:
                 self.font.render_to(screen, (self.text_left, self.text_top + self.font.size * i + 2), line)
             else:
@@ -100,30 +94,28 @@ class TextArea(Rect):
                 rect = utils.center_h(self.font.get_rect(line), self)
                 self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)
 
+    def draw(self, screen):
+        screen.blit(self.s, self.topleft)
+        self.render(screen)
 
 
 class NarratorBar(TextArea):
 
-    def __init__(self, font_size, *args, **kwargs):
-        super(NarratorBar, self).__init__(font_size, *args, **kwargs)
+    def __init__(self, font_size, rect):
+        super(NarratorBar, self).__init__(font_size, rect)
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
-        self.set_text("Hallo wie gehts?")
         self.visibility_status = 0
         self.popup = False
 
     def set_text(self, text):
+        super(NarratorBar, self).set_text(text)
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
 
-        self.text = text
-        textlist = self.text.split("\n")
-        print textlist
-
-        for i in range(len(textlist)):
-            textlist[i] = textlist[i].strip()
-            rect = utils.center_horizontal(self.font.get_rect(textlist[i]), self.width)
-            self.font.render_to(self.image, (rect.center[0], rect.center[1] + self.font.size * i + 2), textlist[i])
+        for i, line in enumerate(self.text):
+            rect = utils.center_horizontal(self.font.get_rect(line), self.width)
+            self.font.render_to(self.image, (rect.center[0], rect.center[1] + self.font.size * i + 2), line)
 
     def pop_up(self):
         self.popup = True
