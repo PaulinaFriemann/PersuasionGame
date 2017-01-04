@@ -67,7 +67,6 @@ class Agent:
                 self.set_path(personal_space_reactions[self.attitude])
             self.event = True
 
-
     def on_collision(self, other):
         try:
             self.set_path(collision_reactions[self.attitude.value])
@@ -89,6 +88,13 @@ class Agent:
     def change_attitude(self, attitude):
         if attitude != self.attitude:
             self.attitude = attitude
+
+class Dummy(Agent):
+
+    def __init__(self, color, movement=movements.idle, attitude=Attitude.neutral,
+                 cluster_member=False):
+        Agent.__init__(self, 0, 0, color, movement, attitude)
+        self.cluster_member = True
 
 
 class Player(Agent):
