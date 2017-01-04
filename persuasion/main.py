@@ -4,7 +4,6 @@ import settings
 import sys
 import utils
 import paulicluster
-import pprint
 
 pygame.init()
 
@@ -33,9 +32,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT \
                     or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                if len(cluster):
+                if len(agent_pos):
                     num_clusters += 1
                     cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
+
+                    paulicluster.move_cluster(cluster, 0, 200)
+
                     paulicluster.append_to_end(cluster)
 
                 pygame.quit()

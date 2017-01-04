@@ -50,12 +50,10 @@ def parse_rect(string):
     return utils.get_rect(*data)
 
 
-
-class RectData(Model):
-    left = Attribute(int)
-    top = Attribute(int)
-    width = Attribute(int, fallback=10)
-    height = Attribute(int, fallback=10)
+def move_cluster(cluster, x, y):
+    for position in cluster.positions:
+        position[0] = str(int(position[0]) + x)
+        position[1] = str(int(position[1]) + y)
 
 
 class PauliCluster(Model):
