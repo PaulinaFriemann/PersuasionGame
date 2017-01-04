@@ -1,17 +1,19 @@
+import math
+import sys
+
 import pygame
 from pygame import Rect
+
 import agents
-import math
-import utils
 import gui
-import sys
+import utils
 
 
 class Game:
 
-    def __init__(self, agents, screen, end_height, top_camera=0, left_camera=0):
+    def __init__(self, screen, end_height, top_camera=0, left_camera=0):
 
-        self.agents = agents
+        self.agents = []
         self.end = end_height
         self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
@@ -134,7 +136,7 @@ class Camera:
         self.max_height = world.end
         self.position = Rect(left, top, width, height)
         self.screen = screen
-        self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, self.height))
+        self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, 350))
 
     def move(self, player_speed):
         new_left = self.position.left + player_speed[0]

@@ -109,6 +109,8 @@ class NarratorBar(TextArea):
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
         self.set_text("Hallo wie gehts?")
+        self.visibility_status = 0
+        self.popup = False
 
     def set_text(self, text):
         self.image = pygame.image.load("resources/bar.jpg")
@@ -116,7 +118,6 @@ class NarratorBar(TextArea):
 
         self.text = text
         textlist = self.text.split("\n")
-        nlines = len(textlist)
         print textlist
 
         for i in range(len(textlist)):
@@ -124,5 +125,17 @@ class NarratorBar(TextArea):
             rect = utils.center_horizontal(self.font.get_rect(textlist[i]), self.width)
             self.font.render_to(self.image, (rect.center[0], rect.center[1] + self.font.size * i + 2), textlist[i])
 
+    def pop_up(self):
+        self.popup = True
+
+    def get_visible(self):
+        if self.popup and self.visibility_status < self.height + 100:
+            self.visibility_status += 2
+        elif self.popup and self.visibility_status == self.height + 100:
+            self.popup = False
+        elif not self.popup and self.visibility_status > 0:
+            self.visibility_status -= 2
+
     def draw(self, screen):
-        screen.blit(self.image, (0, 350))  # (0,0) are the top-left coordinates
+        self.get_visible()
+        screen.blit(self.image, (0, max(screen.get_height() - self.visibility_status, self.top)))

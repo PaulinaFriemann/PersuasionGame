@@ -1,15 +1,23 @@
 import random
-import agents
 import utils
+import settings
+
+
+screen_width  = 0
+screen_height = 0
 
 
 def idle(agent):
     return [[0,0]]
 
 
+def do_nothing(agent):
+    return agent.path
+
+
 def default(agent):
     if agent.step == len(agent.path):
-        return agent.defaultpath
+        return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
 
 
 def bounce_back(self):
@@ -31,19 +39,19 @@ def avoid(agent):
 
 
 def follow(agent):
-    pos = utils.random_point_circle(50, game.player.rect.center)
+    pos = utils.random_point_circle(50, settings.game.player.rect.center)
     agent.goal = pos
     return random_to_goal(agent)
 
 
 def move_path(agent):
     if agent.step >= len(agent.path):
-        agent.set_path(agent.defaultpath)
+        agent.set_path(agent.default_movement)
         agent.event = False
     this_move = agent.path[agent.step]
     new_x = agent.rect.centerx + this_move[0] * 2
 
-    if agent.screen.get_width() > new_x > (0 + agent.rect.width):
+    if settings.screen_width > new_x > (0 + agent.rect.width):
         agent.move(this_move)
     else:
         agent.move([0, this_move[1]])

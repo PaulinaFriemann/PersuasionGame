@@ -1,6 +1,6 @@
-from game import *
 from agents import *
 from cluster import *
+import settings
 import __builtin__
 
 pygame.init()
@@ -9,34 +9,38 @@ pygame.init()
 __builtin__.game = None
 
 
-def main():
+def init():
     pygame.key.set_repeat(True)
+    settings.init(640, 480)
 
-    size = width, height = 640, 480
+
+def main():
+
+
+    init()
+
     white = pygame.Color('White')
     pink = pygame.Color('Pink')
     black = 0, 0, 0
 
-    screen = pygame.display.set_mode(size)
 
     #agent = Agent(width / 2, height / 2 - 100, pink, screen, movement=movements.random_to_goal)
-    player = Player(width/2, height/2, white, screen)
+    player = Player(settings.screen_width/2, settings.screen_height/2, white)
 
    # avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
 
-    happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
-
-
-    __builtin__.game = Game([happy], screen, 600)
-    __builtin__.game.add_player(player)
+    happy = Agent(380, 280, pink, attitude=Attitude.friendly)
+    settings.game.add_agent(happy)
+    settings.game.add_player(player)
 
   #  rainbow_unicorn_cluster = Cluster(11)
    # rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     #rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
-    __builtin__.game.start()
+    settings.game.start()
 
     clock = pygame.time.Clock()
+    settings.game.camera.bar.pop_up()
 
     while True:
         clock.tick(30)
@@ -60,7 +64,7 @@ def main():
         if pressed[pygame.K_t]:
             rainbow_unicorn_cluster.regroup_wait()
 
-        game.update()
+        settings.game.update()
 
 
 if __name__ == '__main__':
