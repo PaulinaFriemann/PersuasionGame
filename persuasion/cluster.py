@@ -13,6 +13,49 @@ class Shape(Enum):
     rect = 3
     file = 4
 
+
+# density will be multiplicated by the space this amount of agents needs. (density * ceil(sqrt(personal_space)))
+def initialize_clusters(agentlist, game, n_minagents = 5, n_maxagents = 15,
+                        min_personal_space = 9, max_personal_space = 20,
+                        min_density = 1, max_density = 1.5,
+                        min_space_between_clusters = 3, max_space_between_clusters = 8):
+
+    n_clusters = len(agentlist)
+    clusters = []
+    clusters_starting_locations = []
+    clusters_n_agents = []
+    clusters_personal_space = []
+    clusters_density = []
+    clusters_space_between_clusters = []
+
+    for i in range(n_clusters):
+        clusters.append(Cluster(i))
+        clusters_n_agents.append(random.randint(n_minagents, n_maxagents))
+        clusters_personal_space.append(random.randint(min_personal_space, max_personal_space))
+        clusters_density.append(random.uniform(min_density, max_density))
+        clusters_space_between_clusters.append(random.uniform(min_space_between_clusters, max_space_between_clusters))
+
+        radius = int(math.ceil(clusters_density[i] * (math.sqrt(clusters_n_agents[i]))*clusters_personal_space[i]))
+
+        if i > 0:
+            y = math.ceil(clusters_starting_locations[i - 1][1] - (
+            clusters_starting_locations[i - 1][2] * clusters_space_between_clusters[i]))
+        else:
+            y = 0
+
+        x = random.randint(radius + 4, game.width - (radius + 4))
+        clusters_starting_locations.append((x, y, radius))
+        with open("clusters/clusterinfos/clusterinfo " + str(i) + ".txt", 'w') as f:
+            f.write(str(clusters_n_agents[i]) +  '\n')
+            f.write(str(clusters_personal_space[i]) +  '\n')
+            f.write(str(clusters_density[i]) +  '\n')
+            f.write(str(clusters_space_between_clusters[i]) +  '\n')
+            f.write(str(clusters_starting_locations[i]) +  '\n')
+
+    for i in range(len(clusters)):
+        clusters[i].create_cluster(clusters_starting_locations[i], clusters_n_agents[i], agentlist[i], game, Shape.circle)
+        clusters[i].to_pickle('clusters/pickles/Cluster ' + str(i) + '.cluster')
+
 def circle_map(radius):
     arr_size = (2 * radius) + 1
     map_circle = [[0] * arr_size for _ in range(arr_size)]
@@ -103,7 +146,7 @@ class Cluster:
         if shape == Shape.circle:
             self.map = circle_map(self.cluster_starting_position[2])
             self.possible_coordinates = to_coordinates(self.map, (self.cluster_starting_position[0], self.cluster_starting_position[1]))
-            export_map(self.map,'map.txt')
+            #export_map(self.map,'map.txt')
         if shape == Shape.file:
             self.map, contains_agents = import_map(filename)
             if contains_agents:
