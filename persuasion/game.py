@@ -54,6 +54,7 @@ class Game:
         self.action_queue.step()
 
         self.update_agents()
+        self.update_agents_color()
 
         self.camera.move(self.player.speed)
 
@@ -73,6 +74,10 @@ class Game:
                     agent.on_enter_personal_space()
 
             agent.update()
+
+    def update_agents_color(self):
+        for i in range(len(self.agents)):
+            self.agents[i].update_color(self.player.happiness)
 
     def check_close(self):
         for event in pygame.event.get():

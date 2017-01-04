@@ -17,8 +17,12 @@ personal_space_reactions = [movements.default, movements.avoid, movements.do_not
 
 
 class Agent:
-    def __init__(self, x, y, color, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
-        self.color = color
+    def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
+        self.happiness = happiness
+
+        self.color = pygame.Color('black')
+        self.color.hsva = (260 - (self.happiness * 2),0,90,0)
+
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
@@ -49,6 +53,9 @@ class Agent:
 
     def update(self):
         movements.move_path(self)
+
+    def update_color(self,player_happiness):
+        self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
 
     def set_path(self, movement, default=False, step=0):
         self.step = step
@@ -91,19 +98,10 @@ class Agent:
         if attitude != self.attitude:
             self.attitude = attitude
 
-
-class Dummy(Agent):
-
-    def __init__(self, color, movement=movements.idle, attitude=Attitude.neutral,
-                 cluster_member=False):
-        Agent.__init__(self, 0, 0, color, movement, attitude)
-        self.cluster_member = True
-
-
 class Player(Agent):
-    def __init__(self, x, y, color):
+    def __init__(self, x, y, happiness):
 
-        Agent.__init__(self, x, y, color)
+        Agent.__init__(self, x, y, happiness)
         self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
 
         # self.speed_modificator = 3
@@ -125,19 +123,18 @@ class Player(Agent):
             self.move(self.speed)
         else:
             movements.move_path(self)
+        self.update_color()
 
-    def colorup(self, dh=0, ds=0, dv=0):
-        h, s, v, a = self.color.hsva
-        self.color.hsva = (min(h + dh, 255), min(s + ds, 100), min(v + dv, 100), a)
+    def update_color(self,doweneedthis=False):
+        self.color.hsva = (260 - (self.happiness * 2), self.happiness, 90, 0)
 
     def on_enter_personal_space(self):
         pass
 
     def on_collision(self, other):
         if self.path == [[0, 0]]:
-
             if other.attitude == Attitude.friendly:
-                self.colorup(ds=1)
+                self.happiness += 5
                 self.set_path(movements.make_happy)
-            else:
+            elif other.attitude != Attitude.friends:
                 self.set_path(movements.bounce_back)

@@ -30,7 +30,7 @@ class ActionQueue:
             for action in next_actions:
                 self.immediate.append(action)
 
-        if self.immediate: print self.immediate
+        #if self.immediate: print self.immediate
 
         for action in self.immediate:
             if action:
