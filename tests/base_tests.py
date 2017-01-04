@@ -1,10 +1,8 @@
-from nose.tools import *
-# from persuasion.game import *
-# from persuasion.agents import *
-# import pygame
-# from pygame import Rect
-from persuasion.utils import *
 import math
+
+from nose.tools import *
+
+from persuasion.utils import *
 
 
 # size = width, height = 640, 480

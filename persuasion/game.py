@@ -39,7 +39,6 @@ class Game:
 
     def start(self):
         self.start_screen()
-        print self.camera.bar.text
         self.camera.bar.set_text(\
         """Hello """ + self.player_name.text[0] + """!
         Welcome to the world of cubes. This world is filled with loneliness.
@@ -84,7 +83,7 @@ class Game:
 
     def start_screen(self):
 
-        background = gui.Background("resources/street.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
+        background = gui.Background("resources/bank.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
 
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")

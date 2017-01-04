@@ -32,7 +32,6 @@ class Button(Rect):
 
     def __init__(self, *args, **kwargs):
         super(Button, self).__init__(*args, **kwargs)
-        print self.__class__, self
 
     def set_text(self, text):
         self.text = text
@@ -53,7 +52,6 @@ class TextArea(Rect):
 
     def __init__(self, font_size, rect, centered=False):
         super(TextArea, self).__init__(rect)
-        print self.__class__, self
 
         self.font = freetype.SysFont(freetype.get_default_font(), font_size)
         self.text = [""]
@@ -96,15 +94,14 @@ class TextArea(Rect):
         self.text_left += x
         self.text_top += y
 
-    def render(self, screen):
-        print self.width
+    def render(self, screen, absolute=True):
         for i, line in enumerate(self.text):
-
-            print self.font.get_rect(line)
             if not self.centered:
                 self.font.render_to(screen, (self.text_left, self.text_top + self.font.size * i + 2), line)
             else:
-                rect = utils.center_h(self.font.get_rect(line), self).move([0, self.top])
+                rect = utils.center_h(self.font.get_rect(line), self)
+                if absolute:
+                    rect.move_ip([0, self.top])
                 self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)
 
     def draw(self, screen):
@@ -115,9 +112,7 @@ class TextArea(Rect):
 class NarratorBar(TextArea):
 
     def __init__(self, font_size, rect):
-        super(NarratorBar, self).__init__(font_size, rect)
-
-        print self.__class__, self
+        super(NarratorBar, self).__init__(font_size, rect, centered=True)
 
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
@@ -131,20 +126,15 @@ class NarratorBar(TextArea):
         self.image = pygame.image.load("resources/bar.jpg")
         self.image.set_alpha(100)
 
-        self.render(self.image)
-
-    def render(self, screen):
-        for i, line in enumerate(self.text):
-            rect = utils.center_h(self.font.get_rect(line), self)
-            self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2), line)
+        self.render(self.image, absolute=False)
 
     def pop_up(self):
         self.popup = True
 
     def get_visible(self):
-        if self.popup and self.visibility_status < self.height + 100:
+        if self.popup and self.visibility_status < self.height + 150:
             self.visibility_status += 2
-        elif self.popup and self.visibility_status == self.height + 100:
+        elif self.popup and self.visibility_status == self.height + 150:
             self.popup = False
         elif not self.popup and self.visibility_status > 0:
             self.visibility_status -= 2

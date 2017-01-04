@@ -90,6 +90,7 @@ class Agent:
         if attitude != self.attitude:
             self.attitude = attitude
 
+
 class Dummy(Agent):
 
     def __init__(self, color, movement=movements.idle, attitude=Attitude.neutral,
