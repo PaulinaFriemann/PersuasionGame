@@ -38,10 +38,15 @@ def main():
    # rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, avoid, game, Shape.circle)
     #rainbow_unicorn_cluster.export_cluster('rainbowcluster.txt')
 
+
     settings.game.start()
 
     cluster_happy = Dummy(pink, attitude=Attitude.friendly)
     cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
+
+    rainbow_unicorn_cluster = Cluster(11)
+    rainbow_unicorn_cluster.evenly_distributed((200, 0), 9, 10, cluster_avoid, settings.game)
+
 
     clock = pygame.time.Clock()
     settings.game.camera.bar.pop_up()
@@ -52,7 +57,7 @@ def main():
         cluster_avoid, cluster_avoid, cluster_happy,
     ]
 
-    initialize_clusters(agentlist, settings.game)
+    # initialize_clusters(agentlist, settings.game)
 
     while True:
         clock.tick(30)

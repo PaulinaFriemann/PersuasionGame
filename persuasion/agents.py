@@ -63,14 +63,15 @@ class Agent:
             try:
                 self.set_path(personal_space_reactions[self.attitude.value])
 
-            except TypeError:
+            except AttributeError:
                 self.set_path(personal_space_reactions[self.attitude])
+
             self.event = True
 
     def on_collision(self, other):
         try:
             self.set_path(collision_reactions[self.attitude.value])
-        except TypeError:
+        except AttributeError:
             self.set_path(collision_reactions[self.attitude])
 
         self.event = True

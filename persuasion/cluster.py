@@ -67,7 +67,6 @@ def circle_map(radius):
 
     return map_circle
 
-
 def export_map (map, filename):
     arr_size = len(map)
     with open(filename,'w') as map_file:
@@ -135,6 +134,47 @@ class Cluster:
         self.cluster_starting_position = []
         self.possible_coordinates = []
         self.step = 0
+
+    def evenly_distributed(self, (center_x, center_y), personal_space, n_agents, exampleAgent, game):
+        n_circles = int(math.ceil(float((n_agents - 1)) / 6))
+        print n_agents/6
+        print n_circles
+        self.starting_locations.append((center_x,center_y))
+        agents_left = n_agents - 1
+
+        for circle in range(1,n_circles + 1):
+            if agents_left >= 6:
+                phi = random.randint(0,59)
+
+                x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+                y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+                self.starting_locations.append((x,y))
+
+                for j in range(5):
+                    phi += 60
+                    x = center_x + math.floor(math.sin(math.radians(phi)) * (personal_space * circle))
+                    y = center_y + math.floor(math.sin(math.radians(90 - phi)) * (personal_space * circle))
+                    self.starting_locations.append((x, y))
+                agents_left -= 6
+            else:
+                increment = (360/agents_left)
+                phi = random.randint(0, increment - 1)
+
+                x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+                y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+                self.starting_locations.append((x, y))
+
+                for j in range(1,agents_left):
+                    phi += increment
+                    x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+                    y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+                    self.starting_locations.append((x, y))
+
+        for i in range(n_agents):
+            self.members.append(
+                agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.color, exampleAgent.default_movement,
+                             exampleAgent.attitude, exampleAgent.cluster_member))
+            game.add_agent(self.members[i])
 
     def create_cluster(self, position, amount, exampleAgent, game, shape=Shape.circle, agent_personal_space = 12, filename = 'map.txt'):
         self.cluster_starting_position = position
