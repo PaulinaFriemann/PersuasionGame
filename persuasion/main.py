@@ -2,11 +2,56 @@ from game import *
 from agents import *
 from cluster import *
 import __builtin__
+import random
+import math
 
 pygame.init()
 
 
 __builtin__.game = None
+
+
+# density will be multiplicated by the space this amount of agents needs. (density * ceil(sqrt(personal_space)))
+def initialize_clusters(agentlist, game, n_minagents = 2, n_maxagents = 10,
+                        min_personal_space = 9, max_personal_space = 20,
+                        min_density = 1.5, max_density = 2,
+                        min_space_between_clusters = 3, max_space_between_clusters = 8):
+
+    n_clusters = len(agentlist)
+    clusters = []
+    clusters_starting_locations = []
+    clusters_n_agents = []
+    clusters_personal_space = []
+    clusters_density = []
+    clusters_space_between_clusters = []
+
+    for i in range(n_clusters):
+        clusters.append(Cluster(i))
+        clusters_n_agents.append(random.randint(n_minagents, n_maxagents))
+        clusters_personal_space.append(random.randint(min_personal_space, max_personal_space))
+        clusters_density.append(random.uniform(min_density, max_density))
+        clusters_space_between_clusters.append(random.uniform(min_space_between_clusters, max_space_between_clusters))
+
+        radius = int(math.ceil(clusters_density[i] * math.sqrt(clusters_n_agents[i])*clusters_personal_space[i]))
+        print radius
+        if i > 0:
+            y = math.ceil(clusters_starting_locations[i - 1][1] - (
+            clusters_starting_locations[i - 1][2] * clusters_space_between_clusters[i]))
+        else:
+            y = 0
+
+        x = random.randint(radius + 4, game.width - (radius + 4))
+        clusters_starting_locations.append((x, y, radius))
+        with open("clusterinfo " + str(i) + ".txt", 'w') as f:
+            f.write(str(clusters_n_agents[i]) +  '\n')
+            f.write(str(clusters_personal_space[i]) +  '\n')
+            f.write(str(clusters_density[i]) +  '\n')
+            f.write(str(clusters_space_between_clusters[i]) +  '\n')
+            f.write(str(clusters_starting_locations[i]) +  '\n')
+
+    for i in range(len(clusters)):
+        clusters[i].create_cluster(clusters_starting_locations[i], clusters_n_agents[i], agentlist[i], game, Shape.circle)
+        clusters[i].to_pickle('Cluster ' + str(i) + '.cluster')
 
 
 def main():
@@ -24,21 +69,24 @@ def main():
 
    # avoid = Agent(300, 200, pink, screen,movement=movements.circle, attitude=Attitude.avoiding, cluster_member=True, player=player)
 
-    happy = Agent(380, 280, pink, screen, attitude=Attitude.friendly, player=player)
+    #happy = Agent(380, 880, pink, screen, attitude=Attitude.friendly, player=player)
     cluster_happy = Dummy(pink, screen, attitude=Attitude.friendly, player=player)
+    cluster_avoid = Dummy(white, screen, attitude=Attitude.avoiding,player=player)
 
-    __builtin__.game = Game([happy], screen, 600)
+    __builtin__.game = Game([], screen, 600)
     __builtin__.game.add_player(player)
 
-    rainbow_unicorn_cluster = Cluster(1)
-    rainbow_unicorn_cluster.from_pickle('Rainbows.cluster', cluster_happy)
-    #rainbow_unicorn_cluster.create_cluster((width / 2, height / 2 - 200, 40), 10, happy, game, Shape.circle)
-    #rainbow_unicorn_cluster.to_pickle('Rainbows.cluster')
     __builtin__.game.start()
 
     clock = pygame.time.Clock()
 
     mouse_is_pressed = False
+
+    agentlist = [
+        cluster_avoid, cluster_avoid, cluster_happy,
+    ]
+
+    initialize_clusters(agentlist, __builtin__.game)
 
     while True:
         clock.tick(30)
