@@ -130,6 +130,7 @@ class Cluster:
                 game.add_agent(self.members[i])
         except ValueError:
             print "I am sorry, there is no space left. I could only make " + str(i) + " agent(s)."
+
     def add_member(self,member):
         self.members.extend(member)
 
@@ -205,7 +206,7 @@ class Cluster:
             self.members.append(
                 agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement,
                              exampleAgent.attitude, exampleAgent.cluster_member, exampleAgent.player))
-            game.add_agent(self.members[i])
+            settings.game.add_agent(self.members[i])
 
     def export_cluster(self, filename):
         arr_size = len(self.map)

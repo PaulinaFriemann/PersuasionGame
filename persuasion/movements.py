@@ -29,7 +29,7 @@ def make_happy(agent):
 
 
 def avoid(agent):
-    direction = agent.direction_to(agent.player.rect)
+    direction = agent.direction_to(settings.game.player.rect)
     #agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
     return path_direct(direction)
 
