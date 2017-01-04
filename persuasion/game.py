@@ -6,8 +6,8 @@ from pygame import Rect
 
 import agents
 import gui
-import utils
 import settings
+import utils
 
 
 class Game:
@@ -33,6 +33,12 @@ class Game:
     def add_player(self, player):
         self.agents.append(player)
         self.player = player
+
+    def add_clusters(self, clusters):
+        for cluster in clusters:
+            for position in cluster.positions:
+                agent = agents.Agent(position[0], position[1], 0, attitude=agents.Attitude.__call__(cluster.attitude))
+                self.add_agent(agent)
 
     def distance(self, rect1, rect2):
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)

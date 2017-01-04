@@ -52,8 +52,8 @@ def parse_rect(string):
 
 def move_cluster(cluster, x, y):
     for position in cluster.positions:
-        position[0] = str(int(position[0]) + x)
-        position[1] = str(int(position[1]) + y)
+        position[0] += x
+        position[1] += y
 
 
 class PauliCluster(Model):

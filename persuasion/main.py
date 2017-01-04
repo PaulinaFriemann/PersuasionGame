@@ -16,6 +16,54 @@ def init():
 def main():
     init()
 
+    white = pygame.Color('White')
+    pink = pygame.Color('Pink')
+    black = 0, 0, 0
+
+    player = Player(settings.screen_width/2, settings.screen_height/2, 0)
+
+    settings.game.add_player(player)
+
+    clusters = paulicluster.load_all()
+
+    settings.game.add_clusters(clusters)
+
+    clock = pygame.time.Clock()
+    settings.game.camera.bar.pop_up()
+
+    mouse_is_pressed = False
+
+    while True:
+        clock.tick(30)
+
+        pressed = pygame.key.get_pressed()
+        mousepressed = pygame.mouse.get_pressed()
+
+        player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
+        player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
+
+        if mousepressed[0]:
+            mouse_is_pressed = True
+
+        if not mousepressed[0] and mouse_is_pressed:
+            print pygame.mouse.get_pos()
+            mouse_is_pressed = False
+
+        if pressed[pygame.K_SPACE]:
+            player.colorup(0, 5)
+
+        if pressed[pygame.K_r]:
+            rainbow_unicorn_cluster.regroup()
+
+        if pressed[pygame.K_t]:
+            rainbow_unicorn_cluster.regroup_wait()
+
+        settings.game.update()
+
+
+def mainc():
+    init()
+
     agent_pos = []
 
     clusters = paulicluster.load_all()
@@ -35,8 +83,6 @@ def main():
                 if len(agent_pos):
                     num_clusters += 1
                     cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
-
-                    paulicluster.move_cluster(cluster, 0, 200)
 
                     paulicluster.append_to_end(cluster)
 
