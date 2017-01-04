@@ -2,5 +2,7 @@
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 **/.idea/
-*.txt
-*.cluster
+**/persuasion/*.txt
+**/persuasion/*.cluster
+**/persuasion/clusters/pickles/
+**/persuasion/clusters/clusterinfos/

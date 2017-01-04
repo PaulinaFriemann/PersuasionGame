@@ -3,6 +3,9 @@ import math
 from nose.tools import *
 
 from persuasion.utils import *
+from persuasion.paulicluster import *
+from pprint import pprint
+from persuasion.agents import Attitude
 
 
 # size = width, height = 640, 480
@@ -64,11 +67,6 @@ def hello2(a, b):
     print "hello ", a, b
 
 
-def test_sin():
-
-    assert_equals(math.sin(2* math.pi), 0)
-
-
 def test_action_queue():
     queue = ActionQueue()
     queue.add(hello, {}, 2)
@@ -88,3 +86,10 @@ def test_action_queue():
     queue.step()
 
    # assert False
+
+
+def test_cluster():
+    init_dict = {'number': 0, 'num_agents': 0, 'attitude': Attitude.friendly, 'positions':[[]]}
+    cluster1 = PauliCluster(number=1, num_agents=1, attitude=Attitude.friendly.value, positions=[[20,20], [34,123]])
+
+    assert False

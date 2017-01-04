@@ -83,16 +83,15 @@ class Game:
 
     def start_screen(self):
 
-        background = gui.Background("resources/bank.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
+        background = gui.Background("resources/bankbig.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
 
         start_button = gui.Button(270, 342, 100, 30)
         start_button.set_text("Start Game")
-
-        start_text = gui.TextArea(15, Rect(self.width/2 - 200,40,400,100), centered=True)
+        start_text_width = 400
+        start_text = gui.TextArea(15, Rect(self.width/2 - start_text_width/2,100,start_text_width,100), centered=True)
 
         start_text.set_text(
-        """Welcome
-        Please enter your name""")
+        """Please enter your name""")
 
         self.player_name = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
         self.player_name.set_changeable(True)
@@ -186,13 +185,7 @@ class Camera:
         name_area = settings.game.player.name_area
         new_rect = self.adjust_rect(name_area)
         self.nametag.move_ip(new_rect.centerx - self.nametag.centerx, new_rect.centery - self.nametag.centery)
-        #nametag.center = new_rect.center
         self.nametag.draw(self.screen)
-        #player_pos = settings.game.player.rect
-        #new_rect = Rect(player_pos).move([0,15])
-        #self.nametag.center = self.adjust_rect(new_rect).center
-        #self.nametag.draw(self.screen)
-
 
     def draw_overlay(self, alpha=20):
 

@@ -1,22 +1,78 @@
 from agents import *
 from cluster import *
 import settings
-import __builtin__
-import random
-import math
+import sys
+import utils
+import paulicluster
+import pprint
 
 pygame.init()
 
 
 def init():
     pygame.key.set_repeat(True)
-    settings.init(640, 480)
-
-
+    settings.init(500, 480)
 
 
 def main():
+    init()
 
+    agent_pos = []
+
+    clusters = paulicluster.load_all()
+
+    print clusters
+
+    player_pos = pygame.Rect(settings.screen_width / 2 - 5, settings.screen_height / 2 - 5, 10, 10)
+    clock = pygame.time.Clock()
+    block = 0
+    num_clusters = 0
+    while True:
+        clock.tick(30)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT \
+                    or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                if len(cluster):
+                    num_clusters += 1
+                    cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
+                    paulicluster.append_to_end(cluster)
+
+                pygame.quit()
+                sys.exit()
+
+        mousepressed = pygame.mouse.get_pressed()[0] if block == 0 else False
+
+        if mousepressed:
+
+            position = pygame.mouse.get_pos()
+            rect = utils.get_rect(position[0], position[1], 10, 10)
+            if any([rect.colliderect(other) for other in agent_pos]):
+                colliders = filter(rect.colliderect, agent_pos)
+                for col in colliders:
+                    agent_pos.remove(col)
+            else:
+                agent_pos.append(rect)
+            block = 10
+
+        block = max(0, block -1)
+
+        #print agent_pos
+
+        settings.game.screen.fill([250, 250, 205])
+        pygame.draw.rect(settings.game.screen, pygame.Color("Black"), player_pos)
+
+        for cluster in clusters:
+            for pos in cluster.positions:
+                pygame.draw.rect(settings.game.screen, pygame.Color("Blue"), utils.get_rect(pos[0], pos[1], 10, 10))
+
+        for pos in agent_pos:
+            pygame.draw.rect(settings.game.screen, pygame.Color("Black"), pos)
+
+        pygame.display.flip()
+
+
+def mainb():
 
     init()
 
@@ -41,8 +97,8 @@ def main():
 
     settings.game.start()
 
-   # cluster_happy = Dummy(pink, attitude=Attitude.friendly)
-  #  cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
+    cluster_happy = Dummy(pink, attitude=Attitude.friendly)
+    cluster_avoid = Dummy(white, attitude=Attitude.avoiding)
 
     rainbow_unicorn_cluster = Cluster(11)
     rainbow_unicorn_cluster.evenly_distributed((200, 0), 9, 10, cluster_avoid, settings.game)
@@ -53,11 +109,11 @@ def main():
 
     mouse_is_pressed = False
 
-  #  agentlist = [
-   #     cluster_avoid, cluster_avoid, cluster_happy,
-   # ]
+    agentlist = [
+        cluster_avoid, cluster_avoid, cluster_happy,
+    ]
 
-#    initialize_clusters(agentlist, settings.game)
+    initialize_clusters(agentlist, settings.game)
 
     while True:
         clock.tick(30)
