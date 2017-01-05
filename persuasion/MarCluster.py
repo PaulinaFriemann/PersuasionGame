@@ -122,7 +122,7 @@ def to_coordinates(map, (center_x, center_y), agents=False):
     return coordinates
 
 
-class Cluster:
+class MarCluster:
 
     def __init__(self, clustno, members=None, game = None, happiness = 50, starting_locations = [],movement = movements.idle, attitude = agents.Attitude.neutral):
         if members is None:

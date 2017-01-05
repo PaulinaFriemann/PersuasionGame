@@ -1,5 +1,5 @@
 from agents import *
-from cluster import *
+#from cluster import *
 import settings
 import sys
 import utils
@@ -41,8 +41,7 @@ def main():
     pauliclusters = paulicluster.load_all()
     clusters = []
     for cluster in pauliclusters:
-        clusters.append(Cluster(cluster.number,game = settings.game,starting_locations=cluster.positions,attitude=cluster.attitude))
-
+        cluster.add_cluster(game = settings.game)
 
     #settings.game.add_clusters(clusters)
 
