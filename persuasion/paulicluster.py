@@ -34,7 +34,6 @@ def load_all():
             clusters.append(deserialize(line))
     return clusters
 
-
 def load_cluster(file_path):
     f = open(file_path)
 

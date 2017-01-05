@@ -25,9 +25,13 @@ def main():
 
     settings.game.start()
 
-    clusters = paulicluster.load_all()
+    pauliclusters = paulicluster.load_all()
+    clusters = []
+    for cluster in pauliclusters:
+        clusters.append(Cluster(cluster.number,game = settings.game,starting_locations=cluster.positions,attitude=cluster.attitude))
 
-    settings.game.add_clusters(clusters)
+
+    #settings.game.add_clusters(clusters)
 
     clock = pygame.time.Clock()
     settings.game.camera.bar.pop_up()

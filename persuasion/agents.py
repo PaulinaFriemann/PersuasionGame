@@ -18,6 +18,8 @@ class Agent:
     def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
         self.happiness = happiness
 
+        print attitude, type(attitude)
+
         self.color = pygame.Color('black')
         self.color.hsva = (260 - (self.happiness * 2),0,90,0)
 
@@ -70,7 +72,7 @@ class Agent:
            #     self.set_path(personal_space_reactions[self.attitude.value])
 
             #except AttributeError:
-            self.set_path(personal_space_reactions[Attitude[self.attitude]])
+            self.set_path(personal_space_reactions[self.attitude])
 
             self.event = True
 
@@ -78,7 +80,7 @@ class Agent:
        # try:
         #    self.set_path(collision_reactions[self.attitude.value])
         #except AttributeError:
-        self.set_path(collision_reactions[Attitude[self.attitude.value]])
+        self.set_path(collision_reactions[self.attitude])
 
         self.event = True
 

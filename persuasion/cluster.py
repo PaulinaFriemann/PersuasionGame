@@ -124,16 +124,24 @@ def to_coordinates(map, (center_x, center_y), agents=False):
 
 class Cluster:
 
-    def __init__(self, clustno, members=None, ):
+    def __init__(self, clustno, members=None, game = None, happiness = 50, starting_locations = [],movement = movements.idle, attitude = agents.Attitude.neutral):
         if members is None:
             members = []
         self.members = members
-        self.starting_locations = []
+        self.starting_locations = starting_locations
         self.clustno = clustno
-        self.map = []
-        self.cluster_starting_position = []
-        self.possible_coordinates = []
         self.step = 0
+
+        if starting_locations != []:
+            for i in range(len(starting_locations)):
+                self.members.append(
+                    agents.Agent(starting_locations[i][0], starting_locations[i][1], happiness,movement = movement, attitude=attitude, cluster_member = True))
+                game.add_agent(self.members[i])
+        else:
+            self.map = []
+            self.cluster_starting_position = []
+            self.possible_coordinates = []
+
 
     def evenly_distributed(self, (center_x, center_y), personal_space, n_agents, exampleAgent, game):
         n_circles = int(math.ceil(float((n_agents - 1)) / 6))
