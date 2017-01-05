@@ -1,4 +1,6 @@
 import pygame
+import sys
+
 import utils
 from pygame import Rect, freetype
 
@@ -159,6 +161,8 @@ class NarratorBar(TextArea):
         super(NarratorBar, self).set_text(text)
         self.s = pygame.image.load("resources/bar.jpg")
         self.s.set_alpha(100)
+
+        print self.width
 
         self.render(self.s, absolute=False)
 

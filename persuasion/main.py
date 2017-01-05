@@ -11,7 +11,7 @@ pygame.init()
 
 def init():
     pygame.key.set_repeat(True)
-    game.init(600, 480)
+    game.init(500, 480)
 
 
 def main():

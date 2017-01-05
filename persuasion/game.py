@@ -7,6 +7,7 @@ from pygame import Rect
 import agents
 import gui
 import utils
+from camera import Camera
 
 
 def init(width, height):
@@ -25,13 +26,6 @@ def init(width, height):
 def start_screen():
     start_screen = gui.StartScreen(screen)
     return start_screen.start()
-
-
-event_positions = [-500]
-event_text = ["""Hey there.
-I see you're not feeling so well.
-Sometimes life can be rough, but
-you will see, things get better."""]
 
 
 class Game:
@@ -58,7 +52,7 @@ class Game:
 
     def add_clusters(self, clusters):
         for cluster in clusters:
-            for position in cluster.positions:
+            for position in cluster.starting_positions:
                 agent = agents.Agent(position[0], position[1], 0, attitude=cluster.attitude)
                 self.add_agent(agent)
 
@@ -70,14 +64,6 @@ class Game:
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
     def start(self):
-
-        self.camera.bar.set_text(\
-        """Hello """ + player_name + """!
-        Welcome to the world of cubes. This world is filled with loneliness.
-        A lot of cubes feel lonely and you are no exception. How do you overcome this?
-        You can move around by using the arrow keys.
-
-        Good luck!""")
 
         self.load_agents()
 
@@ -142,77 +128,3 @@ class Game:
                     or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-
-
-class Camera:
-
-    def __init__(self, width, height, world, screen=None, top=0, left=0):
-        self.height = height
-        self.width = width
-        self.world = world
-        self.max_height = world.end
-        self.position = Rect(left, top, width, height)
-        self.screen = screen
-        self.bar = gui.NarratorBar(Rect(0, 350, self.width, 350))
-        self.nametag = gui.TextArea(Rect(50,50,50,20), centered=True)
-        self.event_num = 0
-
-    def move(self, player_speed):
-        new_left = self.position.left + player_speed[0]
-        new_right = self.position.right + player_speed[0]
-
-        if new_left < 0:
-            self.position.left = 0
-
-        elif new_right > self.world.width:
-            self.position.right = self.width
-
-        else:
-            self.position.left += player_speed[0]
-
-        self.position.top += player_speed[1]
-
-        if self.event_num < len(event_positions):
-            if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
-                self.bar.set_text(event_text[self.event_num])
-                self.bar.pop_up()
-                self.event_num += 1
-
-    def adjust_agent(self, agent):
-        return self.adjust_rect(agent.rect)
-
-    def adjust_rect(self, rect):
-        new_left = rect.left - self.position.left
-        new_top = rect.top - self.position.top
-        return Rect(new_left, new_top, rect.width, rect.height)
-
-    def check_visibility(self, rect):
-        return self.position.contains(rect)
-
-    def draw(self):
-        self.world.background.draw(self.screen, self.position)
-
-        for agent in self.world.agents:
-            if self.check_visibility(agent.rect):
-                new_rect = self.adjust_agent(agent)
-                self.screen.blit(agent.s, new_rect.topleft)
-            else:
-                if agent.rect.top > self.position.bottom:
-                    self.world.agents.remove(agent)
-
-        self.draw_nametag()
-        self.draw_overlay()
-        self.bar.draw(self.screen)
-
-    def draw_nametag(self):
-        name_area = main_game.player.name_area
-        new_rect = self.adjust_rect(name_area)
-        self.nametag.move_ip(new_rect.centerx - self.nametag.centerx, new_rect.centery - self.nametag.centery)
-        #self.nametag.draw(self.screen)
-
-    def draw_overlay(self, alpha=20):
-
-        s = pygame.Surface((640, 480))  # the size of your rect
-        s.set_alpha(alpha)  # alpha level
-        s.fill((0, 0, 0))  # this fills the entire surface
-        self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates

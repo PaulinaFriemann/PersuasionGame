@@ -1,8 +1,10 @@
-from agents import *
 import json
+
 from simple_model import Model, Attribute, list_type
-from agents import Agent
+import movements
+
 import utils
+from agents import *
 
 
 def serialize(model):
