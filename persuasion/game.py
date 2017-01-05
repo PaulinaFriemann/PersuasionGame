@@ -112,19 +112,20 @@ class Game:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
 
-                        paulicluster.append_to_end(cluster)
+                        cluster.append_to_end(new_cluster)
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
 
-                        paulicluster.append_to_end(cluster)
+                        cluster.append_to_end(new_cluster)
+                        new_cluster.add_cluster(game = self)
 
                     self.in_editor_mode = False
 

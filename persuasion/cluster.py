@@ -4,7 +4,7 @@ from simple_model import Model, Attribute, list_type
 import movements
 
 import utils
-from agents import *
+import agents
 
 
 def serialize(model):
@@ -59,15 +59,15 @@ def change_attitude(cluster, attitude):
 
 
 class Cluster(Model):
-    members = Attribute(list_type(lambda l:list(map(Agent, l))), fallback = [])
+    members = Attribute(list_type(lambda l:list(map(agents.Agent, l))), fallback = [])
     number = Attribute(int)
     attitude = Attribute(int, fallback=0)
     starting_positions = Attribute(list_type(lambda l: list(map(int, l))))
 
     def add_cluster(self,happiness = 50, movement = movements.idle, game = None):
         for i in range(len(self.starting_positions)):
-            self.members.append(Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, movement=movement,
-                         attitude=self.attitude, cluster_member=True))
+            self.members.append(agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, movement=movement,
+                         attitude=self.attitude))
             game.add_agent(self.members[i])
 
     def add_member(self,member):
