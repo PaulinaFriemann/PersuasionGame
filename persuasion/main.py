@@ -83,7 +83,11 @@ def mainc():
                     or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 if len(agent_pos):
                     num_clusters += 1
-                    cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
+
+                    try:
+                        cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
+                    except AttributeError:
+                        cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding, positions=[list(pos.center) for pos in agent_pos])
 
                     paulicluster.append_to_end(cluster)
 
