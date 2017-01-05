@@ -1,11 +1,13 @@
 import pygame
-from enum import Enum
+import imp
+
+enum = imp.load_source('Enum', '/home/pauli/anaconda2/lib/python2.7/site-packages/tables/misc/enum.py')
 import settings
 import movements
 import gui
 
 
-class Attitude(Enum):
+class Attitude(enum.Enum):
     neutral = 0
     avoiding = 1
     friendly = 2

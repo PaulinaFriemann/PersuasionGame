@@ -21,8 +21,9 @@ def main():
     black = 0, 0, 0
 
     player = Player(settings.screen_width/2, settings.screen_height/2, 0)
-
     settings.game.add_player(player)
+
+    settings.game.start()
 
     clusters = paulicluster.load_all()
 
