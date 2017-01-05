@@ -71,10 +71,10 @@ class Agent:
         self.default_movement = movement
 
     def fade_away(self):
-        new_alpha = self.alpha - 1
-        if new_alpha < 5:
+        self.alpha -= 1
+        if self.alpha < 5:
             settings.game.agents.remove(self)
-        self.s.set_alpha(self.alpha - 1)
+        self.s.set_alpha(self.alpha)
 
     def change_happiness(self, delta):
         self.happiness = max(0, min(self.happiness + delta, 255))
