@@ -6,3 +6,8 @@
 {"attitude": 1, "starting_positions": [[34, -370], [45, -388], [56, -409], [83, -410], [94, -388], [105, -369], [70, -387]], "name": "m_left", "members": [], "number": 1}
 {"attitude": 1, "starting_positions": [[385, -416], [411, -417], [423, -400], [433, -384], [369, -400], [357, -384], [398, -398]], "name": "m_right", "members": [], "number": 1}
 {"attitude": 2, "starting_positions": [[95, 81], [90, 104], [121, 98], [122, 131], [152, 211]], "name": "default", "members": [], "number": 8}
+{"attitude": 1, "starting_positions": [[277, 176], [324, 178], [311, 202]], "name": "default", "members": [], "number": 9}
+{"attitude": 1, "starting_positions": [[229, 154], [255, 158]], "name": "default", "members": [], "number": 10}
+{"attitude": 0, "starting_positions": [[312, 146], [348, 147]], "name": "default", "members": [], "number": 11}
+{"attitude": 2, "starting_positions": [[388, 192], [361, 194]], "name": "default", "members": [], "number": 12}
+{"attitude": 3, "starting_positions": [[353, 256], [417, 254]], "name": "default", "members": [], "number": 13}

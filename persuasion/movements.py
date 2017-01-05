@@ -7,14 +7,13 @@ import utils
 def idle(agent):
     return [[0,0]]
 
-
 def do_nothing(agent):
-
+    if not agent.path:
+        return default(agent)
     return agent.path
 
 
 def default(agent):
-    if agent.step == len(agent.path):
         return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
 
 

@@ -27,7 +27,7 @@ class Agent:
         self.default_movement = movement
         self.attitude = attitude
         self.distance_to_player = 999
-        self.path = []
+        self.path = [[0,0]]
         self.step = 0
         self.event = False
         self.goal = None
@@ -62,6 +62,7 @@ class Agent:
         self.s.set_alpha(self.alpha)
 
     def set_path(self, movement, default=False, step=0):
+#        print movement(self)
         self.step = step
         self.path = movement(self)
         if default:
@@ -91,6 +92,7 @@ class Agent:
                 if (player.happiness > 1): player.happiness -= 1
 
             self.set_path(personal_space_reactions[self.attitude])
+
 
             self.event = True
 
@@ -168,4 +170,4 @@ class Player(Agent):
             elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-5)
                 other.change_happiness(-5)
-            self.on_bounce(other.attitude)
+                self.on_bounce(other.attitude)
