@@ -249,6 +249,10 @@ class Cluster:
             paths[i].extend([[0,0]] * (longest_path - len(paths[i])))
             self.members[i].set_path(paths[i])
 
+    def update_happiness(self):
+        for i in range(1,len(self.members)):
+            print "lol"
+
 
     def regroup(self, dx = 0, dy = 0):
         for i in range(len(self.members)):
