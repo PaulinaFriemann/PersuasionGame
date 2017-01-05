@@ -8,7 +8,7 @@ def idle(agent):
 
 
 def do_nothing(agent):
-    print "path ", agent.path
+    #print "path ", agent.path
     return agent.path
 
 
@@ -93,9 +93,9 @@ def path_direct(agent):
             path.extend([[signdx,signdy]])
             dx -= signdx
             dy -= signdy
-    if dx > 0:
+    if dx != 0:
         path.extend([[signdx,0]]*abs(dx))
-    if dy > 0:
+    if dy != 0:
         path.extend([[0,signdy]]*abs(dy))
     return path
 
