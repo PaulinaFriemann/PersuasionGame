@@ -89,7 +89,6 @@ def path_direct(agent):
     while dx != 0 and dy != 0:
         if ddxdy > 0 and random.randint(1,ddxdy) != 1:
             path.extend([direction])
-            #print direction
 
             dx -= direction[0]
             dy -= direction[1]
