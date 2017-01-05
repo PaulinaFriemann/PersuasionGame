@@ -114,13 +114,13 @@ class Game:
                     if event.key == pygame.K_1:
                         print "Attitude is now avoiding"
                         attitude = agents.Attitude["avoiding"]
-                    elif event.key == pygame.K2:
+                    elif event.key == pygame.K_2:
                         print "Attitude is now neutral"
                         attitude = agents.Attitude["neutral"]
-                    elif event.key == pygame.K3:
+                    elif event.key == pygame.K_3:
                         print "Attitude is now friendly"
                         attitude = agents.Attitude["friendly"]
-                    elif event.key == pygame.K4:
+                    elif event.key == pygame.K_4:
                         print "Attitude is now friends"
                         attitude = agents.Attitude["friends"]
 
