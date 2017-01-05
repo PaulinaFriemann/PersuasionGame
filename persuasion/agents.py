@@ -2,6 +2,7 @@ import pygame
 import imp
 
 from enum import Enum
+import math
 import settings
 import movements
 import gui
@@ -59,7 +60,7 @@ class Agent:
             self.fade_away()
 
     def update_color(self,player_happiness):
-        self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
+        self.color.hsva = (260 - (int(math.round(self.happiness * 2))), player_happiness, 90, 0)
 
     def set_path(self, movement, default=False, step=0):
         self.step = step
@@ -136,7 +137,7 @@ class Player(Agent):
         self.update_color()
 
     def update_color(self,doweneedthis=False):
-        self.color.hsva = (260 - (self.happiness * 2), self.happiness, 90, 0)
+        self.color.hsva = (260 - (int(math.round(self.happiness * 2))), int(math.round(self.happiness)), 90, 0)
 
     def on_enter_personal_space(self):
         pass
@@ -145,6 +146,9 @@ class Player(Agent):
         if self.path == [[0, 0]]:
             if other.attitude == Attitude.friendly:
                 self.happiness += 5
+                other.happiness += 5
                 self.set_path(movements.make_happy)
             elif other.attitude != Attitude.friends:
+                self.happiness -= 5
+                other.happiness -= 5
                 self.set_path(movements.bounce_back)
