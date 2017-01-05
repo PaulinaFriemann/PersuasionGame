@@ -61,7 +61,7 @@ class Agent:
             self.fade_away()
 
     def update_color(self,player_happiness):
-        self.color.hsva = (260 - (int(round(self.happiness * 2))), player_happiness, 90, 0)
+        self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
         self.s.fill(self.color)
         self.s.set_alpha(self.alpha)
 
@@ -81,12 +81,13 @@ class Agent:
         self.s.set_alpha(self.alpha - 1)
 
 
-    def on_enter_personal_space(self):
+    def on_enter_personal_space(self,player):
         if not self.event:
 
             if self.attitude == Attitude.avoiding:
                 self.fadeaway = True
                 self.set_default_path(movements.do_nothing)
+                if (player.happiness > 1): player.happiness -= 1
 
             self.set_path(personal_space_reactions[self.attitude])
 
@@ -140,7 +141,7 @@ class Player(Agent):
         self.update_color()
 
     def update_color(self,doweneedthis=False):
-        self.color.hsva = (260 - (int(round(self.happiness * 2))), int(round(self.happiness)), 90, 0)
+        self.color.hsva = (260 - (self.happiness * 2), self.happiness, 90, 0)
         self.s.fill(self.color)
 
     def on_enter_personal_space(self):
