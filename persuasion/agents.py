@@ -7,11 +7,7 @@ import movements
 import gui
 
 
-class Attitude(enum.Enum):
-    neutral = 0
-    avoiding = 1
-    friendly = 2
-    friends = 3
+Attitude = enum.Enum({'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3})
 
 
 collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
@@ -70,19 +66,19 @@ class Agent:
 
     def on_enter_personal_space(self):
         if not self.event:
-            try:
-                self.set_path(personal_space_reactions[self.attitude.value])
+          #  try:
+           #     self.set_path(personal_space_reactions[self.attitude.value])
 
-            except AttributeError:
-                self.set_path(personal_space_reactions[self.attitude])
+            #except AttributeError:
+            self.set_path(personal_space_reactions[Attitude[self.attitude]])
 
             self.event = True
 
     def on_collision(self, other):
-        try:
-            self.set_path(collision_reactions[self.attitude.value])
-        except AttributeError:
-            self.set_path(collision_reactions[self.attitude])
+       # try:
+        #    self.set_path(collision_reactions[self.attitude.value])
+        #except AttributeError:
+        self.set_path(collision_reactions[Attitude[self.attitude.value]])
 
         self.event = True
 

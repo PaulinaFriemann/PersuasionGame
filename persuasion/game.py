@@ -37,7 +37,7 @@ class Game:
     def add_clusters(self, clusters):
         for cluster in clusters:
             for position in cluster.positions:
-                agent = agents.Agent(position[0], position[1], 0, attitude=agents.Attitude.avoiding)#agents.Attitude.__call__(cluster.attitude))
+                agent = agents.Agent(position[0], position[1], 0, attitude=agents.Attitude(cluster.attitude))
                 self.add_agent(agent)
 
     def distance(self, rect1, rect2):
