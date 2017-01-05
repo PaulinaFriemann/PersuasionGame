@@ -1,4 +1,6 @@
 import random
+
+import game
 import utils
 import settings
 
@@ -30,14 +32,14 @@ def make_happy(agent):
 
 
 def avoid(agent):
-    direction = agent.direction_to(settings.game.player.rect)
+    direction = agent.direction_to(game.main_game.player.rect)
     #agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
     agent.goal = direction
     return path_direct(agent)
 
 
 def follow(agent):
-    pos = utils.random_point_circle(50, settings.game.player.rect.center)
+    pos = utils.random_point_circle(50, game.main_game.player.rect.center)
     agent.goal = pos
     return random_to_goal(agent)
 
@@ -61,7 +63,7 @@ def move_path(agent):
 
     new_x = agent.rect.centerx + this_move[0] * 2
 
-    if settings.screen_width > new_x > (0 + agent.rect.width):
+    if game.screen_width > new_x > (0 + agent.rect.width):
         agent.move(this_move)
     else:
         agent.move([0, this_move[1]])

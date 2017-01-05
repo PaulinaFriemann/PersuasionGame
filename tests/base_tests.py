@@ -6,8 +6,7 @@ from persuasion.utils import *
 from persuasion.paulicluster import *
 from pprint import pprint
 from persuasion.agents import Attitude
-
-enum = imp.load_source('Enum', '/home/pauli/anaconda2/lib/python2.7/site-packages/tables/misc/enum.py')
+from enum import Enum
 
 
 # size = width, height = 640, 480
@@ -92,13 +91,15 @@ def test_action_queue():
 
 def test_cluster():
     init_dict = {'number': 0, 'num_agents': 0, 'attitude': Attitude.friendly, 'positions':[[]]}
-    cluster1 = PauliCluster(number=1, num_agents=1, attitude=Attitude.friendly.value, positions=[[20,20], [34,123]])
+    cluster1 = PauliCluster(number=1, num_agents=1, attitude=Attitude.friendly, positions=[[20,20], [34,123]])
+    cluster1.move(10,0)
+    print cluster1
 
-    assert True
+    assert False
 
 
 def test_enum():
-    enuma = enum.Enum({'red': 20, 'orange': 10, 'green': 0})
-    print enuma(10)
+   # enuma = Enum({'red': 20, 'orange': 10, 'green': 0})
+   # print enuma(10)
 
-    assert False
+    assert True

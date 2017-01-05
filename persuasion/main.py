@@ -4,13 +4,18 @@ import settings
 import sys
 import utils
 import paulicluster
+import game
 
 pygame.init()
 
 
 def init():
     pygame.key.set_repeat(True)
-    settings.init(600, 480)
+    game.init(600, 480)
+
+
+def main():
+    init()
 
 
 def maiasdn():
@@ -26,28 +31,28 @@ def maiasdn():
     paulicluster.save_all(clusters)
 
 
-def main():
+def mainsad():
     init()
 
     white = pygame.Color('White')
     pink = pygame.Color('Pink')
     black = 0, 0, 0
 
-    player = Player(settings.screen_width/2, settings.screen_height/2, 100)
-    settings.game.add_player(player)
+    player = Player(game.screen_width/2, game.screen_height/2, 100)
+    game.main_game.add_player(player)
 
-    settings.game.start()
+    game.main_game.start()
 
     pauliclusters = paulicluster.load_all()
     clusters = []
     for cluster in pauliclusters:
-        clusters.append(Cluster(cluster.number,game = settings.game,starting_locations=cluster.positions,attitude=cluster.attitude))
+        clusters.append(Cluster(cluster.number,game = game.main_game,starting_locations=cluster.positions,attitude=cluster.attitude))
 
 
     #settings.game.add_clusters(clusters)
 
     clock = pygame.time.Clock()
-    settings.game.camera.bar.pop_up()
+    game.main_game.camera.bar.pop_up()
 
     mouse_is_pressed = False
 
@@ -77,7 +82,7 @@ def main():
         if pressed[pygame.K_t]:
             rainbow_unicorn_cluster.regroup_wait()
 
-        settings.game.update()
+        game.main_game.update()
 
 
 def mainasd():
@@ -92,7 +97,7 @@ def mainasd():
 
     print clusters
 
-    player_pos = pygame.Rect(settings.screen_width / 2 - 5, settings.screen_height / 2 - 5, 10, 10)
+    player_pos = pygame.Rect(game.screen_width / 2 - 5, game.screen_height / 2 - 5, 10, 10)
     clock = pygame.time.Clock()
     block = 0
     num_clusters = 0
@@ -133,15 +138,15 @@ def mainasd():
 
         #print agent_pos
 
-        settings.game.screen.fill([250, 250, 205])
-        pygame.draw.rect(settings.game.screen, pygame.Color("Black"), player_pos)
+        game.screen.fill([250, 250, 205])
+        pygame.draw.rect(game.main_game.screen, pygame.Color("Black"), player_pos)
 
         #for cluster in clusters:
          #   for pos in cluster.positions:
                 #pygame.draw.rect(settings.game.screen, pygame.Color("Blue"), utils.get_rect(pos[0], pos[1], 10, 10))
 
         for pos in agent_pos:
-            pygame.draw.rect(settings.game.screen, pygame.Color("Black"), pos)
+            pygame.draw.rect(game.main_game.screen, pygame.Color("Black"), pos)
 
         pygame.display.flip()
 

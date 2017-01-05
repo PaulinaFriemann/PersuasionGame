@@ -1,33 +1,49 @@
 import math
 import sys
-
+import paulicluster
 import pygame
 from pygame import Rect
 
 import agents
 import gui
-import settings
 import utils
+
+
+def init(width, height):
+    global screen_height, screen_width, main_game, screen, player_name
+    screen_height = height
+    screen_width  = width
+
+    screen = pygame.display.set_mode([screen_width, screen_height])
+
+    player_name = start_screen()
+    main_game = Game(600)
+
+    main_game.start()
+
+
+def start_screen():
+    start_screen = gui.StartScreen(screen)
+    return start_screen.start()
 
 
 event_positions = [-500]
 event_text = ["""Hey there.
 I see you're not feeling so well.
-Sometimes life can be rough.
-You will see, everything gets better."""]
+Sometimes life can be rough, but
+you will see, things get better."""]
 
 
 class Game:
 
-    def __init__(self, screen, end_height, top_camera=0, left_camera=0):
-
-        self.player_name = ""
+    def __init__(self, end_height):
 
         self.agents = []
         self.end = end_height
         self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
-        self.camera = Camera(screen.get_width(), screen.get_height(), self, screen, top_camera, left_camera)
+        self.camera = Camera(screen.get_width(), screen.get_height(), self, screen)
         self.player = None
+        self.add_player(agents.Player(screen_width / 2, screen_height / 2, 100))
         self.width = screen.get_width()
         self.screen = screen
 
@@ -43,25 +59,50 @@ class Game:
     def add_clusters(self, clusters):
         for cluster in clusters:
             for position in cluster.positions:
-                agent = agents.Agent(position[0], position[1], 0, attitude=agents.Attitude(cluster.attitude))
+                agent = agents.Agent(position[0], position[1], 0, attitude=cluster.attitude)
                 self.add_agent(agent)
+
+    def load_agents(self):
+        clusters = paulicluster.load_all()
+        self.add_clusters(clusters)
 
     def distance(self, rect1, rect2):
         return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 
     def start(self):
-        self.start_screen()
+
         self.camera.bar.set_text(\
-        """Hello """ + self.player_name.text[0] + """!
+        """Hello """ + player_name + """!
         Welcome to the world of cubes. This world is filled with loneliness.
         A lot of cubes feel lonely and you are no exception. How do you overcome this?
         You can move around by using the arrow keys.
 
         Good luck!""")
 
-    def update(self):
+        self.load_agents()
 
-        self.check_close()
+        self.camera.bar.pop_up()
+
+        clock = pygame.time.Clock()
+        while True:
+            clock.tick(30)
+
+            pressed = pygame.key.get_pressed()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT \
+                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+
+            self.player.speed = [int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT]),
+                            int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])]
+
+            self.update()
+
+            pygame.display.flip()
+
+    def update(self):
 
         self.action_queue.step()
 
@@ -83,7 +124,7 @@ class Game:
                     self.player.on_collision(agent)
                     agent.on_collision(self.player)
                 if agent.distance_to_player <= agent.personalspace:
-                    if (self.player.happiness > 0) and agent.attitude == agents.Attitude.avoiding:
+                    if (self.player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
                         self.player.change_happiness(-0.5)
                     agent.on_enter_personal_space()
 
@@ -100,55 +141,6 @@ class Game:
                 pygame.quit()
                 sys.exit()
 
-    def start_screen(self):
-
-        background = gui.Background("resources/bankbig.jpg", [0, 0], self.screen.get_width(), self.screen.get_height())
-
-        start_button = gui.Button(270, 342, 100, 30)
-        start_button.set_text("Start Game")
-        start_text_width = 400
-        start_text = gui.TextArea(15, Rect(self.width/2 - start_text_width/2,100,start_text_width,100), centered=True)
-
-        start_text.set_text(
-        """Please enter your name""")
-
-        self.player_name = gui.TextArea(15, utils.center_rect(Rect(0,0,200,30), self.screen.get_rect()))
-        self.player_name.set_changeable(True)
-        name_entered = False
-        while not name_entered:
-
-            pressed = pygame.key.get_pressed()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT \
-                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONUP:
-                    pos, button = event.pos, event.button
-                    if start_button.collidepoint(*pos):
-                        name_entered = True
-                if event.type == pygame.KEYUP:
-                    if pygame.K_a <= event.key <= pygame.K_z:
-                        if not pressed[pygame.K_LSHIFT] and not pressed[pygame.K_RSHIFT]:
-                            self.player_name.add_letter(pygame.key.name(event.key))
-                        else:
-                            self.player_name.add_letter(pygame.key.name(event.key).upper())
-                    elif event.key == pygame.K_BACKSPACE:
-                        self.player_name.delete_letter()
-                    elif event.key == pygame.K_RETURN:
-                        name_entered = True
-
-
-            background.draw(self.screen, self.camera.position)
-            start_text.draw(self.screen)
-            #self.screen.fill([0,0,0])
-            start_button.draw(self.screen)
-            self.player_name.draw(self.screen)
-            pygame.display.flip()
-        self.camera.nametag.set_text(self.player_name.text[0])
-        self.player.name_area.move_ip([-self.player.name_area.width/2, 0])
-
 
 class Camera:
 
@@ -159,8 +151,8 @@ class Camera:
         self.max_height = world.end
         self.position = Rect(left, top, width, height)
         self.screen = screen
-        self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, 350))
-        self.nametag = gui.TextArea(15, Rect(50,50,50,20), centered=True)
+        self.bar = gui.NarratorBar(Rect(0, 350, self.width, 350))
+        self.nametag = gui.TextArea(Rect(50,50,50,20), centered=True)
         self.event_num = 0
 
     def move(self, player_speed):
@@ -211,7 +203,7 @@ class Camera:
         self.bar.draw(self.screen)
 
     def draw_nametag(self):
-        name_area = settings.game.player.name_area
+        name_area = main_game.player.name_area
         new_rect = self.adjust_rect(name_area)
         self.nametag.move_ip(new_rect.centerx - self.nametag.centerx, new_rect.centery - self.nametag.centery)
         #self.nametag.draw(self.screen)

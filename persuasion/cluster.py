@@ -124,7 +124,7 @@ def to_coordinates(map, (center_x, center_y), agents=False):
 
 class Cluster:
 
-    def __init__(self, clustno, members=None, game = None, happiness = 50, starting_locations = [],movement = movements.idle, attitude = agents.Attitude.neutral):
+    def __init__(self, clustno, members=None, game = None, happiness = 50, starting_locations = [],movement = movements.idle, attitude = agents.Attitude["neutral"]):
         if members is None:
             members = []
         self.members = members
@@ -135,7 +135,7 @@ class Cluster:
         if starting_locations != []:
             for i in range(len(starting_locations)):
                 self.members.append(
-                    agents.Agent(starting_locations[i][0], starting_locations[i][1], happiness,movement = movement, attitude=attitude, cluster_member = True))
+                    agents.Agent(starting_locations[i][0], starting_locations[i][1], happiness,movement = movement, attitude=attitude))
                 game.add_agent(self.members[i])
         else:
             self.map = []
@@ -218,7 +218,7 @@ class Cluster:
 
                 self.starting_locations.append(location)
                 self.members.append(agents.Agent(location[0], location[1], exampleAgent.color, exampleAgent.default_movement, exampleAgent.attitude, exampleAgent.cluster_member))
-                settings.game.add_agent(self.members[i])
+                game.main_game.add_agent(self.members[i])
         except ValueError:
             print "I am sorry, there is no space left. I could only make " + str(i) + " agent(s)."
 
@@ -302,7 +302,7 @@ class Cluster:
             self.members.append(
                 agents.Agent(self.starting_locations[i][0], self.starting_locations[i][1], exampleAgent.color, exampleAgent.screen, exampleAgent.movement,
                              exampleAgent.attitude, exampleAgent.cluster_member, exampleAgent.player))
-            settings.game.add_agent(self.members[i])
+            game.main_game.add_agent(self.members[i])
 
     def export_cluster(self, filename):
         arr_size = len(self.map)

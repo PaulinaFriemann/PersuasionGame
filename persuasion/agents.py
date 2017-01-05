@@ -1,10 +1,11 @@
 import pygame
 
+import game
 import movements
 import settings
 from enum import Enum
 
-Attitude = Enum({'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3})
+Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 
 
 collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
@@ -12,7 +13,7 @@ personal_space_reactions = [movements.default, movements.avoid, movements.do_not
 
 
 class Agent:
-    def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
+    def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude["neutral"]):
         self.happiness = happiness
 
         self.color = pygame.Color('black')
@@ -28,7 +29,6 @@ class Agent:
         self.distance_to_player = 999
         self.path = []
         self.step = 0
-        self.cluster_member = cluster_member
         self.event = False
         self.goal = None
         self.s = pygame.Surface((self.width, self.width))
@@ -73,7 +73,7 @@ class Agent:
     def fade_away(self):
         self.alpha -= 1
         if self.alpha < 5:
-            settings.game.agents.remove(self)
+            game.main_game.agents.remove(self)
         self.s.set_alpha(self.alpha)
 
     def change_happiness(self, delta):
@@ -81,9 +81,10 @@ class Agent:
 
 
     def on_enter_personal_space(self):
+        print self.attitude
         if not self.event:
 
-            if self.attitude == Attitude.avoiding:
+            if self.attitude == Attitude["avoiding"]:
                 self.fadeaway = True
                 self.set_default_path(movements.do_nothing)
 
@@ -97,13 +98,13 @@ class Agent:
 
         self.event = True
 
-        if self.attitude == Attitude.friendly:
-            settings.game.action_queue.add(self.change_attitude, {"attitude": Attitude.friends}, len(self.path))
+        if self.attitude == Attitude["friendly"]:
+            game.main_game.action_queue.add(self.change_attitude, {"attitude": Attitude["friends"]}, len(self.path))
             try:
-                settings.game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
+                game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
                                       len(self.path))
             except TypeError:
-                settings.game.action_queue.add(self.set_path,
+                game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
                                       len(self.path))
 
@@ -123,7 +124,7 @@ class Player(Agent):
         self.speed = map(lambda x: self.speed_modificator * x, speed)
 
         new_x = self.rect.bottomright[0] + self.speed[0]
-        if settings.screen_width > new_x > (0 + self.rect.width):
+        if game.screen_width > new_x > (0 + self.rect.width):
             self.rect = self.rect.move(self.speed)
 
             self.name_area = self.name_area.move(self.speed)
