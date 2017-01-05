@@ -28,76 +28,38 @@ class Background(pygame.sprite.Sprite):
                              area=Rect(self.area_horizontal, new_area_vertical, self.camera_width, -area_vertical))
 
 
-class Button(Rect):
-
-    def __init__(self, *args, **kwargs):
-        super(Button, self).__init__(*args, **kwargs)
-
-    def set_text(self, text):
-        self.text = text
-
-        self.font = freetype.SysFont(freetype.get_default_font(), 15)
-        self.text_rect = utils.center_rect(self.font.get_rect(text), self)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, [50,50,50], self)
-        self.font.render_to(screen, self.text_rect.topleft,
-                           self.text, fgcolor = (255,255,255))
-
-    def on_click(self):
-        pass
-
-
 class TextArea(Rect):
 
-    def __init__(self, font_size, rect, centered=False):
+    def __init__(self, rect, text="", fontsize=15,
+                 fgcolor=pygame.Color("Black"), bgcolor=pygame.Color("White"), alpha=40, centered=True):
         super(TextArea, self).__init__(rect)
-
-        self.font = freetype.SysFont(freetype.get_default_font(), font_size)
-        self.text = [""]
-        self.text_top = self.top + (self.height/2 - font_size/2)
-        self.text_left = self.left + 2
-        self.changeable = False
-        self.color = pygame.Color(200,200,200)
+        self.text = [text]
+        self.font = freetype.SysFont(freetype.get_default_font(), fontsize)
+        self.text_color = fgcolor
         self.centered = centered
+        self.fontsize = fontsize
 
         self.s = pygame.Surface((self.width, self.height))  # the size of your rect
-        self.s.set_alpha(40)  # alpha level
-        self.s.fill(self.color)  # this fills the entire surface
-
-    def set_color(self, color):
-        self.color = color
-        self.s.fill(self.color)
-
-    def set_changeable(self, changeable):
-        self.changeable = changeable
+        self.s.set_alpha(alpha)  # alpha level
+        self.s.fill(bgcolor)  # this fills the entire surface
 
     def set_text(self, text):
         self.text = text.split("\n")
+        self.check_width()
+
+    def check_width(self):
         for line in self.text:
             width = self.font.get_rect(line).width
             if width > self.width:
                 self.width = width
 
-    def add_letter(self, letter):
-        if self.changeable and len(self.text) == 1:
-            _, rect = self.font.render(self.text[-1] + letter)
-            if rect.width < self.width - 2:
-                self.text[-1] += letter
-
-    def delete_letter(self):
-        if self.changeable and len(self.text) == 1:
-            self.text[-1] = self.text[-1][:-1]
-
-    def move_ip(self, x, y):
-        super(TextArea, self).move_ip(x, y)
-        self.text_left += x
-        self.text_top += y
-
     def render(self, screen, absolute=True):
+        text_left = self.left + 2
+        text_top = self.top + (self.height / 2 - self.fontsize / 2)
+
         for i, line in enumerate(self.text):
             if not self.centered:
-                self.font.render_to(screen, (self.text_left, self.text_top + self.font.size * i + 2), line)
+                self.font.render_to(screen, (text_left, text_top + self.font.size * i + 2), line)
             else:
                 rect = utils.center_h(self.font.get_rect(line), self)
                 if absolute:
@@ -109,24 +71,96 @@ class TextArea(Rect):
         self.render(screen)
 
 
+class Button(TextArea):
+
+    def __init__(self, rect, text="", fgcolor=(255,255,255),bgcolor=(50,50,50)):
+        super(Button, self).__init__(rect, text=text, fgcolor=fgcolor, bgcolor=bgcolor)
+
+
+class TextField(TextArea):
+
+    def __init__(self, rect, text="", fgcolor=(255,255,255),bgcolor=(50,50,50)):
+        super(TextField, self).__init__(rect, text=text, fgcolor=fgcolor, bgcolor=bgcolor, centered=False)
+        print self
+
+    def add_letter(self, letter):
+        _, rect = self.font.render(self.text[-1] + letter)
+        if rect.width < self.width - 2:
+            self.text[-1] += letter
+
+    def delete_letter(self):
+        self.text[-1] = self.text[-1][:-1]
+
+
+class StartScreen:
+
+    def __init__(self, screen):
+
+        self.screen = screen
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+
+        self.background = Background("resources/bankbig.jpg", [0, 0], self.width, self.height)
+
+        self.start_button = Button(Rect(270, 342, 100, 30), text="Start Game")
+        self.start_text = TextArea(Rect(screen.get_width() / 2 - 400/ 2, 100, 400, 100))
+
+        self.start_text.set_text(
+            """Please enter your name""")
+
+        self.player_name = TextField(utils.center_rect(Rect(0, 0, 200, 30), self.screen.get_rect()))
+
+    def start(self):
+        name_entered = False
+        while not name_entered:
+
+            pressed = pygame.key.get_pressed()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT \
+                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    pos, button = event.pos, event.button
+                    if self.start_button.collidepoint(*pos):
+                        name_entered = True
+                if event.type == pygame.KEYUP:
+                    if pygame.K_a <= event.key <= pygame.K_z:
+                        if not pressed[pygame.K_LSHIFT] and not pressed[pygame.K_RSHIFT]:
+                            self.player_name.add_letter(pygame.key.name(event.key))
+                        else:
+                            self.player_name.add_letter(pygame.key.name(event.key).upper())
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.player_name.delete_letter()
+                    elif event.key == pygame.K_RETURN:
+                        name_entered = True
+
+            self.background.draw(self.screen, self.screen.get_rect())
+            self.start_text.draw(self.screen)
+            self.start_button.draw(self.screen)
+            self.player_name.draw(self.screen)
+            pygame.display.flip()
+
+        return self.player_name.text[0]
+
+
 class NarratorBar(TextArea):
 
-    def __init__(self, font_size, rect):
-        super(NarratorBar, self).__init__(font_size, rect, centered=True)
+    def __init__(self, rect, fontsize=15):
+        super(NarratorBar, self).__init__(rect, centered=True, fontsize=fontsize)
 
-        self.image = pygame.image.load("resources/bar.jpg")
-        self.image.set_alpha(100)
+        self.s = pygame.image.load("resources/bar.jpg")
+        self.s.set_alpha(100)
         self.visibility_status = 0
         self.popup = False
-        self.text_top = self.top + (self.height/2 - font_size/2)
-        self.text_left = self.left + 2
 
     def set_text(self, text):
         super(NarratorBar, self).set_text(text)
-        self.image = pygame.image.load("resources/bar.jpg")
-        self.image.set_alpha(100)
+        self.s = pygame.image.load("resources/bar.jpg")
+        self.s.set_alpha(100)
 
-        self.render(self.image, absolute=False)
+        self.render(self.s, absolute=False)
 
     def pop_up(self):
         self.popup = True
@@ -141,4 +175,4 @@ class NarratorBar(TextArea):
 
     def draw(self, screen):
         self.get_visible()
-        screen.blit(self.image, (0, max(screen.get_height() - self.visibility_status, self.top)))
+        screen.blit(self.s, (0, max(screen.get_height() - self.visibility_status, self.top)))
