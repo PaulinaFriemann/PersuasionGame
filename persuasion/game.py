@@ -165,7 +165,10 @@ class Game:
 
             if mousepressed:
 
-                position = pygame.mouse.get_pos()
+                position = list(pygame.mouse.get_pos())
+                print position, self.camera.position.top
+                position[1] += self.camera.position.top
+                print position
                 rect = utils.get_rect(position[0], position[1], 10, 10)
                 if any([rect.colliderect(other) for other in agent_pos]):
                     colliders = filter(rect.colliderect, agent_pos)
@@ -180,7 +183,7 @@ class Game:
             self.camera.draw()
 
             for pos in agent_pos:
-                pygame.draw.rect(self.screen, pygame.Color("Black"), pos)
+                pygame.draw.rect(self.screen, pygame.Color("Black"), pos.move([0,-self.camera.position.top]))
 
             pygame.display.flip()
 
