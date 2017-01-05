@@ -73,3 +73,6 @@ class PauliCluster(Model):
     number = Attribute(int)
     attitude = Attribute(int, fallback=0)
     positions = Attribute(list_type(lambda l: list(map(int, l))))
+
+    def move(self, x, y):
+        move_cluster(self, x, y)
