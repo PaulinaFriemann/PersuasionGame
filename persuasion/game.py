@@ -46,8 +46,6 @@ class Game:
 
         self.music = None#pygame.mixer.music.load("resources/")
 
-        self.last_cluster = []
-
         self.action_queue = utils.ActionQueue()
 
     def add_agent(self, agent):
@@ -133,10 +131,6 @@ class Game:
                         print "Attitude is now friends"
                         attitude = agents.Attitude["friends"]
 
-                if event.type == pygame.KEYUP and event.key == pygame.K_z:
-                    print self.clusters.pop()
-                    agent_pos = self.last_cluster
-
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     if len(agent_pos):
@@ -160,7 +154,6 @@ class Game:
 
                         cluster.append_to_end(new_cluster)
                         new_cluster.add_cluster(game = self)
-                    self.last_cluster = agent_pos
                     self.in_editor_mode = False
 
             if mousepressed:
