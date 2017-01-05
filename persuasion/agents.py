@@ -22,7 +22,7 @@ class Agent:
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
-        self.speed_modificator = 1.5
+        self.speed_modificator = 1
         self.personalspace = self.width*4
         self.default_movement = movement
         self.attitude = attitude

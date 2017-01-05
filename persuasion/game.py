@@ -7,6 +7,7 @@ from pygame import Rect
 import agents
 import gui
 import utils
+import movements
 from camera import Camera
 
 
@@ -42,6 +43,7 @@ class Game:
         self.width = screen.get_width()
         self.screen = screen
         self.in_editor_mode = False
+        self.music = None#pygame.mixer.music.load("resources/")
 
         self.action_queue = utils.ActionQueue()
 
@@ -58,6 +60,9 @@ class Game:
             for position in cluster.starting_positions:
                 agent = agents.Agent(position[0], position[1], 0, attitude=cluster.attitude)
                 self.add_agent(agent)
+
+        for agent in self.agents[1:2]:
+            agent.set_path(movements.side_to_side,default=True)
 
     def load_agents(self):
         clusters = cluster.load_all()
@@ -113,19 +118,19 @@ class Game:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
 
-                        paulicluster.append_to_end(cluster)
+                        cluster.append_to_end(cluster)
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
                         self.clusters.append(cluster)
-                        paulicluster.append_to_end(cluster)
+                        cluster.append_to_end(cluster)
 
                     self.in_editor_mode = False
 

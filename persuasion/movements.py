@@ -46,6 +46,8 @@ def follow(agent):
 
 def move_path(agent):
     if agent.step >= len(agent.path):
+        if agent.default_movement == side_to_side:
+            print "I ARRIVED"
         agent.set_path(agent.default_movement)
         agent.event = False
     try:
@@ -61,9 +63,11 @@ def move_path(agent):
         this_move = agent.path[agent.step]
 
 
-    new_x = agent.rect.centerx + this_move[0] * 2
+    new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
+    if agent.default_movement == side_to_side:
+        print "newx ", new_x
 
-    if game.screen_width > new_x > (0 + agent.rect.width):
+    if (game.screen_width) >= new_x >= (agent.rect.width/2):
         agent.move(this_move)
     else:
         agent.move([0, this_move[1]])
@@ -102,7 +106,26 @@ def path_direct(agent):
         path.extend([[signdx,0]]*abs(dx))
     if dy != 0:
         path.extend([[0,signdy]]*abs(dy))
+    print path, len(path)
     return path
+
+
+def side_to_side(agent):
+    max = game.screen_width
+    agent_right = agent.rect.right
+    agent_left = agent.rect.left
+
+    print agent_right, agent_left
+
+    if agent_left <= 0:
+        return [[1, 0]] * (max + agent_left)
+    if agent_right >= max:
+        return [[-1, 0]] * (max - agent.width)
+
+    if agent_right < max/2:
+        return [[-1,0]] * (agent_right)
+    else:
+        return [[1,0]] * (max - agent_right)
 
 
 def random_to_goal(agent):
