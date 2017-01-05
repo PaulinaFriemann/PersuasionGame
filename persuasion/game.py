@@ -81,6 +81,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    #paulicluster.save_all(self.clusters)
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
@@ -140,6 +141,7 @@ class Game:
 
                         new_cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
+                        self.clusters.append(new_cluster)
 
                         cluster.append_to_end(new_cluster)
                         new_cluster.add_cluster(game = self)

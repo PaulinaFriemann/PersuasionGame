@@ -60,6 +60,7 @@ def change_attitude(cluster, attitude):
 
 class Cluster(Model):
     members = Attribute(list_type(lambda l:list(map(agents.Agent, l))), fallback = [])
+    name = Attribute(str, fallback="default")
     number = Attribute(int)
     attitude = Attribute(int, fallback=0)
     starting_positions = Attribute(list_type(lambda l: list(map(int, l))))
