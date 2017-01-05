@@ -8,6 +8,7 @@ def idle(agent):
 
 
 def do_nothing(agent):
+    print "path ", agent.path
     return agent.path
 
 

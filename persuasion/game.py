@@ -186,7 +186,7 @@ class Camera:
         for agent in self.world.agents:
             if self.check_visibility(agent.rect):
                 new_rect = self.adjust_agent(agent)
-                pygame.draw.rect(self.screen, agent.color, new_rect)
+                self.screen.blit(agent.s, new_rect.topleft)
             else:
                 if agent.rect.top > self.position.bottom:
                     self.world.agents.remove(agent)

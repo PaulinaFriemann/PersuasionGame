@@ -18,10 +18,8 @@ class Agent:
     def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude.neutral, cluster_member=False):
         self.happiness = happiness
 
-        print attitude, type(attitude)
-
         self.color = pygame.Color('black')
-        self.color.hsva = (260 - (self.happiness * 2),0,90,0)
+        self.color.hsva = (260 - (self.happiness * 2),0,90,100)
 
         self.speed = [0, 0]
         self.width = 10
@@ -36,6 +34,10 @@ class Agent:
         self.cluster_member = cluster_member
         self.event = False
         self.goal = None
+        self.s = pygame.Surface((self.width, self.width))
+        self.s.fill(self.color)
+        self.s.set_alpha(255)
+        self.fadeaway = False
 
         self.set_path(self.default_movement, default=True)
 
@@ -53,6 +55,8 @@ class Agent:
 
     def update(self):
         movements.move_path(self)
+        if self.fadeaway:
+            self.fade_away()
 
     def update_color(self,player_happiness):
         self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
@@ -66,20 +70,26 @@ class Agent:
     def set_default_path(self, movement):
         self.default_movement = movement
 
+    def fade_away(self):
+        new_alpha = self.s.get_alpha() - 1
+        if new_alpha < 5:
+            settings.game.agents.remove(self)
+        self.s.set_alpha(self.s.get_alpha() - 1)
+
+
     def on_enter_personal_space(self):
         if not self.event:
-          #  try:
-           #     self.set_path(personal_space_reactions[self.attitude.value])
 
-            #except AttributeError:
+            if self.attitude == Attitude.avoiding:
+                self.fadeaway = True
+                self.set_default_path(movements.do_nothing)
+
             self.set_path(personal_space_reactions[self.attitude])
 
             self.event = True
 
     def on_collision(self, other):
-       # try:
-        #    self.set_path(collision_reactions[self.attitude.value])
-        #except AttributeError:
+
         self.set_path(collision_reactions[self.attitude])
 
         self.event = True
