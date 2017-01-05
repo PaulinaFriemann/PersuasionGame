@@ -22,8 +22,6 @@ def maiasdn():
     #paulicluster.move_cluster(clusters[-3], 0, -100)
     #paulicluster.move_cluster(clusters[-2], 0, -100)
     #paulicluster.move_cluster(clusters[-1], 0, -100)
-    paulicluster.move_cluster(clusters[1], 0, -200)
-    paulicluster.move_cluster(clusters[2], 0, -200)
 
     paulicluster.save_all(clusters)
 

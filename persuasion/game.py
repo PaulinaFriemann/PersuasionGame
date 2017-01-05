@@ -10,6 +10,13 @@ import settings
 import utils
 
 
+event_positions = [-100]
+event_text = ["""Hey there.
+I see you're not feeling so well.
+Sometimes life can be rough.
+You will see, everything gets better."""]
+
+
 class Game:
 
     def __init__(self, screen, end_height, top_camera=0, left_camera=0):
@@ -23,7 +30,6 @@ class Game:
         self.player = None
         self.width = screen.get_width()
         self.screen = screen
-
 
         self.action_queue = utils.ActionQueue()
 
@@ -153,6 +159,7 @@ class Camera:
         self.screen = screen
         self.bar = gui.NarratorBar(15, Rect(0, 350, self.width, 350))
         self.nametag = gui.TextArea(15, Rect(50,50,50,20), centered=True)
+        self.event_num = 0
 
     def move(self, player_speed):
         new_left = self.position.left + player_speed[0]
@@ -168,6 +175,14 @@ class Camera:
             self.position.left += player_speed[0]
 
         self.position.top += player_speed[1]
+        print self.position.top
+
+        if self.event_num < len(event_positions):
+            if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
+                print "POPOPOPSADOPAODSOAJDIO"
+                self.bar.set_text(event_text[self.event_num])
+                self.bar.pop_up()
+                self.event_num += 1
 
     def adjust_agent(self, agent):
         return self.adjust_rect(agent.rect)

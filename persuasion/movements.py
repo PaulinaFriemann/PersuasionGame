@@ -8,7 +8,6 @@ def idle(agent):
 
 
 def do_nothing(agent):
-    print "path ", agent.path
     return agent.path
 
 
@@ -54,6 +53,10 @@ def move_path(agent):
         print agent.attitude
         print agent.default_movement
         print agent.color
+
+        agent.set_path(agent.default_movement)
+        this_move = agent.path[agent.step]
+
 
     new_x = agent.rect.centerx + this_move[0] * 2
 
@@ -130,5 +133,7 @@ def random_to_goal(agent):
         print signdx
         print signdy
         print "LOLOLOL"
+
+        path = agent.path
 
     return path

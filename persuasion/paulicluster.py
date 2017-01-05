@@ -65,6 +65,10 @@ def move_cluster(cluster, x, y):
         position[1] += y
 
 
+def change_attitude(cluster, attitude):
+    cluster.attitude = attitude
+
+
 class PauliCluster(Model):
     number = Attribute(int)
     attitude = Attribute(int, fallback=0)
