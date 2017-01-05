@@ -1,6 +1,6 @@
 import math
 import sys
-import paulicluster
+import cluster
 import pygame
 from pygame import Rect
 
@@ -60,7 +60,7 @@ class Game:
                 self.add_agent(agent)
 
     def load_agents(self):
-        clusters = paulicluster.load_all()
+        clusters = cluster.load_all()
         self.add_clusters(clusters)
 
     def distance(self, rect1, rect2):
