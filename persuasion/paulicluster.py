@@ -14,14 +14,14 @@ def deserialize(string):
     return PauliCluster(**json.loads(string.strip("\n")))
 
 
-def save_all(clusters):
+def save_all(clusters, file_path = 'clusters/json/cluster1.txt'):
     with open(file_path, 'w') as f:
         for cluster in clusters:
             f.write(serialize(cluster)+"\n")
 
 
 
-def save_cluster(PauliCluster):
+def save_cluster(PauliCluster, file_path = 'clusters/json/cluster1.txt'):
     string = serialize(PauliCluster)
     f = open(file_path, 'w')
 
@@ -30,14 +30,13 @@ def save_cluster(PauliCluster):
     f.close()
 
 
-def append_to_end(PauliCluster):
+def append_to_end(PauliCluster,file_path = 'clusters/json/cluster1.txt'):
     string = serialize(PauliCluster)
-    with open('clusters/json/cluster1.txt', 'a') as f:
+    with open(file_path, 'a') as f:
         f.write(string + "\n")
 
 
-def load_all():
-    path = 'clusters/json/cluster1.txt'
+def load_all(path = 'clusters/json/cluster1.txt'):
     clusters = []
     with open(path, 'r') as f:
         for line in f:
