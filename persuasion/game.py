@@ -42,6 +42,8 @@ class Game:
         self.width = screen.get_width()
         self.screen = screen
         self.in_editor_mode = False
+        self.last_cluster = []
+
 
         self.action_queue = utils.ActionQueue()
 
@@ -125,6 +127,10 @@ class Game:
                         print "Attitude is now friends"
                         attitude = agents.Attitude["friends"]
 
+                if event.type == pygame.KEYUP and event.key == pygame.K_z:
+                    print self.clusters.pop()
+                    agent_pos = self.last_cluster
+
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     if len(agent_pos):
@@ -133,19 +139,19 @@ class Game:
                         new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
 
-                        cluster.append_to_end(new_cluster)
+                        #cluster.append_to_end(new_cluster)
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        new_cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
                         self.clusters.append(new_cluster)
 
-                        cluster.append_to_end(new_cluster)
+                        #cluster.append_to_end(new_cluster)
                         new_cluster.add_cluster(game = self)
-
+                    self.last_cluster = agent_pos
                     self.in_editor_mode = False
 
             if mousepressed:
