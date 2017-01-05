@@ -250,9 +250,9 @@ class Cluster:
             self.members[i].set_path(paths[i])
 
     def update_happiness(self):
-        for i in range(1,len(self.members)):
-            print "lol"
-
+        for i in range(len(self.members)):
+            for j in range(len(self.members)):
+                self.members[i].happiness += (self.members[j].happiness - self.members[i].happiness)/100
 
     def regroup(self, dx = 0, dy = 0):
         for i in range(len(self.members)):

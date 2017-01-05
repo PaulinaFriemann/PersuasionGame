@@ -126,15 +126,7 @@ def random_to_goal(agent):
         path.extend([[0,signdy]]*abs(dy))
 
     if path == []:
-        print "LOL"
-        print begin
-        print end
-        print dx
-        print dy
-        print signdx
-        print signdy
-        print "LOLOLOL"
-
+        # path = [[0,0]]
         path = agent.path
 
     return path
