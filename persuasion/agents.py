@@ -1,13 +1,13 @@
 import pygame
 import imp
 
-enum = imp.load_source('Enum', '/home/pauli/anaconda2/lib/python2.7/site-packages/tables/misc/enum.py')
+from enum import Enum
 import settings
 import movements
 import gui
 
 
-Attitude = enum.Enum({'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3})
+Attitude = Enum({'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3})
 
 
 collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
