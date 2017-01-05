@@ -33,6 +33,7 @@ class Game:
     def __init__(self, end_height):
 
         self.agents = []
+        self.clusters = []
         self.end = end_height
         self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen)
@@ -40,6 +41,7 @@ class Game:
         self.add_player(agents.Player(screen_width / 2, screen_height / 2, 100))
         self.width = screen.get_width()
         self.screen = screen
+        self.in_editor_mode = False
 
         self.action_queue = utils.ActionQueue()
 
@@ -52,6 +54,7 @@ class Game:
 
     def add_clusters(self, clusters):
         for cluster in clusters:
+            self.clusters.append(cluster)
             for position in cluster.starting_positions:
                 agent = agents.Agent(position[0], position[1], 0, attitude=cluster.attitude)
                 self.add_agent(agent)
@@ -80,11 +83,69 @@ class Game:
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
+                    self.in_editor_mode = not self.in_editor_mode
 
-            self.player.speed = [int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT]),
-                            int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])]
+            if not self.in_editor_mode:
+                self.player.speed = [int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT]),
+                                int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])]
 
-            self.update()
+                self.update()
+
+            else:
+                self.editor_mode()
+
+            pygame.display.flip()
+
+    def editor_mode(self):
+        block = 0
+        clock = pygame.time.Clock()
+        agent_pos = []
+        num_clusters = len(self.clusters)
+        while self.in_editor_mode:
+            clock.tick(30)
+            mousepressed = pygame.mouse.get_pressed()[0] if block == 0 else False
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT \
+                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    if len(agent_pos):
+                        num_clusters += 1
+
+                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+
+                        paulicluster.append_to_end(cluster)
+
+                if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
+                    if len(agent_pos):
+                        num_clusters += 1
+
+                        cluster = paulicluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+
+                        paulicluster.append_to_end(cluster)
+
+                    self.in_editor_mode = False
+
+            if mousepressed:
+
+                position = pygame.mouse.get_pos()
+                rect = utils.get_rect(position[0], position[1], 10, 10)
+                if any([rect.colliderect(other) for other in agent_pos]):
+                    colliders = filter(rect.colliderect, agent_pos)
+                    for col in colliders:
+                        agent_pos.remove(col)
+                else:
+                    agent_pos.append(rect)
+                block = 10
+
+            block = max(0, block - 1)
+
+            self.camera.draw()
+
+            for pos in agent_pos:
+                pygame.draw.rect(self.screen, pygame.Color("Black"), pos)
 
             pygame.display.flip()
 
