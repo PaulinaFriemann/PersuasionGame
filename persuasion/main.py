@@ -3,7 +3,7 @@ from agents import *
 import settings
 import sys
 import utils
-import paulicluster
+import cluster
 import game
 
 pygame.init()
@@ -22,13 +22,13 @@ def maiasdn():
 
     init()
 
-    clusters = paulicluster.load_all()
+    clusters = cluster.load_all()
 
-    #paulicluster.move_cluster(clusters[-3], 0, -100)
-    #paulicluster.move_cluster(clusters[-2], 0, -100)
-    #paulicluster.move_cluster(clusters[-1], 0, -100)
+    #cluster.move_cluster(clusters[-3], 0, -100)
+    #cluster.move_cluster(clusters[-2], 0, -100)
+    #cluster.move_cluster(clusters[-1], 0, -100)
 
-    paulicluster.save_all(clusters)
+    cluster.save_all(clusters)
 
 
 def mainsad():
@@ -43,9 +43,9 @@ def mainsad():
 
     game.main_game.start()
 
-    pauliclusters = paulicluster.load_all()
-    clusters = []
-    for cluster in pauliclusters:
+    clusters = cluster.load_all()
+    for cluster in clusters:
+
         cluster.add_cluster(game = game.main_game)
 
     #settings.game.add_clusters(clusters)
@@ -89,10 +89,10 @@ def mainasd():
 
     agent_pos = []
 
-    clusters = paulicluster.load_all()
+    clusters = cluster.load_all()
 
-    paulicluster.move_cluster(clusters[1], 0, -200)
-    paulicluster.move_cluster(clusters[2], 0, -200)
+    cluster.move_cluster(clusters[1], 0, -200)
+    cluster.move_cluster(clusters[2], 0, -200)
 
     print clusters
 
@@ -110,11 +110,11 @@ def mainasd():
                     num_clusters += 1
 
                     try:
-                        cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
+                        cluster = cluster.Cluster(number=num_clusters, attitude=Attitude.avoiding.value, positions=[list(pos.center) for pos in agent_pos])
                     except AttributeError:
-                        cluster = paulicluster.PauliCluster(number=num_clusters, attitude=Attitude.avoiding, positions=[list(pos.center) for pos in agent_pos])
+                        cluster = cluster.Cluster(number=num_clusters, attitude=Attitude.avoiding, positions=[list(pos.center) for pos in agent_pos])
 
-                    paulicluster.append_to_end(cluster)
+                    cluster.append_to_end(cluster)
 
                 pygame.quit()
                 sys.exit()
