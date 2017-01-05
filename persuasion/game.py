@@ -187,6 +187,9 @@ class Camera:
             if self.check_visibility(agent.rect):
                 new_rect = self.adjust_agent(agent)
                 pygame.draw.rect(self.screen, agent.color, new_rect)
+            else:
+                if agent.rect.top > self.position.bottom:
+                    self.world.agents.remove(agent)
 
         self.draw_nametag()
         self.draw_overlay()

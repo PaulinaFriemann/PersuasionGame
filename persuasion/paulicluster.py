@@ -3,6 +3,9 @@ import json
 from simple_model import Model, Attribute, list_type
 import utils
 
+
+file_path = 'clusters/json/cluster1.txt'
+
 def serialize(model):
     return json.dumps(dict(model))
 
@@ -11,9 +14,16 @@ def deserialize(string):
     return PauliCluster(**json.loads(string.strip("\n")))
 
 
+def save_all(clusters):
+    with open(file_path, 'w') as f:
+        for cluster in clusters:
+            f.write(serialize(cluster)+"\n")
+
+
+
 def save_cluster(PauliCluster):
     string = serialize(PauliCluster)
-    f = open('clusters/json/cluster1.txt', 'w')
+    f = open(file_path, 'w')
 
     f.write(string)
 
