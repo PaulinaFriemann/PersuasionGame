@@ -124,9 +124,11 @@ class Game:
                     self.player.on_collision(agent)
                     agent.on_collision(self.player)
                 if agent.distance_to_player <= agent.personalspace:
+
                     if (self.player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
                         self.player.change_happiness(-0.5)
-                    agent.on_enter_personal_space()
+                    agent.on_enter_personal_space(self.player)
+
 
             agent.update()
 
