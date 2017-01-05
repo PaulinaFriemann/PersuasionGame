@@ -37,7 +37,8 @@ class Agent:
         self.goal = None
         self.s = pygame.Surface((self.width, self.width))
         self.s.fill(self.color)
-        self.s.set_alpha(255)
+        self.alpha = 255
+        self.s.set_alpha(self.alpha)
         self.fadeaway = False
 
         self.set_path(self.default_movement, default=True)
@@ -60,7 +61,9 @@ class Agent:
             self.fade_away()
 
     def update_color(self,player_happiness):
-        self.color.hsva = (260 - (int(math.round(self.happiness * 2))), player_happiness, 90, 0)
+        self.color.hsva = (260 - (int(round(self.happiness * 2))), player_happiness, 90, 0)
+        self.s.fill(self.color)
+        self.s.set_alpha(self.alpha)
 
     def set_path(self, movement, default=False, step=0):
         self.step = step
@@ -72,10 +75,10 @@ class Agent:
         self.default_movement = movement
 
     def fade_away(self):
-        new_alpha = self.s.get_alpha() - 1
+        new_alpha = self.alpha - 1
         if new_alpha < 5:
             settings.game.agents.remove(self)
-        self.s.set_alpha(self.s.get_alpha() - 1)
+        self.s.set_alpha(self.alpha - 1)
 
 
     def on_enter_personal_space(self):
@@ -137,7 +140,8 @@ class Player(Agent):
         self.update_color()
 
     def update_color(self,doweneedthis=False):
-        self.color.hsva = (260 - (int(math.round(self.happiness * 2))), int(math.round(self.happiness)), 90, 0)
+        self.color.hsva = (260 - (int(round(self.happiness * 2))), int(round(self.happiness)), 90, 0)
+        self.s.fill(self.color)
 
     def on_enter_personal_space(self):
         pass

@@ -10,7 +10,7 @@ import settings
 import utils
 
 
-event_positions = [-100]
+event_positions = [-500]
 event_text = ["""Hey there.
 I see you're not feeling so well.
 Sometimes life can be rough.
@@ -175,11 +175,9 @@ class Camera:
             self.position.left += player_speed[0]
 
         self.position.top += player_speed[1]
-        print self.position.top
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
-                print "POPOPOPSADOPAODSOAJDIO"
                 self.bar.set_text(event_text[self.event_num])
                 self.bar.pop_up()
                 self.event_num += 1
@@ -214,7 +212,7 @@ class Camera:
         name_area = settings.game.player.name_area
         new_rect = self.adjust_rect(name_area)
         self.nametag.move_ip(new_rect.centerx - self.nametag.centerx, new_rect.centery - self.nametag.centery)
-        self.nametag.draw(self.screen)
+        #self.nametag.draw(self.screen)
 
     def draw_overlay(self, alpha=20):
 

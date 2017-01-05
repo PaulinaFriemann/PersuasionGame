@@ -10,7 +10,7 @@ pygame.init()
 
 def init():
     pygame.key.set_repeat(True)
-    settings.init(500, 480)
+    settings.init(600, 480)
 
 
 def maiasdn():
@@ -33,7 +33,7 @@ def main():
     pink = pygame.Color('Pink')
     black = 0, 0, 0
 
-    player = Player(settings.screen_width/2, settings.screen_height/2, 0)
+    player = Player(settings.screen_width/2, settings.screen_height/2, 100)
     settings.game.add_player(player)
 
     settings.game.start()
@@ -58,8 +58,8 @@ def main():
         mousepressed = pygame.mouse.get_pressed()
 
         player.speed[0] = int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT])
-        #player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
-        player.speed[1] = - int(pressed[pygame.K_UP])
+        player.speed[1] = int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])
+        #player.speed[1] = - int(pressed[pygame.K_UP])
 
         if mousepressed[0]:
             mouse_is_pressed = True
