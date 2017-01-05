@@ -1,12 +1,8 @@
 import pygame
-import imp
 
-from enum import Enum
-import math
-import settings
 import movements
-import gui
-
+import settings
+from enum import Enum
 
 Attitude = Enum({'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3})
 
@@ -25,7 +21,7 @@ class Agent:
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
-        self.speed_modificator = 1
+        self.speed_modificator = 1.5
         self.personalspace = self.width*4
         self.default_movement = movement
         self.attitude = attitude
@@ -75,10 +71,13 @@ class Agent:
         self.default_movement = movement
 
     def fade_away(self):
-        new_alpha = self.alpha - 1
-        if new_alpha < 5:
+        self.alpha -= 1
+        if self.alpha < 5:
             settings.game.agents.remove(self)
-        self.s.set_alpha(self.alpha - 1)
+        self.s.set_alpha(self.alpha)
+
+    def change_happiness(self, delta):
+        self.happiness = max(0, min(self.happiness + delta, 255))
 
 
     def on_enter_personal_space(self,player):
@@ -119,19 +118,19 @@ class Player(Agent):
         Agent.__init__(self, x, y, happiness)
         self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
 
-        # self.speed_modificator = 3
+        self.speed_modificator = 1.5
 
     def move(self, speed):
         self.speed = map(lambda x: self.speed_modificator * x, speed)
 
         new_x = self.rect.bottomright[0] + self.speed[0]
         if settings.screen_width > new_x > (0 + self.rect.width):
-            self.rect = self.rect.move(speed)
+            self.rect = self.rect.move(self.speed)
 
-            self.name_area = self.name_area.move(speed)
+            self.name_area = self.name_area.move(self.speed)
         else:
-            self.rect = self.rect.move([0, speed[1]])
-            self.name_area.move_ip([0, speed[1]])
+            self.rect = self.rect.move([0, self.speed[1]])
+            self.name_area.move_ip([0, self.speed[1]])
 
     def update(self):
         if self.path == [[0, 0]]:
@@ -141,7 +140,7 @@ class Player(Agent):
         self.update_color()
 
     def update_color(self,doweneedthis=False):
-        self.color.hsva = (260 - (self.happiness * 2), self.happiness, 90, 0)
+        self.color.hsva = (max(0,260 - (self.happiness * 2)), self.happiness, 90, 0)
         self.s.fill(self.color)
 
     def on_enter_personal_space(self):
@@ -150,10 +149,10 @@ class Player(Agent):
     def on_collision(self, other):
         if self.path == [[0, 0]]:
             if other.attitude == Attitude.friendly:
-                self.happiness += 5
-                other.happiness += 5
+                self.change_happiness(5)
+                other.change_happiness(5)
                 self.set_path(movements.make_happy)
             elif other.attitude != Attitude.friends:
-                self.happiness -= 5
-                other.happiness -= 5
+                self.change_happiness(-5)
+                other.change_happiness(-5)
                 self.set_path(movements.bounce_back)
