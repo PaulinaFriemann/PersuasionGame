@@ -102,17 +102,34 @@ class Game:
         clock = pygame.time.Clock()
         agent_pos = []
         num_clusters = len(self.clusters)
+
+        attitude = agents.Attitude["avoiding"]
+
         while self.in_editor_mode:
             clock.tick(30)
             mousepressed = pygame.mouse.get_pressed()[0] if block == 0 else False
 
             for event in pygame.event.get():
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_1:
+                        print "Attitude is now avoiding"
+                        attitude = agents.Attitude["avoiding"]
+                    elif event.key == pygame.K2:
+                        print "Attitude is now neutral"
+                        attitude = agents.Attitude["neutral"]
+                    elif event.key == pygame.K3:
+                        print "Attitude is now friendly"
+                        attitude = agents.Attitude["friendly"]
+                    elif event.key == pygame.K4:
+                        print "Attitude is now friends"
+                        attitude = agents.Attitude["friends"]
+
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     if len(agent_pos):
                         num_clusters += 1
 
-                        new_cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
 
                         cluster.append_to_end(new_cluster)
