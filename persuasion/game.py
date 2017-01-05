@@ -39,11 +39,14 @@ class Game:
         self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen)
         self.player = None
-        self.add_player(agents.Player(screen_width / 2, screen_height / 2, 100))
+        self.add_player(agents.Player(screen_width / 2, screen_height / 2, 50))
         self.width = screen.get_width()
         self.screen = screen
         self.in_editor_mode = False
+
         self.music = None#pygame.mixer.music.load("resources/")
+
+        self.last_cluster = []
 
         self.action_queue = utils.ActionQueue()
 
@@ -108,30 +111,56 @@ class Game:
         clock = pygame.time.Clock()
         agent_pos = []
         num_clusters = len(self.clusters)
+
+        attitude = agents.Attitude["avoiding"]
+
         while self.in_editor_mode:
             clock.tick(30)
             mousepressed = pygame.mouse.get_pressed()[0] if block == 0 else False
 
             for event in pygame.event.get():
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_1:
+                        print "Attitude is now avoiding"
+                        attitude = agents.Attitude["avoiding"]
+                    elif event.key == pygame.K_2:
+                        print "Attitude is now neutral"
+                        attitude = agents.Attitude["neutral"]
+                    elif event.key == pygame.K_3:
+                        print "Attitude is now friendly"
+                        attitude = agents.Attitude["friendly"]
+                    elif event.key == pygame.K_4:
+                        print "Attitude is now friends"
+                        attitude = agents.Attitude["friends"]
+
+                if event.type == pygame.KEYUP and event.key == pygame.K_z:
+                    print self.clusters.pop()
+                    agent_pos = self.last_cluster
+
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
-                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+                        #
 
-                        cluster.append_to_end(cluster)
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
+                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+                        cluster.append_to_end(new_cluster)
+
+
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        cluster = cluster.Cluster(number=num_clusters, attitude=agents.Attitude["avoiding"],
+                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
-                        self.clusters.append(cluster)
-                        cluster.append_to_end(cluster)
+                        self.clusters.append(new_cluster)
 
+                        cluster.append_to_end(new_cluster)
+                        new_cluster.add_cluster(game = self)
+                    self.last_cluster = agent_pos
                     self.in_editor_mode = False
 
             if mousepressed:

@@ -77,7 +77,9 @@ class Agent:
         self.s.set_alpha(self.alpha)
 
     def change_happiness(self, delta):
-        self.happiness = max(0, min(self.happiness + delta, 255))
+
+        self.happiness = max(0, min(self.happiness + delta, 100))
+        self.update_color(game.main_game.player.happiness)
 
 
     def on_enter_personal_space(self,player):
@@ -93,6 +95,8 @@ class Agent:
             self.event = True
 
     def on_collision(self, other):
+
+        print "collision"
 
         self.set_path(collision_reactions[self.attitude])
 
@@ -137,22 +141,31 @@ class Player(Agent):
             self.move(self.speed)
         else:
             movements.move_path(self)
-        self.update_color()
+        #self.update_color()
 
     def update_color(self,doweneedthis=False):
-        self.color.hsva = (max(0,260 - (self.happiness * 2)), self.happiness, 90, 0)
+        #print min(255,max(0,260 - (self.happiness * 2)))
+        try:
+            self.color.hsva = (min(255,max(0,260 - (self.happiness * 2))), self.happiness, 90, 0)
+        except ValueError:
+            print (min(255,max(0,260 - (self.happiness * 2))), self.happiness, 90, 0)
         self.s.fill(self.color)
 
     def on_enter_personal_space(self):
         pass
 
+    def on_bounce(self, other_attitude):
+        self.step = 0
+        size = 6 if other_attitude == Attitude["friends"] else 10
+        self.path = movements.bounce_back(self, size)
+
     def on_collision(self, other):
         if self.path == [[0, 0]]:
-            if other.attitude == Attitude.friendly:
+            if other.attitude == Attitude["friendly"]:
                 self.change_happiness(5)
                 other.change_happiness(5)
                 self.set_path(movements.make_happy)
-            elif other.attitude != Attitude.friends:
+            elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-5)
                 other.change_happiness(-5)
-                self.set_path(movements.bounce_back)
+            self.on_bounce(other.attitude)

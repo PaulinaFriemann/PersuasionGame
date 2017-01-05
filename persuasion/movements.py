@@ -2,7 +2,6 @@ import random
 
 import game
 import utils
-import settings
 
 
 def idle(agent):
@@ -19,8 +18,8 @@ def default(agent):
         return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
 
 
-def bounce_back(self):
-    return [map(lambda x: -x, self.speed)] * 15
+def bounce_back(agent, size=6):
+    return [map(lambda x: -x, agent.speed)] * size
 
 
 def make_happy(agent):
@@ -47,25 +46,15 @@ def follow(agent):
 def move_path(agent):
     if agent.step >= len(agent.path):
         if agent.default_movement == side_to_side:
-            print "I ARRIVED"
-        agent.set_path(agent.default_movement)
-        agent.event = False
+            agent.set_path(agent.default_movement)
+            agent.event = False
     try:
         this_move = agent.path[agent.step]
     except IndexError:
-        print agent.path
-        print agent.step
-        print agent.attitude
-        print agent.default_movement
-        print agent.color
-
         agent.set_path(agent.default_movement)
         this_move = agent.path[agent.step]
 
-
     new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
-    if agent.default_movement == side_to_side:
-        print "newx ", new_x
 
     if (game.screen_width) >= new_x >= (agent.rect.width/2):
         agent.move(this_move)
@@ -106,7 +95,6 @@ def path_direct(agent):
         path.extend([[signdx,0]]*abs(dx))
     if dy != 0:
         path.extend([[0,signdy]]*abs(dy))
-    print path, len(path)
     return path
 
 
@@ -114,8 +102,6 @@ def side_to_side(agent):
     max = game.screen_width
     agent_right = agent.rect.right
     agent_left = agent.rect.left
-
-    print agent_right, agent_left
 
     if agent_left <= 0:
         return [[1, 0]] * (max + agent_left)
@@ -149,7 +135,7 @@ def random_to_goal(agent):
     if dy != 0:
         path.extend([[0,signdy]]*abs(dy))
 
-    if path == []:
+    if not path:
         # path = [[0,0]]
         path = agent.path
 
