@@ -6,7 +6,7 @@ import movements
 Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 
 
-collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
+collision_reactions = [movements.bounce_back, movements.bounce_back, movements.do_nothing, movements.bounce_back]
 personal_space_reactions = [movements.default, movements.avoid, movements.do_nothing, movements.make_happy]
 
 
@@ -81,7 +81,7 @@ class Agent:
 
         self.happiness = max(0, min(self.happiness + delta, 100))
         self.update_color(self.happiness)
-        print self.happiness
+        #print self.happiness
 
 
     def on_enter_personal_space(self,player):
@@ -93,6 +93,12 @@ class Agent:
 
             self.set_path(personal_space_reactions[self.attitude])
 
+            if self.attitude == Attitude["friendly"]:
+                print "Okay, you seem cool."
+                self.set_path(movements.make_happy)
+                if player.trying_to_communicate:
+                    print "Let's be friends!"
+                    self.become_friends()
 
             self.event = True
 
@@ -104,6 +110,9 @@ class Agent:
 
         self.event = True
 
+        self.become_friends()
+
+    def become_friends(self):
         if self.attitude == Attitude["friendly"]:
             game.main_game.action_queue.add(self.change_attitude, {"attitude": Attitude["friends"]}, len(self.path))
             try:
@@ -123,7 +132,7 @@ class Player(Agent):
 
         Agent.__init__(self, x, y, happiness)
         self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
-
+        self.trying_to_communicate = False
         self.speed_modificator = 1.5
 
     def move(self, speed):
@@ -167,6 +176,16 @@ class Player(Agent):
         self.step = 0
         size = 6 if other_attitude == Attitude["friends"] else 10
         self.path = movements.bounce_back(self, size)
+
+    def happy_dance(self):
+        self.step = 0
+        self.path = movements.happy_dance(self)
+        self.communicating()
+        game.main_game.action_queue.add(self.communicating, {"trying_to_communicate": False}, len(self.path))
+
+
+    def communicating(self, trying_to_communicate = True):
+        self.trying_to_communicate = trying_to_communicate
 
     def on_collision(self, other):
         if self.path == [[0, 0]]:

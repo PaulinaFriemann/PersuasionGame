@@ -88,6 +88,9 @@ class Game:
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     self.in_editor_mode = not self.in_editor_mode
 
+                if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+                    self.player.happy_dance()
+
             if not self.in_editor_mode:
                 self.player.speed = [int(pressed[pygame.K_RIGHT]) - int(pressed[pygame.K_LEFT]),
                                 int(pressed[pygame.K_DOWN]) - int(pressed[pygame.K_UP])]
@@ -180,7 +183,7 @@ class Game:
         self.update_agents()
         self.update_agents_color()
 
-        self.camera.move(self.player.rect.center)
+        self.camera.move(self.player.rect.centery)
 
         self.camera.draw()
         self.camera.bar.draw(self.screen)

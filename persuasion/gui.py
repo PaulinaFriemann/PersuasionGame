@@ -230,7 +230,7 @@ class NarratorBar(TextArea):
                 self.font.render_to(screen, (text_left, text_top + self.font.size * i + 2), line)
             else:
                 rect = utils.center_h(self.font.get_rect(line), self.text_rect)
-                print rect
+                #print rect
                 if absolute:
                     rect.move_ip([0, text_top])
                 self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)

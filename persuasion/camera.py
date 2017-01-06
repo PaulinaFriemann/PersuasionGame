@@ -31,10 +31,10 @@ class Camera:
         How do you overcome this?
         You can move around by using the arrow keys.""")
 
-    def move(self, player_center):
+    def move(self, player_centery):
         #self.position.top += player_speed[1]
 
-        self.position.center = player_center
+        self.position.centery = player_centery
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:

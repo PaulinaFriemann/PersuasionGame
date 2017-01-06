@@ -28,6 +28,12 @@ def make_happy(agent):
     path.extend([[1,-1]] * 3)
     return path
 
+def happy_dance(agent):
+    path = [[1,-1]] * 3
+    path.extend([[-1,-1]] * 3)
+    path.extend([[-1,1]] * 3)
+    path.extend([[1,1]] * 3)
+    return path
 
 def avoid(agent):
     direction = agent.direction_to(game.main_game.player.rect)
