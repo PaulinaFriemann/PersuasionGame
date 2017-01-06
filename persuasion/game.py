@@ -33,7 +33,6 @@ class Game:
 
     def __init__(self, end_height):
 
-        self.agents = []
         self.clusters = []
         self.end = end_height
         self.background = gui.Background("resources/snowbig.jpg", [0, 0], screen.get_width(), screen.get_height())
@@ -45,15 +44,12 @@ class Game:
         self.in_editor_mode = False
         self.cluster_starts = []
 
-        self.music = None#pygame.mixer.music.load("resources/")
+        self.music = pygame.mixer.music.load("resources/guano.mp3")
+        pygame.mixer.music.play(-1)
 
         self.action_queue = utils.ActionQueue()
 
-    def add_agent(self, agent):
-        self.agents.append(agent)
-
     def add_player(self, player):
-        self.agents.append(player)
         self.player = player
 
     def add_clusters(self, clusters):
@@ -155,7 +151,7 @@ class Game:
                         self.clusters.append(new_cluster)
 
                         cluster.append_to_end(new_cluster)
-                        new_cluster.add_cluster(game = self)
+                        new_cluster.add_cluster()
                     self.in_editor_mode = False
 
             if mousepressed:

@@ -11,7 +11,7 @@ personal_space_reactions = [movements.default, movements.avoid, movements.do_not
 
 
 class Agent:
-    def __init__(self, x, y, happiness, movement=movements.idle, attitude=Attitude["neutral"]):
+    def __init__(self, x, y, happiness, cluster=None, movement=movements.idle, attitude=Attitude["neutral"]):
         self.happiness = happiness
 
         self.color = pygame.Color('black')
@@ -34,6 +34,7 @@ class Agent:
         self.alpha = 255
         self.s.set_alpha(self.alpha)
         self.fadeaway = False
+        self.cluster = cluster
 
         self.set_path(self.default_movement, default=True)
 
@@ -71,7 +72,7 @@ class Agent:
     def fade_away(self):
         self.alpha -= 1
         if self.alpha < 5:
-            game.main_game.agents.remove(self)
+            self.cluster.members.remove(self)
         self.s.set_alpha(self.alpha)
 
     def change_happiness(self, delta):
@@ -86,7 +87,7 @@ class Agent:
             if self.attitude == Attitude["avoiding"]:
                 self.fadeaway = True
                 self.set_default_path(movements.do_nothing)
-                if (player.happiness > 1): player.happiness -= 1
+                if player.happiness > 1: player.happiness -= 1
 
             self.set_path(personal_space_reactions[self.attitude])
 
@@ -149,8 +150,13 @@ class Player(Agent):
             print (min(255,max(0,260 - (self.happiness * 2))), self.happiness, 90, 0)
         self.s.fill(self.color)
 
-    def on_enter_personal_space(self):
-        pass
+    def on_enter_personal_space(self, other):
+        if other.attitude == Attitude["friendly"]:
+            self.change_happiness(2)
+            other.change_happiness(2)
+        elif other.attitude != Attitude["friends"]:
+            self.change_happiness(-2)
+            other.change_happiness(-2)
 
     def on_bounce(self, other_attitude):
         self.step = 0

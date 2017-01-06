@@ -1,6 +1,5 @@
 import json
 
-from simple_model import Model, Attribute, list_type
 import movements
 
 import utils
@@ -86,26 +85,26 @@ class Cluster:
                 start = y
             self.start_position = start
 
-    def add_cluster(self, happiness=50, movement=movements.idle, game=None):
+    def add_cluster(self, happiness=50, movement=movements.idle):
         for i in range(len(self.start_positions)):
             self.members.append(
-                agents.Agent(self.start_positions[i][0], self.start_positions[i][1], happiness,
+                agents.Agent(self.start_positions[i][0], self.start_positions[i][1], happiness, self,
                              movement=movement,
                              attitude=self.attitude))
-            #game.add_agent(self.members[i])
 
     def update(self, player):
         for agent in self.members:
             agent.distance_to_player = utils.distance(player.rect, agent.rect)
-            if not isinstance(agent, agents.Player):
-                if agent.distance_to_player <= agent.width:
-                    player.on_collision(agent)
-                    agent.on_collision(player)
-                if agent.distance_to_player <= agent.personalspace:
 
-                    if (player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
-                        player.change_happiness(-0.5)
-                    agent.on_enter_personal_space(player)
+            if agent.distance_to_player <= agent.width:
+                player.on_collision(agent)
+                agent.on_collision(player)
+            if agent.distance_to_player <= agent.personalspace:
+
+                if (player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
+                    player.change_happiness(-0.5)
+                agent.on_enter_personal_space(player)
+                player.on_enter_personal_space(agent)
 
             agent.update()
 
@@ -117,46 +116,39 @@ class Cluster:
 
 
 
-
-
-class Clustersfd(Model):
-
-    def add_member(self,member):
-        self.members.extend(member)
-
-    def remove_member(self, member):
-        if member in self.members:
-            self.members.remove(member)
-
-    def regroup_wait(self,dx = 0, dy = 0):
-        paths = []
-        longest_path = 0
-        for i in range(len(self.members)):
-            target_x = self.starting_positions[i][0] + dx
-            target_y = self.starting_positions[i][1] + dy
-            current_x,current_y = self.members[i].rect.center
-            paths.append(movements.path_direct((target_x - current_x, target_y - current_y)))
-            if len(paths[i]) > longest_path:
-                longest_path = len(paths[i])
-
-        for i in range(len(self.members)):
-            paths[i].extend([[0,0]] * (longest_path - len(paths[i])))
-            self.members[i].set_path(paths[i])
-
-
-
-    def regroup(self, dx = 0, dy = 0):
-        for i in range(len(self.members)):
-            target_x = self.starting_positions[i][0] + dx
-            target_y = self.starting_positions[i][1] + dy
-            current_x,current_y = self.members[i].rect.center
-            self.members[i].goal = (target_x - current_x, target_y - current_y)
-            self.members[i].set_path(movements.path_direct)
-
-    def save_cluster(self, file_path=''):
-        if file_path == '':
-            file_path = 'clusters/json/cluster ' + int(self.number) + '.txt'
-        string = serialize(self)
-        f = open(file_path, 'w')
-        f.write(string)
-        f.close()
+#
+#
+# class Clustersfd(Model):
+#
+#     def regroup_wait(self,dx = 0, dy = 0):
+#         paths = []
+#         longest_path = 0
+#         for i in range(len(self.members)):
+#             target_x = self.starting_positions[i][0] + dx
+#             target_y = self.starting_positions[i][1] + dy
+#             current_x,current_y = self.members[i].rect.center
+#             paths.append(movements.path_direct((target_x - current_x, target_y - current_y)))
+#             if len(paths[i]) > longest_path:
+#                 longest_path = len(paths[i])
+#
+#         for i in range(len(self.members)):
+#             paths[i].extend([[0,0]] * (longest_path - len(paths[i])))
+#             self.members[i].set_path(paths[i])
+#
+#
+#
+#     def regroup(self, dx = 0, dy = 0):
+#         for i in range(len(self.members)):
+#             target_x = self.starting_positions[i][0] + dx
+#             target_y = self.starting_positions[i][1] + dy
+#             current_x,current_y = self.members[i].rect.center
+#             self.members[i].goal = (target_x - current_x, target_y - current_y)
+#             self.members[i].set_path(movements.path_direct)
+#
+#     def save_cluster(self, file_path=''):
+#         if file_path == '':
+#             file_path = 'clusters/json/cluster ' + int(self.number) + '.txt'
+#         string = serialize(self)
+#         f = open(file_path, 'w')
+#         f.write(string)
+#         f.close()
