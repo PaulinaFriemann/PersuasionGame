@@ -60,21 +60,33 @@ def move_path(agent):
         this_move = agent.path[agent.step]
 
     new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
-
-    if game.screen_width >= new_x >= (agent.rect.width/2):
-        agent.move(this_move)
+    if not agent.fadeaway:
+        if game.screen_width >= new_x >= (agent.rect.width/2):
+            agent.move(this_move)
+        else:
+            agent.move([0, this_move[1]])
     else:
-        agent.move([0, this_move[1]])
+        agent.move(this_move)
 
     agent.step += 1
 
 
-def circle(agent, size=20):
-    path = [[0,1]]*size
-    path.extend([[-1,0]]*size)
-    path.extend([[0,-1]]*size)
-    path.extend([[1,0]]*size)
+def circle(agent, size=40):
+    path = [[0,0], [0,1], [0,0]]*(size/2)
+    path.extend([[0, 0], [-1, 1], [0, 0]] * (size / 2))
+    path.extend([[0,0], [-1,0], [0,0]]*(size/2))
+    path.extend([[0, 0], [-1, -1], [0, 0]] * (size / 2))
+    path.extend([[0,0], [0,-1], [0,0]]*(size/2))
+    path.extend([[0, 0], [1, -1], [0, 0]] * (size / 2))
+    path.extend([[0,0], [1,0], [0,0]]*(size/2))
+    path.extend([[0,0], [1,1], [0,0]]*(size/2))
     return path
+
+
+def rand_circle(agent):
+    size = random.randint(30, 60)
+
+    return circle(agent, size)
 
 
 def path_direct(agent):
@@ -104,19 +116,35 @@ def path_direct(agent):
 
 
 def side_to_side(agent):
-    max = game.screen_width
+    max = 500#game.screen_width
     agent_right = agent.rect.right
     agent_left = agent.rect.left
+
+    rand = random.randint(0,2)
 
     if agent_left <= 0:
         return [[1, 0]] * (max + agent_left)
     if agent_right >= max:
         return [[-1, 0]] * (max - agent.width)
 
-    if agent_right < max/2:
+    if rand == 1:
         return [[-1,0]] * agent_right
     else:
         return [[1,0]] * (max - agent_right)
+
+
+def from_to_rand(agent):
+    if agent.goal == agent.goal_a:
+        agent.goal = agent.goal_b
+    else:
+        agent.goal = agent.goal_a
+    return random_to_goal(agent)
+
+
+def path(agent):
+
+    end_x, end_y = agent.goal
+
 
 
 def random_to_goal(agent):
@@ -130,15 +158,15 @@ def random_to_goal(agent):
 
     while dx != 0 and dy != 0:
         if random.randint(1,2) == 1:
-            path.extend([[signdx,0]])
+            path.extend([[0,0], [signdx,0], [0,0]])
             dx -= signdx
         else:
-            path.extend([[0,signdy]])
+            path.extend([[0,0], [0,signdy], [0,0]])
             dy -= signdy
     if dx != 0:
-        path.extend([[signdx,0]]*abs(dx))
+        path.extend([[0,0], [signdx,0], [0,0]]*abs(dx))
     if dy != 0:
-        path.extend([[0,signdy]]*abs(dy))
+        path.extend([[0,0], [0,signdy], [0,0]]*abs(dy))
 
     if not path:
         # path = [[0,0]]

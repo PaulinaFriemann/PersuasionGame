@@ -32,14 +32,12 @@ class Camera:
         You can move around by using the arrow keys.""")
 
     def move(self, player_centery):
-        #self.position.top += player_speed[1]
-
         self.position.centery = player_centery
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
                 self.bar.set_text(event_text[self.event_num])
-                self.bar.pop_up()
+                #self.bar.pop_up()
                 self.event_num += 1
 
     def adjust_agent(self, agent):
@@ -55,6 +53,7 @@ class Camera:
 
     def draw(self):
         self.world.background.draw(self.screen, self.position)
+        self.draw_overlay(100 - self.world.player.happiness)
         for cluster in self.world.clusters:
             if self.position.top <= cluster.start_position:
                 for agent in cluster.members:
@@ -67,7 +66,7 @@ class Camera:
         new_rect = self.adjust_agent(self.world.player)
         self.screen.blit(self.world.player.s, new_rect.topleft)
 
-        self.draw_overlay(100 - self.world.player.happiness)
+
         self.bar.draw(self.screen)
 
     def draw_overlay(self, alpha=0):

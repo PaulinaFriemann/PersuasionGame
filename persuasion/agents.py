@@ -1,4 +1,7 @@
+import random
+
 import pygame
+import utils
 
 import game
 import movements
@@ -15,7 +18,7 @@ class Agent:
         self.happiness = happiness
 
         self.color = pygame.Color('black')
-        self.color.hsva = (260 - (self.happiness * 2),0,90,100)
+        self.color.hsva = (260 - (self.happiness * 2),0,80,100)
 
         self.speed = [0, 0]
         self.width = 10
@@ -36,6 +39,13 @@ class Agent:
         self.fadeaway = False
         self.cluster = cluster
         self.has_interacted = False
+        self.goal_a = [-999, -999]
+        self.goal_b = [-999, -999]
+
+        if self.default_movement == movements.from_to_rand:
+            while utils.pos_distance(self.goal_a, self.goal_b) <= 15:
+                self.goal_a = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
+                self.goal_b = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
 
         self.set_path(self.default_movement, default=True)
 
@@ -43,6 +53,8 @@ class Agent:
             self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
             self.set_path(self.default_movement)
             self.set_default_path(movements.idle)
+
+
 
     def direction_to(self, rect):
         return [a - b for a, b in zip(self.rect.center, rect.center)]
@@ -104,8 +116,6 @@ class Agent:
 
     def on_collision(self, other):
 
-        print "collision"
-
         self.set_path(collision_reactions[self.attitude])
 
         self.event = True
@@ -133,7 +143,7 @@ class Player(Agent):
         Agent.__init__(self, x, y, happiness)
         self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
         self.trying_to_communicate = False
-        self.speed_modificator = 1.5
+        self.speed_modificator = 2
 
     def move(self, speed):
         self.speed = map(lambda x: self.speed_modificator * x, speed)

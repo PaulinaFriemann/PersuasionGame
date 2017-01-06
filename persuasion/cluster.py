@@ -14,9 +14,15 @@ def serialize(model):
             field = (getattr(model, attribute))
             if type(field) == unicode:
                 field = field.encode("ascii", "ignore")
-            if attribute not in ["members", "add_cluster", "update_happiness"]:
-                print attribute, type(attribute)
+            if attribute == "movement":
+                print field
+                field = str(field).split(" ")[1]
+                print "lala", attribute, field
+            if attribute not in ["members", "add_cluster", "update_happiness", "regroup_wait",
+                                 "regroup", "update", "add_member", "remove_member", "save_cluster"]:
+                #print attribute, type(attribute)
                 att_dict[attribute] = field
+
 
     return json.dumps(att_dict)
 
@@ -28,7 +34,6 @@ def deserialize(string):
 def save_all(clusters, file_path = 'clusters/json/all clusters.txt'):
     with open(file_path, 'w') as f:
         for cluster in clusters:
-            print serialize(cluster)
             f.write(serialize(cluster)+"\n")
 
 def append_to_end(Cluster,file_path = 'clusters/json/all clusters.txt'):
@@ -60,7 +65,7 @@ def parse_rect(string):
 
 
 def move_cluster(cluster, x, y):
-    for position in cluster.positions:
+    for position in cluster.starting_positions:
         position[0] += x
         position[1] += y
 
@@ -71,13 +76,14 @@ def change_attitude(cluster, attitude):
 
 class Cluster:
 
-    def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, members = []):
+    def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, members = [], movement="idle"):
         self.starting_positions = starting_positions
         self.name = name
         self.attitude = attitude
         self.number = number
         self.members = members
-        self.add_cluster()
+        self.movement = getattr(movements, movement)
+        self.add_cluster(movement = self.movement)
 
         if start_position == -9999:
             for pos in self.starting_positions:
@@ -98,9 +104,9 @@ class Cluster:
             agent.distance_to_player = utils.distance(player.rect, agent.rect)
 
             if agent.distance_to_player <= agent.width:
-
-                player.on_collision(agent)
-                agent.on_collision(player)
+                if not agent.fadeaway:
+                    player.on_collision(agent)
+                    agent.on_collision(player)
             if agent.distance_to_player <= agent.personalspace:
 
                 agent.on_enter_personal_space(player)
