@@ -35,6 +35,7 @@ class Agent:
         self.s.set_alpha(self.alpha)
         self.fadeaway = False
         self.cluster = cluster
+        self.has_interacted = False
 
         self.set_path(self.default_movement, default=True)
 
@@ -79,7 +80,8 @@ class Agent:
     def change_happiness(self, delta):
 
         self.happiness = max(0, min(self.happiness + delta, 100))
-        self.update_color(game.main_game.player.happiness)
+        self.update_color(self.happiness)
+        print self.happiness
 
 
     def on_enter_personal_space(self,player):
@@ -88,7 +90,6 @@ class Agent:
             if self.attitude == Attitude["avoiding"]:
                 self.fadeaway = True
                 self.set_default_path(movements.do_nothing)
-                if player.happiness > 1: player.happiness -= 1
 
             self.set_path(personal_space_reactions[self.attitude])
 
@@ -153,12 +154,14 @@ class Player(Agent):
         self.s.fill(self.color)
 
     def on_enter_personal_space(self, other):
-        if other.attitude == Attitude["friendly"]:
-            self.change_happiness(2)
-            other.change_happiness(2)
-        elif other.attitude != Attitude["friends"]:
-            self.change_happiness(-2)
-            other.change_happiness(-2)
+        if not other.has_interacted:
+            if other.attitude == Attitude["friendly"]:
+                self.change_happiness(2)
+                other.change_happiness(2)
+            elif other.attitude != Attitude["friends"]:
+                self.change_happiness(-2)
+                other.change_happiness(-2)
+                other.has_interacted = True
 
     def on_bounce(self, other_attitude):
         self.step = 0

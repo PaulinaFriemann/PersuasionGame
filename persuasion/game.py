@@ -1,13 +1,10 @@
-import math
 import sys
 import cluster
 import pygame
-from pygame import Rect
 
 import agents
 import gui
 import utils
-import movements
 from camera import Camera
 
 
@@ -190,10 +187,10 @@ class Game:
         pygame.display.flip()
 
     def update_agents(self):
+        self.player.update()
+
         for cluster in self.clusters:
             cluster.update(self.player)
-
-        self.player.update()
 
     def update_agents_color(self):
         for cluster in self.clusters:
