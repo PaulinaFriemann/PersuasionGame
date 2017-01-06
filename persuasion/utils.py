@@ -45,6 +45,10 @@ def get_rect(x, y, width, height):
                        width, height)
 
 
+def pos_distance(pos1, pos2):
+    return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
+
+
 def distance(rect1, rect2):
     return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
 

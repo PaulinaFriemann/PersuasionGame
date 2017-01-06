@@ -20,8 +20,8 @@ def mains():
 
     clusters = cluster.load_all()
 
-    clusters[-1].movement = movements.from_to_rand
-    #cluster.move_cluster(clusters[0], 0, -150)
+    #clusters[-1].movement = movements.from_to_rand
+    cluster.move_cluster(clusters[-1], 0, 212)
     #cluster.move_cluster(clusters[-2], 0, -100)
     #cluster.move_cluster(clusters[-1], 0, -100)
 

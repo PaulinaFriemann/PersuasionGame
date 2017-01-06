@@ -1,6 +1,7 @@
 import random
 
 import pygame
+import utils
 
 import game
 import movements
@@ -17,7 +18,7 @@ class Agent:
         self.happiness = happiness
 
         self.color = pygame.Color('black')
-        self.color.hsva = (260 - (self.happiness * 2),0,90,100)
+        self.color.hsva = (260 - (self.happiness * 2),0,80,100)
 
         self.speed = [0, 0]
         self.width = 10
@@ -38,10 +39,13 @@ class Agent:
         self.fadeaway = False
         self.cluster = cluster
         self.has_interacted = False
+        self.goal_a = [-999, -999]
+        self.goal_b = [-999, -999]
 
         if self.default_movement == movements.from_to_rand:
-            self.goal_a = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
-            self.goal_b = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
+            while utils.pos_distance(self.goal_a, self.goal_b) <= 15:
+                self.goal_a = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
+                self.goal_b = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
 
         self.set_path(self.default_movement, default=True)
 
@@ -89,7 +93,6 @@ class Agent:
 
         self.happiness = max(0, min(self.happiness + delta, 100))
         self.update_color(self.happiness)
-        print self.happiness
 
 
     def on_enter_personal_space(self,player):
@@ -105,8 +108,6 @@ class Agent:
             self.event = True
 
     def on_collision(self, other):
-
-        print "collision"
 
         self.set_path(collision_reactions[self.attitude])
 
