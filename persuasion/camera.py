@@ -32,14 +32,13 @@ class Camera:
         You can move around by using the arrow keys.""")
 
     def move(self, player_center):
-        #self.position.top += player_speed[1]
 
-        self.position.center = player_center
+        self.position.centery = player_center[1]
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
                 self.bar.set_text(event_text[self.event_num])
-                self.bar.pop_up()
+                #self.bar.pop_up()
                 self.event_num += 1
 
     def adjust_agent(self, agent):

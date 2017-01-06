@@ -63,11 +63,11 @@ def move_path(agent):
     agent.step += 1
 
 
-def circle(agent, size=20):
-    path = [[0,1]]*size
-    path.extend([[-1,0]]*size)
-    path.extend([[0,-1]]*size)
-    path.extend([[1,0]]*size)
+def circle(agent, size=40):
+    path = [[0,0], [0,1], [0,0]]*size
+    path.extend([[0,0], [-1,0], [0,0]]*size)
+    path.extend([[0,0], [0,-1], [0,0]]*size)
+    path.extend([[0,0], [1,0], [0,0]]*size)
     return path
 
 
@@ -98,19 +98,35 @@ def path_direct(agent):
 
 
 def side_to_side(agent):
-    max = game.screen_width
+    max = 500#game.screen_width
     agent_right = agent.rect.right
     agent_left = agent.rect.left
+
+    rand = random.randint(0,2)
 
     if agent_left <= 0:
         return [[1, 0]] * (max + agent_left)
     if agent_right >= max:
         return [[-1, 0]] * (max - agent.width)
 
-    if agent_right < max/2:
+    if rand == 1:
         return [[-1,0]] * agent_right
     else:
         return [[1,0]] * (max - agent_right)
+
+
+def from_to_rand(agent):
+    if agent.goal == agent.goal_a:
+        agent.goal = agent.goal_b
+    else:
+        agent.goal = agent.goal_a
+    return random_to_goal(agent)
+
+
+def path(agent):
+
+    end_x, end_y = agent.goal
+
 
 
 def random_to_goal(agent):

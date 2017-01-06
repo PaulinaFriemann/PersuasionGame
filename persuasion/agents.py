@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 import game
@@ -37,12 +39,18 @@ class Agent:
         self.cluster = cluster
         self.has_interacted = False
 
+        if self.default_movement == movements.from_to_rand:
+            self.goal_a = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
+            self.goal_b = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
+
         self.set_path(self.default_movement, default=True)
 
         if movement == movements.random_to_goal:
             self.goal = [self.rect.centerx + 20, self.rect.centery + 100]
             self.set_path(self.default_movement)
             self.set_default_path(movements.idle)
+
+
 
     def direction_to(self, rect):
         return [a - b for a, b in zip(self.rect.center, rect.center)]
@@ -124,7 +132,7 @@ class Player(Agent):
         Agent.__init__(self, x, y, happiness)
         self.name_area = pygame.Rect(self.rect.left, self.rect.top + 7, 30, 15)
 
-        self.speed_modificator = 1.5
+        self.speed_modificator = 2
 
     def move(self, speed):
         self.speed = map(lambda x: self.speed_modificator * x, speed)
