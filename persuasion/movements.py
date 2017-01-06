@@ -14,7 +14,7 @@ def do_nothing(agent):
 
 
 def default(agent):
-        return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
+    return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
 
 
 def bounce_back(agent, size=6):

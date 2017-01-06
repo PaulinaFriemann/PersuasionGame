@@ -43,6 +43,7 @@ class Game:
         self.width = screen.get_width()
         self.screen = screen
         self.in_editor_mode = False
+        self.cluster_starts = []
 
         self.music = None#pygame.mixer.music.load("resources/")
 
@@ -58,19 +59,20 @@ class Game:
     def add_clusters(self, clusters):
         for cluster in clusters:
             self.clusters.append(cluster)
-            for position in cluster.starting_positions:
-                agent = agents.Agent(position[0], position[1], 0, attitude=cluster.attitude)
-                self.add_agent(agent)
-
-        for agent in self.agents[1:2]:
-            agent.set_path(movements.side_to_side,default=True)
 
     def load_agents(self):
         clusters = cluster.load_all()
         self.add_clusters(clusters)
+        self.calc_starts()
 
-    def distance(self, rect1, rect2):
-        return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
+    def calc_starts(self):
+        for c in self.clusters:
+            lowest_y = -999
+            for pos in c.start_positions:
+                y = pos[1]
+                if y > lowest_y:
+                    lowest_y = y
+            self.cluster_starts.append(lowest_y)
 
     def start(self):
 
@@ -138,8 +140,8 @@ class Game:
 
                         #
 
-                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
-                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+                        new_cluster = cluster.Cluster(attitude=attitude,
+                                                                start_positions=[list(pos.center) for pos in agent_pos])
                         cluster.append_to_end(new_cluster)
 
 
@@ -148,8 +150,8 @@ class Game:
                     if len(agent_pos):
                         num_clusters += 1
 
-                        new_cluster = cluster.Cluster(number=num_clusters, attitude=attitude,
-                                                                starting_positions=[list(pos.center) for pos in agent_pos])
+                        new_cluster = cluster.Cluster(attitude=attitude,
+                                                                start_positions=[list(pos.center) for pos in agent_pos])
                         self.clusters.append(new_cluster)
 
                         cluster.append_to_end(new_cluster)
@@ -158,7 +160,8 @@ class Game:
 
             if mousepressed:
 
-                position = pygame.mouse.get_pos()
+                position = list(pygame.mouse.get_pos())
+                position[1] += self.camera.position.top
                 rect = utils.get_rect(position[0], position[1], 10, 10)
                 if any([rect.colliderect(other) for other in agent_pos]):
                     colliders = filter(rect.colliderect, agent_pos)
@@ -173,7 +176,7 @@ class Game:
             self.camera.draw()
 
             for pos in agent_pos:
-                pygame.draw.rect(self.screen, pygame.Color("Black"), pos)
+                pygame.draw.rect(self.screen, pygame.Color("Black"), pos.move([0,-self.camera.position.top]))
 
             pygame.display.flip()
 
@@ -191,25 +194,16 @@ class Game:
         pygame.display.flip()
 
     def update_agents(self):
+        for cluster in self.clusters:
+            cluster.update(self.player)
 
-        for agent in self.agents:
-            agent.distance_to_player = self.distance(self.player.rect, agent.rect)
-            if not isinstance(agent, agents.Player):
-                if agent.distance_to_player <= agent.width:
-                    self.player.on_collision(agent)
-                    agent.on_collision(self.player)
-                if agent.distance_to_player <= agent.personalspace:
-
-                    if (self.player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
-                        self.player.change_happiness(-0.5)
-                    agent.on_enter_personal_space(self.player)
-
-
-            agent.update()
+        self.player.update()
 
     def update_agents_color(self):
-        for i in range(len(self.agents)):
-            self.agents[i].update_color(self.player.happiness)
+        for cluster in self.clusters:
+            for agent in cluster.members:
+                agent.update_color(self.player.happiness)
+        self.player.update_color(self.player.happiness)
 
     def check_close(self):
         for event in pygame.event.get():

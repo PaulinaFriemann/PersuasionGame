@@ -45,6 +45,10 @@ def get_rect(x, y, width, height):
                        width, height)
 
 
+def distance(rect1, rect2):
+    return math.sqrt((rect1.centerx - rect2.centerx) ** 2 + (rect1.centery - rect2.centery) ** 2)
+
+
 def center_rect(inner, outer):
     new_top = outer.top + (outer.height/2 - inner.height/2)
     new_left = outer.left + (outer.width/2 - inner.width/2)

@@ -8,7 +8,18 @@ import agents
 
 
 def serialize(model):
-    return json.dumps(dict(model))
+    attributes = dir(model)
+    att_dict = {}
+    for attribute in attributes:
+        if "__" not in attribute:
+            field = (getattr(model, attribute))
+            if type(field) == unicode:
+                field = field.encode("ascii", "ignore")
+            if attribute not in ["members", "add_cluster", "update_happiness"]:
+                print attribute, type(attribute)
+                att_dict[attribute] = field
+
+    return json.dumps(att_dict)
 
 
 def deserialize(string):
@@ -18,6 +29,7 @@ def deserialize(string):
 def save_all(clusters, file_path = 'clusters/json/all clusters.txt'):
     with open(file_path, 'w') as f:
         for cluster in clusters:
+            print serialize(cluster)
             f.write(serialize(cluster)+"\n")
 
 def append_to_end(Cluster,file_path = 'clusters/json/all clusters.txt'):
@@ -58,19 +70,50 @@ def change_attitude(cluster, attitude):
     cluster.attitude = attitude
 
 
-class Cluster(Model):
-    members = Attribute(list_type(lambda l:list(map(agents.Agent, l))), fallback = [])
-    name = Attribute(str, fallback="default")
-    number = Attribute(int)
-    attitude = Attribute(int, fallback=0)
-    starting_positions = Attribute(list_type(lambda l: list(map(int, l))))
+class Cluster:
 
-    def add_cluster(self,happiness = 50, movement = movements.idle, game = None):
-        for i in range(len(self.starting_positions)):
-            print self.attitude
-            self.members.append(agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, movement=movement,
-                         attitude=self.attitude))
-            game.add_agent(self.members[i])
+    def __init__(self, name="", start_positions=[], attitude=0, start_position=-999):
+        self.start_positions = start_positions
+        self.name = name
+        self.attitude = attitude
+
+        self.members = []
+        self.add_cluster()
+        start = start_position
+        for pos in self.start_positions:
+            y = pos[1]
+            if y > start:
+                start = y
+            self.start_position = start
+
+    def add_cluster(self, happiness=50, movement=movements.idle, game=None):
+        for i in range(len(self.start_positions)):
+            self.members.append(
+                agents.Agent(self.start_positions[i][0], self.start_positions[i][1], happiness,
+                             movement=movement,
+                             attitude=self.attitude))
+            #game.add_agent(self.members[i])
+
+    def update(self, player):
+        for agent in self.members:
+            agent.distance_to_player = utils.distance(player.rect, agent.rect)
+            if not isinstance(agent, agents.Player):
+                if agent.distance_to_player <= agent.width:
+                    player.on_collision(agent)
+                    agent.on_collision(player)
+                if agent.distance_to_player <= agent.personalspace:
+
+                    if (player.happiness > 0) and agent.attitude == agents.Attitude["avoiding"]:
+                        player.change_happiness(-0.5)
+                    agent.on_enter_personal_space(player)
+
+            agent.update()
+
+    def update_happiness(self):
+        for i in range(len(self.members)):
+            for j in range(len(self.members)):
+                self.members[i].happiness += (self.members[j].happiness - self.members[i].happiness)/100
+
 
     def add_member(self,member):
         self.members.extend(member)
@@ -94,10 +137,7 @@ class Cluster(Model):
             paths[i].extend([[0,0]] * (longest_path - len(paths[i])))
             self.members[i].set_path(paths[i])
 
-    def update_happiness(self):
-        for i in range(len(self.members)):
-            for j in range(len(self.members)):
-                self.members[i].happiness += (self.members[j].happiness - self.members[i].happiness)/100
+
 
     def regroup(self, dx = 0, dy = 0):
         for i in range(len(self.members)):
