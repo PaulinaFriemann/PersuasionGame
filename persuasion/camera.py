@@ -4,11 +4,12 @@ import gui
 import game
 
 
-event_positions = [-500]
+event_positions = [-500, -1000]
 event_text = ["""Hey there.
 I see you're not feeling so well.
 Sometimes life can be rough, but
-you will see, things get better."""]
+you will see, things get better.""", """When you hit rock bottom,
+there is only one way to go."""]
 
 
 class Camera:
@@ -65,20 +66,21 @@ class Camera:
     def draw(self):
         self.world.background.draw(self.screen, self.position)
         for cluster in self.world.clusters:
-            for agent in cluster.members:
-                if self.check_visibility(agent.rect):
-                    new_rect = self.adjust_agent(agent)
-                    self.screen.blit(agent.s, new_rect.topleft)
-                else:
-                    if agent.rect.top > self.position.bottom:
-                        cluster.members.remove(agent)
+            if self.position.top <= cluster.start_position:
+                for agent in cluster.members:
+                    if self.check_visibility(agent.rect):
+                        new_rect = self.adjust_agent(agent)
+                        self.screen.blit(agent.s, new_rect.topleft)
+                    else:
+                        if agent.rect.top > self.position.bottom:
+                            cluster.members.remove(agent)
         new_rect = self.adjust_agent(self.world.player)
         self.screen.blit(self.world.player.s, new_rect.topleft)
 
-        self.draw_overlay()
+        self.draw_overlay(100 - self.world.player.happiness)
         self.bar.draw(self.screen)
 
-    def draw_overlay(self, alpha=40):
+    def draw_overlay(self, alpha=0):
 
         s = pygame.Surface((640, 480))  # the size of your rect
         s.set_alpha(alpha)  # alpha level

@@ -55,7 +55,7 @@ def move_path(agent):
 
     new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
 
-    if (game.screen_width) >= new_x >= (agent.rect.width/2):
+    if game.screen_width >= new_x >= (agent.rect.width/2):
         agent.move(this_move)
     else:
         agent.move([0, this_move[1]])
@@ -108,7 +108,7 @@ def side_to_side(agent):
         return [[-1, 0]] * (max - agent.width)
 
     if agent_right < max/2:
-        return [[-1,0]] * (agent_right)
+        return [[-1,0]] * agent_right
     else:
         return [[1,0]] * (max - agent_right)
 
