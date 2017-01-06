@@ -2,8 +2,6 @@ import pygame
 
 import game
 import movements
-import settings
-from enum import Enum
 
 Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 

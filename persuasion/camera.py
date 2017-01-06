@@ -64,14 +64,16 @@ class Camera:
 
     def draw(self):
         self.world.background.draw(self.screen, self.position)
-
-        for agent in self.world.agents:
-            if self.check_visibility(agent.rect):
-                new_rect = self.adjust_agent(agent)
-                self.screen.blit(agent.s, new_rect.topleft)
-            else:
-                if agent.rect.top > self.position.bottom:
-                    self.world.agents.remove(agent)
+        for cluster in self.world.clusters:
+            for agent in cluster.members:
+                if self.check_visibility(agent.rect):
+                    new_rect = self.adjust_agent(agent)
+                    self.screen.blit(agent.s, new_rect.topleft)
+                else:
+                    if agent.rect.top > self.position.bottom:
+                        cluster.members.remove(agent)
+        new_rect = self.adjust_agent(self.world.player)
+        self.screen.blit(self.world.player.s, new_rect.topleft)
 
         self.draw_overlay()
         self.bar.draw(self.screen)

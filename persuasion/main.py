@@ -5,6 +5,7 @@ import sys
 import utils
 import cluster
 import game
+from simple_model import Attribute
 
 pygame.init()
 
@@ -12,6 +13,13 @@ pygame.init()
 def init():
     pygame.key.set_repeat(True)
     game.init(500, 480)
+
+
+def mainfds():
+
+    clusters = cluster.load_all()
+
+    cluster.save_all(clusters)
 
 
 def main():
