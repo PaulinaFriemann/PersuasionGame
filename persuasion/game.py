@@ -42,7 +42,7 @@ class Game:
         self.cluster_starts = []
 
         self.music = pygame.mixer.music.load("resources/guano.mp3")
-        pygame.mixer.music.play(-1)
+#        pygame.mixer.music.play(-1)
 
         self.action_queue = utils.ActionQueue()
 
@@ -180,7 +180,7 @@ class Game:
         self.update_agents()
         self.update_agents_color()
 
-        self.camera.move(self.player.speed)
+        self.camera.move(self.player.rect.center)
 
         self.camera.draw()
         self.camera.bar.draw(self.screen)
