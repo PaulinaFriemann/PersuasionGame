@@ -64,7 +64,7 @@ class Game:
     def calc_starts(self):
         for c in self.clusters:
             lowest_y = -999
-            for pos in c.start_positions:
+            for pos in c.starting_positions:
                 y = pos[1]
                 if y > lowest_y:
                     lowest_y = y
@@ -137,7 +137,7 @@ class Game:
                         #
 
                         new_cluster = cluster.Cluster(attitude=attitude,
-                                                                start_positions=[list(pos.center) for pos in agent_pos])
+                                                               starting_positions=[list(pos.center) for pos in agent_pos])
                         cluster.append_to_end(new_cluster)
 
 
@@ -147,7 +147,7 @@ class Game:
                         num_clusters += 1
 
                         new_cluster = cluster.Cluster(attitude=attitude,
-                                                                start_positions=[list(pos.center) for pos in agent_pos])
+                                                                starting_positions=[list(pos.center) for pos in agent_pos])
                         self.clusters.append(new_cluster)
 
                         cluster.append_to_end(new_cluster)

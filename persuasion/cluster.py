@@ -89,7 +89,7 @@ class Cluster:
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):
         for i in range(len(self.starting_positions)):
             self.members.append(
-                agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness,
+                agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, cluster = self,
                              movement=movement,
                              attitude=self.attitude))
 
