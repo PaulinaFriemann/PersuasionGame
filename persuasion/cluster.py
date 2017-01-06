@@ -72,24 +72,25 @@ def change_attitude(cluster, attitude):
 
 class Cluster:
 
-    def __init__(self, name="", start_positions=[], attitude=0, start_position=-999):
-        self.start_positions = start_positions
+    def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, members = []):
+        self.starting_positions = starting_positions
         self.name = name
         self.attitude = attitude
-
-        self.members = []
+        self.number = number
+        self.members = members
         self.add_cluster()
-        start = start_position
-        for pos in self.start_positions:
-            y = pos[1]
-            if y > start:
-                start = y
-            self.start_position = start
+
+        if start_position == -9999:
+            for pos in self.starting_positions:
+                if pos[1] > start_position:
+                    start_position = pos[1]
+
+        self.start_position = start_position
 
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):
-        for i in range(len(self.start_positions)):
+        for i in range(len(self.starting_positions)):
             self.members.append(
-                agents.Agent(self.start_positions[i][0], self.start_positions[i][1], happiness,
+                agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness,
                              movement=movement,
                              attitude=self.attitude))
             #game.add_agent(self.members[i])
