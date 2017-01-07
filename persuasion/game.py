@@ -103,6 +103,8 @@ class Game:
             pygame.display.flip()
 
     def editor_mode(self):
+        circle = False
+        line = False
         block = 0
         clock = pygame.time.Clock()
         agent_pos = []
@@ -128,6 +130,22 @@ class Game:
                     elif event.key == pygame.K_4:
                         print "Attitude is now friends"
                         attitude = agents.Attitude["friends"]
+
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_c:
+                        n_agents = int(raw_input('How many agents? '))
+                        n_space = int(raw_input('How much space do they need? '))
+                        print str(n_agents) + " agents, and " + str(n_space) + "space, got it!"
+                        print "Just click to place (:"
+                        circle = True
+
+                    if event.key == pygame.K_l:
+                        n_angle = int(raw_input('What angle? '))
+                        n_space = int(raw_input('What space? '))
+                        n_agents = int(raw_input('How many agents?'))
+                        print "I'll make a line of " + str(n_agents) + " agents, at an angle of " + str(n_angle) + " with " + str(n_space) + " pixels between them."
+                        print "Just click to place (:"
+                        line = True
 
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -156,16 +174,28 @@ class Game:
 
             if mousepressed:
 
-                position = list(pygame.mouse.get_pos())
-                position[1] += self.camera.position.top
-                rect = utils.get_rect(position[0], position[1], 10, 10)
-                if any([rect.colliderect(other) for other in agent_pos]):
-                    colliders = filter(rect.colliderect, agent_pos)
-                    for col in colliders:
-                        agent_pos.remove(col)
+                mouse_position = list(pygame.mouse.get_pos())
+                mouse_position[1] += self.camera.position.top
+
+                if circle:
+                    positions = cluster.evenly_distributed((mouse_position[0], mouse_position[1]), n_space, n_agents)
+                    circle = False
+                elif line:
+                    positions = cluster.line((mouse_position[0],mouse_position[1]), n_space, n_angle, n_agents)
+                    line = False
                 else:
-                    agent_pos.append(rect)
-                block = 10
+                    positions = [mouse_position]
+
+                for position in positions:
+                    rect = utils.get_rect(position[0], position[1], 10, 10)
+
+                    if any([rect.colliderect(other) for other in agent_pos]):
+                        colliders = filter(rect.colliderect, agent_pos)
+                        for col in colliders:
+                            agent_pos.remove(col)
+                    else:
+                        agent_pos.append(rect)
+                    block = 10
 
             block = max(0, block - 1)
 

@@ -7,3 +7,4 @@
 {"name": "", "number": -1, "starting_positions": [[145, -1606], [68, -1584], [87, -1523], [151, -1491], [57, -1478], [111, -1567], [62, -1641], [47, -1566]], "attitude": 1, "start_position": -1478, "movement": "rand_circle"}
 {"name": "", "number": -1, "starting_positions": [[387, -2134], [352, -2117], [339, -2082], [351, -2051], [436, -2081], [417, -2053], [386, -2042], [425, -2116]], "attitude": 1, "start_position": -2042, "movement": "idle"}
 {"name": "", "number": -1, "starting_positions": [[380, -2081], [396, -2092], [396, -2075]], "attitude": 1, "start_position": -2075, "movement": "from_to_rand"}
+{"name": "", "number": -1, "starting_positions": [[350, 156], [356, 175], [363, 141], [330, 151]], "attitude": 1, "start_position": 175, "movement": "idle"}

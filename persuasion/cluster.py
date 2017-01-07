@@ -4,7 +4,8 @@ import movements
 
 import utils
 import agents
-
+import math
+import random
 
 def serialize(model):
     attributes = dir(model)
@@ -74,6 +75,48 @@ def change_attitude(cluster, attitude):
     cluster.attitude = attitude
 
 
+def line((begin_x, begin_y), space, angle, n_agents):
+    return [
+        ((begin_x + (math.floor(math.sin(math.radians(angle)) * space * i))),
+         begin_y + (math.floor(math.sin(math.radians(90 - angle)) * space * i)))
+            for i in range(n_agents)]
+
+def evenly_distributed((center_x, center_y), personal_space, n_agents):
+    n_circles = int(math.ceil(float((n_agents - 1)) / 6))
+
+    circle_positions = [(center_x,center_y)]
+    agents_left = n_agents - 1
+
+    for circle in range(1,n_circles + 1):
+        if agents_left >= 6:
+            phi = random.randint(0,59)
+
+            x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+            y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+            circle_positions.append((x,y))
+
+            for j in range(5):
+                phi += 60
+                x = center_x + math.floor(math.sin(math.radians(phi)) * (personal_space * circle))
+                y = center_y + math.floor(math.sin(math.radians(90 - phi)) * (personal_space * circle))
+                circle_positions.append((x, y))
+            agents_left -= 6
+        else:
+            increment = (360/agents_left)
+            phi = random.randint(0, increment - 1)
+
+            x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+            y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+            circle_positions.append((x, y))
+
+            for j in range(1,agents_left):
+                phi += increment
+                x = center_x + math.floor(math.sin(math.radians(phi)) * personal_space * circle)
+                y = center_y + math.floor(math.sin(math.radians(90 - phi)) * personal_space * circle)
+                circle_positions.append((x, y))
+        return circle_positions
+
+
 class Cluster:
 
     def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, members = [], movement="idle"):
@@ -108,8 +151,8 @@ class Cluster:
                     player.on_collision(agent)
                     agent.on_collision(player)
             if agent.distance_to_player <= agent.personalspace:
-
                 agent.on_enter_personal_space(player)
+                agent.while_in_personal_space(player)
                 player.on_enter_personal_space(agent)
 
             agent.update()

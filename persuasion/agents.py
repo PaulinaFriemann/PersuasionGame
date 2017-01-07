@@ -96,7 +96,7 @@ class Agent:
         #print self.happiness
 
 
-    def on_enter_personal_space(self,player):
+    def on_enter_personal_space(self, player):
         if not self.event:
 
             if self.attitude == Attitude["avoiding"]:
@@ -104,15 +104,13 @@ class Agent:
                 self.set_default_path(movements.do_nothing)
 
             self.set_path(personal_space_reactions[self.attitude])
-
-            if self.attitude == Attitude["friendly"]:
-                print "Okay, you seem cool."
-                self.set_path(movements.make_happy)
-                if player.trying_to_communicate:
-                    print "Let's be friends!"
-                    self.become_friends()
-
             self.event = True
+
+    def while_in_personal_space(self, player):
+        if self.attitude == Attitude["friendly"]:
+            if player.trying_to_communicate:
+                self.set_path(movements.make_happy)
+                self.become_friends()
 
     def on_collision(self, other):
 
