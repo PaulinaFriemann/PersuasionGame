@@ -103,6 +103,7 @@ class Game:
             pygame.display.flip()
 
     def editor_mode(self):
+        big_circle = False
         circle = False
         line = False
         block = 0
@@ -135,9 +136,14 @@ class Game:
                     if event.key == pygame.K_c:
                         n_agents = int(raw_input('How many agents? '))
                         n_space = int(raw_input('How much space do they need? '))
-                        print str(n_agents) + " agents, and " + str(n_space) + "space, got it!"
+                        if raw_input('Big circle \'b\', or evenly distributed ? ') == "b":
+                            big_circle = True
+                        else:
+                            circle = True
+
+                        print ("A big circle with " if big_circle else "") + str(n_agents) + " agents, " + ("circles worth of agent s" if circle else "") + " and " + str(n_space) + " space between them, got it!"
                         print "Just click to place (:"
-                        circle = True
+
 
                     if event.key == pygame.K_l:
                         n_angle = int(raw_input('What angle? '))
@@ -180,6 +186,9 @@ class Game:
                 if circle:
                     positions = cluster.evenly_distributed((mouse_position[0], mouse_position[1]), n_space, n_agents)
                     circle = False
+                elif big_circle:
+                    positions = cluster.big_circle((mouse_position[0],mouse_position[1]),n_space,n_agents)
+                    big_circle = False
                 elif line:
                     positions = cluster.line((mouse_position[0],mouse_position[1]), n_space, n_angle, n_agents)
                     line = False

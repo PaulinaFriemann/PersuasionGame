@@ -81,6 +81,15 @@ def line((begin_x, begin_y), space, angle, n_agents):
          begin_y + (math.floor(math.sin(math.radians(90 - angle)) * space * i)))
             for i in range(n_agents)]
 
+def big_circle((center_x, center_y), personal_space, n_agents):
+
+    return [
+        (center_x + math.floor(math.sin(math.radians(360*i/n_agents)) * personal_space),
+        center_y + math.floor(math.sin(math.radians(90 - (360 * i / n_agents))) * personal_space))
+        for i in range(n_agents)
+    ]
+
+
 def evenly_distributed((center_x, center_y), personal_space, n_agents):
     n_circles = int(math.ceil(float((n_agents - 1)) / 6))
 
