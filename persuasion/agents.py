@@ -10,7 +10,7 @@ Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 
 
 collision_reactions = [movements.bounce_back, movements.bounce_back, movements.do_nothing, movements.bounce_back]
-personal_space_reactions = [movements.default, movements.avoid, movements.do_nothing, movements.make_happy]
+personal_space_reactions = [movements.do_nothing, movements.avoid, movements.do_nothing, movements.make_happy]
 
 
 class Agent:
@@ -41,6 +41,7 @@ class Agent:
         self.has_interacted = False
         self.goal_a = [-999, -999]
         self.goal_b = [-999, -999]
+        self.frozen = False
 
         if self.default_movement == movements.from_to_rand:
             while utils.pos_distance(self.goal_a, self.goal_b) <= 15:
@@ -107,8 +108,12 @@ class Agent:
             self.event = True
 
     def while_in_personal_space(self, player):
-        if self.attitude == Attitude["friendly"]:
+        if self.attitude == Attitude["neutral"]:
+            self.frozen = True
+
+        elif self.attitude == Attitude["friendly"]:
             if player.trying_to_communicate:
+                print "going happy"
                 self.set_path(movements.make_happy)
                 self.become_friends()
 
@@ -118,22 +123,22 @@ class Agent:
 
         self.event = True
 
-        self.become_friends()
-
     def become_friends(self):
+        print "Let's become friends!"
         if self.attitude == Attitude["friendly"]:
-            game.main_game.action_queue.add(self.change_attitude, {"attitude": Attitude["friends"]}, len(self.path))
+            self.change_attitude(Attitude["friends"])
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path))
+                                      len(self.path)+120)
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
-                                      len(self.path))
+                                      len(self.path)+120)
 
     def change_attitude(self, attitude):
         if attitude != self.attitude:
             self.attitude = attitude
+            self.has_interacted = False
 
 class Player(Agent):
     def __init__(self, x, y, happiness):
@@ -173,8 +178,12 @@ class Player(Agent):
     def on_enter_personal_space(self, other):
         if not other.has_interacted:
             if other.attitude == Attitude["friendly"]:
-                self.change_happiness(2)
-                other.change_happiness(2)
+                self.change_happiness(5)
+                other.change_happiness(5)
+                other.has_interacted = True
+            if other.attitude == Attitude["friends"]:
+                self.change_happiness(0.05)
+                other.change_happiness(0.05)
             elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-2)
                 other.change_happiness(-2)
@@ -198,9 +207,9 @@ class Player(Agent):
     def on_collision(self, other):
         if self.path == [[0, 0]]:
             if other.attitude == Attitude["friendly"]:
-                self.change_happiness(5)
-                other.change_happiness(5)
-                self.set_path(movements.make_happy)
+                 self.change_happiness(5)
+                 other.change_happiness(5)
+                 #self.set_path(movements.make_happy)
             elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-5)
                 other.change_happiness(-5)

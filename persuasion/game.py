@@ -87,6 +87,13 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYUP and event.key == pygame.K_BACKSPACE:
                     self.in_editor_mode = not self.in_editor_mode
+                if event.type == pygame.KEYUP and event.key == pygame.K_t:
+                    self.player.rect.centery = int(raw_input("Teleport to where? "))
+                    #self.player.rect.centery = -3500
+
+                if event.type == pygame.KEYUP and event.key == pygame.K_k:
+                    print "YOU MONSTER"
+                    self.player.happiness = 0
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
                     self.player.happy_dance()
@@ -131,27 +138,29 @@ class Game:
                     elif event.key == pygame.K_4:
                         print "Attitude is now friends"
                         attitude = agents.Attitude["friends"]
+                try:
+                    if event.type == pygame.KEYUP:
+                        if event.key == pygame.K_c:
+                            n_agents = int(raw_input('How many agents? '))
+                            n_space = int(raw_input('How much space do they need? '))
+                            if raw_input('Big circle \'b\', or evenly distributed ? ') == "b":
+                                big_circle = True
+                            else:
+                                circle = True
 
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_c:
-                        n_agents = int(raw_input('How many agents? '))
-                        n_space = int(raw_input('How much space do they need? '))
-                        if raw_input('Big circle \'b\', or evenly distributed ? ') == "b":
-                            big_circle = True
-                        else:
-                            circle = True
-
-                        print ("A big circle with " if big_circle else "") + str(n_agents) + " agents, " + ("circles worth of agent s" if circle else "") + " and " + str(n_space) + " space between them, got it!"
-                        print "Just click to place (:"
+                            print ("A big circle with " if big_circle else "") + str(n_agents) + " agents, " + ("circles worth of agent s" if circle else "") + " and " + str(n_space) + " space between them, got it!"
+                            print "Just click to place (:"
 
 
-                    if event.key == pygame.K_l:
-                        n_angle = int(raw_input('What angle? '))
-                        n_space = int(raw_input('What space? '))
-                        n_agents = int(raw_input('How many agents?'))
-                        print "I'll make a line of " + str(n_agents) + " agents, at an angle of " + str(n_angle) + " with " + str(n_space) + " pixels between them."
-                        print "Just click to place (:"
-                        line = True
+                        if event.key == pygame.K_l:
+                            n_angle = int(raw_input('What angle? '))
+                            n_space = int(raw_input('What space? '))
+                            n_agents = int(raw_input('How many agents? '))
+                            print "I'll make a line of " + str(n_agents) + " agents, at an angle of " + str(n_angle) + " with " + str(n_space) + " pixels between them."
+                            print "Just click to place (:"
+                            line = True
+                except ValueError:
+                    print "That's not a good value."
 
                 if event.type == pygame.QUIT \
                         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):

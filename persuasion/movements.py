@@ -22,17 +22,25 @@ def bounce_back(agent, size=6):
 
 
 def make_happy(agent):
-    path = [[1,1]] * 3
-    path.extend([[-1,1]] * 3)
-    path.extend([[-1,-1]] * 3)
-    path.extend([[1,-1]] * 3)
+    path = [[-1,1]] * 4
+    path.extend([[1,-1]] * 4)
+    path.extend([[1,1]] * 4)
+    path.extend([[-1,-1]] * 4)
+    path.extend([[0,1]] * 4)
+    path.extend([[0,-1]] * 4)
+    path.extend([[0,1]] * 4)
+    path.extend([[0,0],[0,0],[0,-1]] * 4)
     return path
 
 def happy_dance(agent):
-    path = [[1,-1]] * 3
-    path.extend([[-1,-1]] * 3)
-    path.extend([[-1,1]] * 3)
-    path.extend([[1,1]] * 3)
+    path = [[-1,-1]] * 4
+    path.extend([[1,1]] * 4)
+    path.extend([[1,-1]] * 4)
+    path.extend([[-1,1]] * 4)
+    path.extend([[0,-1]] * 4)
+    path.extend([[0,1]] * 4)
+    path.extend([[0,-1]] * 4)
+    path.extend([[0,0]] * 10)
     return path
 
 def avoid(agent):
@@ -41,7 +49,6 @@ def avoid(agent):
     agent.goal = direction
     return path_direct(agent)
 
-
 def follow(agent):
     pos = utils.random_point_circle(50, game.main_game.player.rect.center)
     agent.goal = pos
@@ -49,26 +56,34 @@ def follow(agent):
 
 
 def move_path(agent):
-    if agent.step >= len(agent.path):
-        if agent.default_movement == side_to_side:
-            agent.set_path(agent.default_movement)
-            agent.event = False
-    try:
-        this_move = agent.path[agent.step]
-    except IndexError:
-        agent.set_path(agent.default_movement)
-        this_move = agent.path[agent.step]
-
-    new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
-    if not agent.fadeaway:
-        if game.screen_width >= new_x >= (agent.rect.width/2):
-            agent.move(this_move)
-        else:
-            agent.move([0, this_move[1]])
+    if(agent.frozen): pass
     else:
-        agent.move(this_move)
+        if agent.step >= len(agent.path):
+            if agent.default_movement == side_to_side:
+                agent.set_path(agent.default_movement)
+                agent.event = False
+        try:
+            this_move = agent.path[agent.step]
+        except IndexError:
+            agent.set_path(agent.default_movement)
+            this_move = agent.path[agent.step]
 
-    agent.step += 1
+        new_x = agent.rect.centerx + this_move[0] * agent.speed_modificator
+        if not agent.fadeaway:
+            if game.screen_width >= new_x >= (agent.rect.width/2):
+                agent.move(this_move)
+            else:
+                agent.move([0, this_move[1]])
+        else:
+            agent.move(this_move)
+
+        agent.step += 1
+
+def circle_around(agent, (center_x, center_y), radius = 20):
+    beginx = agent.rect.centerx
+    beginy = agent.rect.centery
+
+
 
 
 def circle(agent, size=40):
@@ -83,8 +98,8 @@ def circle(agent, size=40):
     return path
 
 
-def rand_circle(agent):
-    size = random.randint(30, 60)
+def rand_circle(agent,min_r = 30, max_r = 60):
+    size = random.randint(min_r, max_r)
 
     return circle(agent, size)
 
