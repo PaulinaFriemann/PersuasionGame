@@ -3,6 +3,7 @@ import sys
 
 import utils
 from pygame import Rect, freetype
+import game
 
 
 class Background(pygame.sprite.Sprite):
@@ -149,46 +150,37 @@ class StartScreen:
 
 class NarratorBar(TextArea):
 
-    def __init__(self, rect, fontsize=15):
-        super(NarratorBar, self).__init__(rect, centered=True, fontsize=fontsize)
+    def __init__(self, rect):
 
-        self.s = pygame.image.load("resources/bar.jpg")
-        self.s.set_alpha(30)
+        super(NarratorBar, self).__init__(rect, centered=True)
         self.visibility_status = 0
         self.popup = False
-        self.text_rect = Rect(self)
+        self.max_top = rect.top
+        self.top = game.screen_height
 
     def set_text(self, text):
         super(NarratorBar, self).set_text(text)
-        self.s = pygame.image.load("resources/bar.jpg")
-        self.s.set_alpha(30)
 
     def pop_up(self):
         self.popup = True
 
-    def get_visible(self):
-        if self.popup and self.visibility_status < self.height + 150:
+    def get_visible(self, screen_height):
+        print self.visibility_status, self, self.popup
+        if self.popup and self.visibility_status < 150:
             self.visibility_status += 2
-        elif self.popup and self.visibility_status == self.height + 150:
+            self.move_ip(0,-2)
+        elif self.popup and 150 <= self.visibility_status  < 300:
+            self.visibility_status += 2
+
+        elif self.popup and self.visibility_status == 300:
             self.popup = False
-        elif not self.popup and self.visibility_status > 0:
+        elif not self.popup and self.visibility_status > 150:
             self.visibility_status -= 2
+            self.move_ip(0,2)
+        elif not self.popup and self.visibility_status <= 150:
+            self.visibility_status = 0
 
     def draw(self, screen):
-        self.get_visible()
-        screen.blit(self.s, (0, max(screen.get_height() - self.visibility_status, self.top)))
-        self.text_rect.top = max(screen.get_height() - self.visibility_status, self.top)
-        self.render(screen, True)
-
-    def render(self, screen, absolute=True):
-        text_top = max(screen.get_height() - self.visibility_status, self.top)
-
-        for i, line in enumerate(self.text):
-            if not self.centered:
-                self.font.render_to(screen, (text_left, text_top + self.font.size * i + 2), line)
-            else:
-                rect = utils.center_h(self.font.get_rect(line), self.text_rect)
-                #print rect
-                if absolute:
-                    rect.move_ip([0, text_top])
-                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)
+        if self.popup or self.visibility_status != 0:
+            self.get_visible(screen.get_height())
+            self.render(screen, True)

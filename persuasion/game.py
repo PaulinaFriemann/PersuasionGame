@@ -56,7 +56,7 @@ class Game:
     def load_agents(self):
         clusters = cluster.load_all()
         self.add_clusters(clusters)
-        self.calc_starts()
+        #self.calc_starts()
 
     def calc_starts(self):
         for c in self.clusters:
@@ -241,7 +241,10 @@ class Game:
         self.player.update()
 
         for cluster in self.clusters:
-            cluster.update(self.player)
+            if self.camera.position.top <= cluster.start_position:
+                cluster.update(self.player)
+            if not cluster.members:
+                self.clusters.remove(cluster)
 
     def update_agents_color(self):
         for cluster in self.clusters:

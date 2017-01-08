@@ -155,6 +155,7 @@ class Cluster:
                              attitude=self.attitude))
 
     def update(self, player):
+
         for agent in self.members:
             agent.distance_to_player = utils.distance(player.rect, agent.rect)
 

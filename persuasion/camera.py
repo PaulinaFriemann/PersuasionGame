@@ -63,6 +63,7 @@ class Camera:
                     else:
                         if agent.rect.top > self.position.bottom:
                             cluster.members.remove(agent)
+
         new_rect = self.adjust_agent(self.world.player)
         self.screen.blit(self.world.player.s, new_rect.topleft)
 
