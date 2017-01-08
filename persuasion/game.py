@@ -50,18 +50,21 @@ class Game:
             self.clusters.append(cluster)
 
     def reset_clusters(self, clusters = []):
+        #print "SPEDYYY"
         self.clusters = []
         for cluster in clusters:
             self.clusters.append(cluster)
 
     def load_agents(self):
         clusters = cluster.load_all()
+        #print "FIRST"
         self.add_clusters(clusters)
         #self.calc_starts()
 
     def load_phase(self, phase):
-        print "loading phase " + str(phase)
+        #print "loading phase " + str(phase)
         clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
+        #print "FIRSTIE FIRST"
         self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
         pygame.mixer.music.play(-1)
 
@@ -236,7 +239,6 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-
         if self.camera.position.top == -4100:
             self.load_phase(3)
         elif self.camera.position.top == -2700:
