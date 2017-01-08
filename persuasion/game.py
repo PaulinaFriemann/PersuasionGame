@@ -41,9 +41,6 @@ class Game:
         self.in_editor_mode = False
         self.cluster_starts = []
 
-        self.music = pygame.mixer.music.load("resources/guano.mp3")
-#        pygame.mixer.music.play(-1)
-
         self.action_queue = utils.ActionQueue()
 
     def add_player(self, player):
@@ -66,6 +63,9 @@ class Game:
     def load_phase(self, phase):
         print "loading phase " + str(phase)
         clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
+        self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
+        pygame.mixer.music.play(-1)
+
         self.reset_clusters(clusters)
         #self.calc_starts()
 
@@ -238,7 +238,7 @@ class Game:
 
     def update(self):
 
-        if self.camera.position.top == -4000:
+        if self.camera.position.top == -4100:
             self.load_phase(3)
         elif self.camera.position.top == -2700:
             self.load_phase(2)
