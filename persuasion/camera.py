@@ -47,6 +47,7 @@ class Camera:
 
     def move(self, player_centery):
         self.position.centery = player_centery
+        print player_centery
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
@@ -70,8 +71,8 @@ class Camera:
         self.draw_overlay(100 - self.world.player.happiness)
         for cluster in self.world.clusters:
             if self.position.top <= cluster.start_position:
-                print "Clustno = ", cluster.number
-                print "members = ", len(cluster.members)
+               # print "Clustno = ", cluster.number
+               # print "members = ", len(cluster.members)
                 for agent in cluster.members:
                     if self.check_visibility(agent.rect):
                         new_rect = self.adjust_agent(agent)

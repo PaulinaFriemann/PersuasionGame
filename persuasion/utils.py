@@ -67,7 +67,7 @@ def center_h(inner, outer):
 
 
 def random_point_circle(radius, position):
-    offset = random.randint(3, radius)
+    offset = random.randint(10, radius)
     angle = random.random() * 2 * math.pi
     x = int(position[0] + math.cos(angle) * offset)
     y = int(position[1] - (math.sin(angle) * offset))
