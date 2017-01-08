@@ -62,12 +62,12 @@ class TextArea(Rect):
 
         for i, line in enumerate(self.text):
             if not self.centered:
-                self.font.render_to(screen, (text_left, text_top + self.font.size * i + 2), line)
+                self.font.render_to(screen, (text_left, text_top + self.font.size * i + 2), line, fgcolor=self.text_color)
             else:
                 rect = utils.center_h(self.font.get_rect(line), self)
                 if absolute:
                     rect.move_ip([0, self.top])
-                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i + 2),line)
+                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i +30),line, fgcolor=self.text_color)
 
     def draw(self, screen):
         screen.blit(self.s, self.topleft)
@@ -151,7 +151,7 @@ class NarratorBar(TextArea):
 
     def __init__(self, rect):
 
-        super(NarratorBar, self).__init__(rect, centered=True)
+        super(NarratorBar, self).__init__(rect, centered=True, fgcolor=pygame.Color("White"), fontsize=16)
         self.visibility_status = 0
         self.popup = False
         self.max_top = rect.top
@@ -162,23 +162,25 @@ class NarratorBar(TextArea):
 
     def pop_up(self):
         self.popup = True
+        #print self.visibility_status
 
     def get_visible(self, screen_height):
         if self.popup and self.visibility_status < 150:
             self.visibility_status += 2
             self.move_ip(0,-2)
-        elif self.popup and 150 <= self.visibility_status  < 300:
+        elif self.popup and 150 <= self.visibility_status  < 800:
             self.visibility_status += 2
 
-        elif self.popup and self.visibility_status == 300:
+        elif self.popup and self.visibility_status >= 800:
             self.popup = False
-        elif not self.popup and self.visibility_status > 150:
+        elif not self.popup and self.visibility_status > 650:
             self.visibility_status -= 2
             self.move_ip(0,2)
-        elif not self.popup and self.visibility_status <= 150:
+        elif not self.popup and self.visibility_status <= 650:
             self.visibility_status = 0
 
     def draw(self, screen):
+        print self.visibility_status
         if self.popup or self.visibility_status != 0:
             self.get_visible(screen.get_height())
             self.render(screen, True)
