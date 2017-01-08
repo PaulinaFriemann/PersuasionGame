@@ -84,7 +84,6 @@ class TextField(TextArea):
 
     def __init__(self, rect, text="", fgcolor=(255,255,255),bgcolor=(50,50,50)):
         super(TextField, self).__init__(rect, text=text, fgcolor=fgcolor, bgcolor=bgcolor, centered=False)
-        print self
 
     def add_letter(self, letter):
         _, rect = self.font.render(self.text[-1] + letter)
@@ -165,7 +164,6 @@ class NarratorBar(TextArea):
         self.popup = True
 
     def get_visible(self, screen_height):
-        print self.visibility_status, self, self.popup
         if self.popup and self.visibility_status < 150:
             self.visibility_status += 2
             self.move_ip(0,-2)

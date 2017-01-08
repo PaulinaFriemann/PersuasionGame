@@ -9,7 +9,7 @@ import movements
 Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 
 
-collision_reactions = [movements.bounce_back, movements.bounce_back, movements.do_nothing, movements.bounce_back]
+collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
 personal_space_reactions = [movements.do_nothing, movements.avoid, movements.do_nothing, movements.make_happy]
 
 
@@ -42,6 +42,7 @@ class Agent:
         self.goal_a = [-999, -999]
         self.goal_b = [-999, -999]
         self.frozen = False
+        self.runaway = 0
 
         if self.default_movement == movements.from_to_rand:
             while utils.pos_distance(self.goal_a, self.goal_b) <= 15:
@@ -66,8 +67,17 @@ class Agent:
 
     def update(self):
         movements.move_path(self)
+        if self.attitude == Attitude["friends"]:
+            self.run_away()
+            #print self.runaway
+            if self.runaway == 100:
+                print "change attitude"
+                self.change_attitude(Attitude["friendly"])
         if self.fadeaway:
             self.fade_away()
+
+    def run_away(self):
+        self.runaway = min(self.runaway + 0.1, 100)
 
     def update_color(self,player_happiness):
         self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
@@ -120,8 +130,14 @@ class Agent:
     def on_collision(self, other):
 
         self.set_path(collision_reactions[self.attitude])
-
         self.event = True
+
+        if self.attitude == Attitude["friendly"]:
+
+            self.become_friends()
+
+        if self.attitude == Attitude["friends"]:
+            self.runaway = 0
 
     def become_friends(self):
         print "Let's become friends!"

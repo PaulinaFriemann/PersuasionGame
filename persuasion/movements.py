@@ -50,7 +50,7 @@ def avoid(agent):
     return path_direct(agent)
 
 def follow(agent):
-    pos = utils.random_point_circle(50, game.main_game.player.rect.center)
+    pos = utils.random_point_circle(50 + int(agent.runaway), game.main_game.player.rect.center)
     agent.goal = pos
     return random_to_goal(agent)
 
