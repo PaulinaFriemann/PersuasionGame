@@ -231,9 +231,11 @@ class Player(Agent):
     def on_collision(self, other):
         if self.path == [[0, 0]]:
             if other.attitude == Attitude["friendly"]:
-                 self.change_happiness(5)
-                 other.change_happiness(5)
-                 #self.set_path(movements.make_happy)
+                print "HAPPY AND I KNOW IT"
+                self.change_happiness(5)
+                other.change_happiness(5)
+                self.set_path(movements.happy_dance)
+                other.set_path(movements.make_happy)
             elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-5)
                 other.change_happiness(-5)
