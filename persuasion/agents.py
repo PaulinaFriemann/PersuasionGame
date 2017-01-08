@@ -1,5 +1,5 @@
 import random
-
+import cluster
 import pygame
 import utils
 
@@ -72,6 +72,9 @@ class Agent:
             ##print self.runaway
             if self.runaway == 100:
                 #print "change attitude"
+                self.cluster.remove_member(self)
+                self.cluster = cluster.Cluster(attitude=Attitude["friendly"], starting_positions=list(self.rect.center), start_position=self.rect.bottom)
+                game.main_game.add_clusters([self.cluster])
                 self.change_attitude(Attitude["friendly"])
         if self.fadeaway:
             self.fade_away()
@@ -140,6 +143,11 @@ class Agent:
 
     def on_collision(self, other):
 
+        if self.attitude == Attitude["friendly"]:
+            self.cluster.remove_member(self)
+            self.cluster = game.main_game.player_cluster
+            self.cluster.add_member(self)
+
         self.set_path(collision_reactions[self.attitude])
         self.event = True
 
@@ -150,6 +158,9 @@ class Agent:
         #print "Let's become friends!"
         if self.attitude == Attitude["friendly"]:
             self.change_attitude(Attitude["friends"])
+            self.cluster.remove_member(self)
+            self.cluster = game.main_game.player_cluster
+            self.cluster.add_member(self)
             self.runaway = 0
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},

@@ -7,3 +7,5 @@
 {"name": "", "number": 7, "starting_positions": [[145, -1606], [68, -1584], [87, -1523], [151, -1491], [57, -1478], [111, -1567], [62, -1641], [47, -1566]], "attitude": 1, "start_position": -1478, "movement": "rand_circle"}
 {"name": "", "number": 8, "starting_positions": [[387, -2134], [352, -2117], [339, -2082], [351, -2051], [436, -2081], [417, -2053], [386, -2042], [425, -2116]], "attitude": 1, "start_position": -2042, "movement": "idle"}
 {"name": "side_to_side", "number": 9, "starting_positions": [[380, -2081], [396, -2092], [396, -2075]], "attitude": 1, "start_position": -2075, "movement": "from_to_rand"}
+{"name": "", "number": 10, "starting_positions": [[179, -187], [195, -187], [180, -202], [162, -186], [162, -169], [179, -169], [196, -170], [142, -169], [211, -169]], "attitude": 1, "start_position": -169, "movement": "idle"}
+{"name": "", "number": 11, "starting_positions": [[386, -269], [356, -251], [322, -221], [385, -219], [417, -252], [448, -218]], "attitude": 1, "start_position": -218, "movement": "idle"}

@@ -41,6 +41,8 @@ class Game:
         self.in_editor_mode = False
         self.cluster_starts = []
         self.action_queue = utils.ActionQueue()
+        self.player_cluster = cluster.Cluster(name="player_cluster", number=0, starting_positions=[list(self.player.rect.center)])
+        self.player_cluster.members.append(self.player)
 
     def add_player(self, player):
         self.player = player
@@ -239,12 +241,12 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-        if self.camera.position.top == -4000:
-            pygame.mixer.music.fadeout(1000)
+        if self.camera.position.top == -3950:
+            pygame.mixer.music.fadeout(2000)
         elif self.camera.position.top == -4100:
             self.load_phase(3)
-        elif self.camera.position.top == -2600:
-            pygame.mixer.music.fadeout(1000)
+        elif self.camera.position.top == -2550:
+            pygame.mixer.music.fadeout(2000)
         elif self.camera.position.top == -2700:
             self.load_phase(2)
 
@@ -260,7 +262,7 @@ class Game:
         pygame.display.flip()
 
     def update_agents(self):
-        self.player.update()
+        self.player_cluster.update(self.player)
 
         for cluster in self.clusters:
             if self.camera.position.top <= cluster.start_position:

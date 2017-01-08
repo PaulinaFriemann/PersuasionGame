@@ -48,7 +48,10 @@ def load_all(path = 'clusters/json/all clusters.txt'):
     clusters = []
     with open(path, 'r') as f:
         for line in f:
-            clusters.append(deserialize(line))
+
+            cluster = deserialize(line)
+            cluster.add_cluster(movement=cluster.movement)
+            clusters.append(cluster)
     return clusters
 
 def load_cluster(file_path = 'clusters/json/cluster 0.txt'):
@@ -140,7 +143,7 @@ class Cluster:
         self.number = number
         self.members = []
         self.movement = getattr(movements, movement)
-        self.add_cluster(movement = self.movement)
+
         self.start_position = -9999
         self.calc_start()
 
@@ -158,19 +161,18 @@ class Cluster:
                              attitude=self.attitude))
 
     def update(self, player):
-        if self.number == 5:
-            print "I have ", len(self.members)
         for agent in self.members:
-            agent.distance_to_player = utils.distance(player.rect, agent.rect)
+            if not isinstance(agent, agents.Player):
+                agent.distance_to_player = utils.distance(player.rect, agent.rect)
 
-            if agent.distance_to_player <= agent.width:
-                if not agent.fadeaway:
-                    player.on_collision(agent)
-                    agent.on_collision(player)
-            if agent.distance_to_player <= agent.personalspace:
-                agent.on_enter_personal_space(player)
-                agent.while_in_personal_space(player)
-                player.on_enter_personal_space(agent)
+                if agent.distance_to_player <= agent.width:
+                    if not agent.fadeaway:
+                        player.on_collision(agent)
+                        agent.on_collision(player)
+                if agent.distance_to_player <= agent.personalspace:
+                    agent.on_enter_personal_space(player)
+                    agent.while_in_personal_space(player)
+                    player.on_enter_personal_space(agent)
 
             agent.update()
 
@@ -181,7 +183,7 @@ class Cluster:
 
 
     def add_member(self,member):
-        self.members.extend(member)
+        self.members.append(member)
 
     def remove_member(self, member):
         if member in self.members:

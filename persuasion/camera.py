@@ -47,7 +47,7 @@ class Camera:
 
     def move(self, player_centery):
         self.position.centery = player_centery
-        print player_centery
+       # print player_centery
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
@@ -84,8 +84,13 @@ class Camera:
                             cluster.members.remove(agent)
                             if not cluster.members:
                                 self.world.clusters.remove(cluster)
-        new_rect = self.adjust_agent(self.world.player)
-        self.screen.blit(self.world.player.s, new_rect.topleft)
+        #new_rect = self.adjust_agent(self.world.player)
+
+        #self.screen.blit(self.world.player.s, new_rect.topleft)
+
+        for agent in self.world.player_cluster.members:
+            new_rect = self.adjust_agent(agent)
+            self.screen.blit(agent.s, new_rect.topleft)
 
 
         self.bar.draw(self.screen)
