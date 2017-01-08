@@ -61,9 +61,13 @@ class Camera:
                         new_rect = self.adjust_agent(agent)
                         self.screen.blit(agent.s, new_rect.topleft)
                     else:
+                        print "not visible ", self.position.bottom, agent.rect.top, cluster.start_position, cluster.name
+                        print "num members ", len(cluster.members)
                         if agent.rect.top > self.position.bottom:
+                            print "dlkshj"
                             cluster.members.remove(agent)
-
+                            if not cluster.members:
+                                self.world.clusters.remove(cluster)
         new_rect = self.adjust_agent(self.world.player)
         self.screen.blit(self.world.player.s, new_rect.topleft)
 

@@ -20,7 +20,7 @@ def serialize(model):
                 field = str(field).split(" ")[1]
                 print "lala", attribute, field
             if attribute not in ["members", "add_cluster", "update_happiness", "regroup_wait",
-                                 "regroup", "update", "add_member", "remove_member", "save_cluster"]:
+                                 "regroup", "update", "add_member", "remove_member", "save_cluster", "calc_start"]:
                 #print attribute, type(attribute)
                 att_dict[attribute] = field
 
@@ -139,13 +139,13 @@ class Cluster:
         self.members = members
         self.movement = getattr(movements, movement)
         self.add_cluster(movement = self.movement)
+        self.start_position = -9999
+        self.calc_start()
 
-        if start_position == -9999:
-            for pos in self.starting_positions:
-                if pos[1] > start_position:
-                    start_position = pos[1]
-
-        self.start_position = start_position
+    def calc_start(self):
+        for pos in self.starting_positions:
+            if pos[1] > self.start_position:
+                self.start_position = pos[1]
 
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):
         for i in range(len(self.starting_positions)):
