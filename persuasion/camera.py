@@ -47,7 +47,7 @@ class Camera:
 
     def move(self, player_centery):
         self.position.centery = player_centery
-       # print player_centery
+
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:

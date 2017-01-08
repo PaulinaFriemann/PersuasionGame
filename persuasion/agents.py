@@ -103,6 +103,9 @@ class Agent:
             self.cluster.members.remove(self)
         self.s.set_alpha(self.alpha)
 
+    def unfreeze(self):
+        self.frozen = False
+
     def change_happiness(self, delta):
 
         self.happiness = max(0, min(self.happiness + delta, 100))
@@ -128,6 +131,7 @@ class Agent:
     def while_in_personal_space(self, player):
         if self.attitude == Attitude["neutral"]:
             self.frozen = True
+            game.main_game.action_queue.add(self.unfreeze,{},15)
 
         elif self.attitude == Attitude["friendly"]:
             if player.trying_to_communicate:

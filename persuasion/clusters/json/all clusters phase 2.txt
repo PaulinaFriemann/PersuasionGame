@@ -10,4 +10,4 @@
 {"name": "Lonely square", "number": 10, "starting_positions": [[228, -3769]], "attitude": 2, "start_position": -3769, "movement": "idle"}
 {"name": "Bullies", "number": 11, "starting_positions": [[214, -3784], [237, -3754]], "attitude": 1, "start_position": -3754, "movement": "idle"}
 {"name": "Weak bystanders", "number": 9, "starting_positions": [[289, -3787], [175, -3751], [182, -3735]], "attitude": 1, "start_position": -3735, "movement": "idle"}
-{"name": "people", "number": 12, "starting_positions": [[69, -3106], [45, -3119], [39, -3092]], "attitude": 1, "start_position": -3090, "movement": "make_happy"}
+{"name": "people", "number": 12, "starting_positions": [[69, -3106], [45, -3119], [39, -3092]], "attitude": 0, "start_position": -3090, "movement": "make_happy"}
