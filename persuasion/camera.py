@@ -4,12 +4,23 @@ import gui
 import game
 
 
-event_positions = [-500, -1000]
+event_positions = [-500, -1000, -1500, -2000, -2500, -3500]
 event_text = ["""Hey there.
 I see you're not feeling so well.
 Sometimes life can be rough, but
-you will see, things get better.""", """When you hit rock bottom,
-there is only one way to go."""]
+you will see, things get better.""","""In 2015, 1,871 commited
+suicide in the Netherlands alone.
+At least 1 in every 20 deaths
+here is due to a mental disorder.""", """20 percent of all adults
+go through depression at some point.
+You are not alone.""", """When you hit rock bottom,
+there is only one way to go.""", """No one wants to be alone.
+Go out there, make a friend.
+I am sure, you will feel much better.""", """Being lonely can lead to depression
+and worse. It increases mortality
+by 26%.""", """So go out there, and
+save someone's life.
+Happiness is contagious."""]
 
 
 class Camera:
@@ -55,14 +66,15 @@ class Camera:
         self.world.background.draw(self.screen, self.position)
         self.draw_overlay(100 - self.world.player.happiness)
         for cluster in self.world.clusters:
+            print "num members ", len(cluster.members)
             if self.position.top <= cluster.start_position:
                 for agent in cluster.members:
                     if self.check_visibility(agent.rect):
                         new_rect = self.adjust_agent(agent)
                         self.screen.blit(agent.s, new_rect.topleft)
                     else:
-                        print "not visible ", self.position.bottom, agent.rect.top, cluster.start_position, cluster.name
-                        print "num members ", len(cluster.members)
+                        #print "not visible ", self.position.bottom, agent.rect.top, cluster.start_position, cluster.name
+                        #print "num members ", len(cluster.members)
                         if agent.rect.top > self.position.bottom:
                             print "dlkshj"
                             cluster.members.remove(agent)

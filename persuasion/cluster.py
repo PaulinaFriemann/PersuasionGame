@@ -141,6 +141,7 @@ class Cluster:
         self.add_cluster(movement = self.movement)
         self.start_position = -9999
         self.calc_start()
+        print self.name, len(self.members)
 
     def calc_start(self):
         for pos in self.starting_positions:
