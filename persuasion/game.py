@@ -66,7 +66,7 @@ class Game:
         clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
         #print "FIRSTIE FIRST"
         self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
-        pygame.mixer.music.play(-1)
+        #pygame.mixer.music.play(-1)
 
         self.reset_clusters(clusters)
         #self.calc_starts()
