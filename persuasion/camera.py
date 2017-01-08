@@ -35,6 +35,9 @@ class Camera:
         self.bar = gui.NarratorBar(Rect(0, 350, self.width, 350))
         self.event_num = 0
 
+        #self.music = pygame.mixer.music.load("resources/phase1.mpeg")
+        #pygame.mixer.music.play(-1)
+
         self.bar.set_text("""Hello """ + game.player_name + """!
         Welcome to the world of cubes.
         This world is filled with loneliness.
@@ -66,7 +69,6 @@ class Camera:
         self.world.background.draw(self.screen, self.position)
         self.draw_overlay(100 - self.world.player.happiness)
         for cluster in self.world.clusters:
-            print "num members ", len(cluster.members)
             if self.position.top <= cluster.start_position:
                 for agent in cluster.members:
                     if self.check_visibility(agent.rect):

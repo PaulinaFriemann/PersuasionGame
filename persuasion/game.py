@@ -41,8 +41,7 @@ class Game:
         self.in_editor_mode = False
         self.cluster_starts = []
 
-        self.music = pygame.mixer.music.load("resources/guano.mp3")
-#        pygame.mixer.music.play(-1)
+
 
         self.action_queue = utils.ActionQueue()
 

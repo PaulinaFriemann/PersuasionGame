@@ -141,7 +141,6 @@ class Cluster:
         self.add_cluster(movement = self.movement)
         self.start_position = -9999
         self.calc_start()
-        print self.name, len(self.members)
 
     def calc_start(self):
         for pos in self.starting_positions:
@@ -149,13 +148,19 @@ class Cluster:
                 self.start_position = pos[1]
 
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):
+        if self.number ==1:
+            print "before ", len(self.members)
         for i in range(len(self.starting_positions)):
             self.members.append(
                 agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, cluster = self,
                              movement=movement,
                              attitude=self.attitude))
+        if self.number ==1:
+            print "after ", len(self.members)
 
     def update(self, player):
+        if self.number ==1:
+            print "after2 ", len(self.members)
 
         for agent in self.members:
             agent.distance_to_player = utils.distance(player.rect, agent.rect)
@@ -202,7 +207,10 @@ class Cluster:
 
 
     def regroup(self, dx = 0, dy = 0):
+        print "members ", len(self.members)
+        print "starting pose" , len(self.starting_positions)
         for i in range(len(self.members)):
+           # print i
             target_x = self.starting_positions[i][0] + dx
             target_y = self.starting_positions[i][1] + dy
             current_x,current_y = self.members[i].rect.center
