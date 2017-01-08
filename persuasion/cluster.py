@@ -16,9 +16,9 @@ def serialize(model):
             if type(field) == unicode:
                 field = field.encode("ascii", "ignore")
             if attribute == "movement":
-                print field
+                #print field
                 field = str(field).split(" ")[1]
-                print "lala", attribute, field
+                #print "lala", attribute, field
             if attribute not in ["members", "add_cluster", "update_happiness", "regroup_wait",
                                  "regroup", "update", "add_member", "remove_member", "save_cluster", "calc_start"]:
                 #print attribute, type(attribute)

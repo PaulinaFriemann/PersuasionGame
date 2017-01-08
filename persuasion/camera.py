@@ -76,7 +76,7 @@ class Camera:
                         #print "not visible ", self.position.bottom, agent.rect.top, cluster.start_position, cluster.name
                         #print "num members ", len(cluster.members)
                         if agent.rect.top > self.position.bottom:
-                            print "dlkshj"
+                            #print "dlkshj"
                             cluster.members.remove(agent)
                             if not cluster.members:
                                 self.world.clusters.remove(cluster)
