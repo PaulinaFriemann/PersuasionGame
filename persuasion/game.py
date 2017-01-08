@@ -53,9 +53,20 @@ class Game:
         for cluster in clusters:
             self.clusters.append(cluster)
 
+    def reset_clusters(self, clusters = []):
+        self.clusters = []
+        for cluster in clusters:
+            self.clusters.append(cluster)
+
     def load_agents(self):
         clusters = cluster.load_all()
         self.add_clusters(clusters)
+        #self.calc_starts()
+
+    def load_phase(self, phase):
+        print "loading phase " + str(phase)
+        clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
+        self.reset_clusters(clusters)
         #self.calc_starts()
 
     def calc_starts(self):
@@ -69,7 +80,8 @@ class Game:
 
     def start(self):
 
-        self.load_agents()
+        #self.load_agents()
+        self.load_phase(1)
 
         self.camera.bar.pop_up()
 
@@ -225,6 +237,11 @@ class Game:
             pygame.display.flip()
 
     def update(self):
+
+        if self.camera.position.top == -4000:
+            self.load_phase(3)
+        elif self.camera.position.top == -2700:
+            self.load_phase(2)
 
         self.action_queue.step()
 

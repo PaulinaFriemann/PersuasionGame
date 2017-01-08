@@ -22,14 +22,21 @@ def bounce_back(agent, size=6):
 
 
 def make_happy(agent):
-    path = [[-1,1]] * 4
-    path.extend([[1,-1]] * 4)
-    path.extend([[1,1]] * 4)
-    path.extend([[-1,-1]] * 4)
-    path.extend([[0,1]] * 4)
-    path.extend([[0,-1]] * 4)
-    path.extend([[0,1]] * 4)
-    path.extend([[0,0],[0,0],[0,-1]] * 4)
+    path = [[1,-1]] * 5
+    path.extend([[0,0]] * 3)
+    path.extend([[-1,1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[-1,-1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[1,1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[0,-1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[0,1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[0,-1]] * 5)
+    path.extend([[0,0]] * 3)
+    path.extend([[0,0],[0,0],[0,1]] * 5)
     return path
 
 def happy_dance(agent):

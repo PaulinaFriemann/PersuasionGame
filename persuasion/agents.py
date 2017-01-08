@@ -124,17 +124,19 @@ class Agent:
         elif self.attitude == Attitude["friendly"]:
             if player.trying_to_communicate:
                 print "going happy"
-                self.set_path(movements.make_happy)
+                try:
+                    game.main_game.action_queue.add(self.set_path, {"movement": movements.make_happy},
+                                                    24)
+                except TypeError:
+                    game.main_game.action_queue.add(self.set_path,
+                                                    {"movement": movements.make_happy},
+                                                    24)
                 self.become_friends()
 
     def on_collision(self, other):
 
         self.set_path(collision_reactions[self.attitude])
         self.event = True
-
-        if self.attitude == Attitude["friendly"]:
-
-            self.become_friends()
 
         if self.attitude == Attitude["friends"]:
             self.runaway = 0
@@ -146,11 +148,11 @@ class Agent:
             self.runaway = 0
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path)+120)
+                                      len(self.path)+50)
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
-                                      len(self.path)+120)
+                                      len(self.path)+50)
 
     def change_attitude(self, attitude):
         if attitude != self.attitude:
