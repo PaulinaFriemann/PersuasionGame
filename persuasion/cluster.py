@@ -29,6 +29,7 @@ def serialize(model):
 
 
 def deserialize(string):
+    #print string
     return Cluster(**json.loads(string.strip("\n")))
 
 
@@ -131,12 +132,13 @@ def evenly_distributed((center_x, center_y), personal_space, n_agents):
 
 class Cluster:
 
-    def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, members = [], movement="idle"):
+    def __init__(self, name="", number = -1, starting_positions = [], attitude=0, start_position=-9999, movement="idle"):
+
         self.starting_positions = starting_positions
         self.name = name
         self.attitude = attitude
         self.number = number
-        self.members = members
+        self.members = []
         self.movement = getattr(movements, movement)
         self.add_cluster(movement = self.movement)
         self.start_position = -9999
@@ -148,20 +150,16 @@ class Cluster:
                 self.start_position = pos[1]
 
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):
-        #if self.number ==1:
-         #   print "before ", len(self.members)
+
         for i in range(len(self.starting_positions)):
             self.members.append(
                 agents.Agent(self.starting_positions[i][0], self.starting_positions[i][1], happiness, cluster = self,
                              movement=movement,
                              attitude=self.attitude))
-       # if self.number ==1:
-            #print "after ", len(self.members)
 
     def update(self, player):
-       # if self.number ==1:
-           # print "after2 ", len(self.members)
-
+        if self.number == 5:
+            print "I have ", len(self.members)
         for agent in self.members:
             agent.distance_to_player = utils.distance(player.rect, agent.rect)
 
@@ -209,7 +207,7 @@ class Cluster:
     def regroup(self, dx = 0, dy = 0):
       #  print "members ", len(self.members)
       #  print "starting pose" , len(self.starting_positions)
-        for i in range(len(self.starting_positions)):
+        for i, member in enumerate(filter(lambda m: not m.fadeaway, self.members)):
            # print i
             target_x = self.starting_positions[i][0] + dx
             target_y = self.starting_positions[i][1] + dy

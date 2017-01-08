@@ -69,9 +69,9 @@ class Agent:
         movements.move_path(self)
         if self.attitude == Attitude["friends"]:
             self.run_away()
-            #print self.runaway
+            ##print self.runaway
             if self.runaway == 100:
-                print "change attitude"
+                #print "change attitude"
                 self.change_attitude(Attitude["friendly"])
         if self.fadeaway:
             self.fade_away()
@@ -85,7 +85,7 @@ class Agent:
         self.s.set_alpha(self.alpha)
 
     def set_path(self, movement, default=False, step=0):
-#        print movement(self)
+#        #print movement(self)
         self.step = step
         self.path = movement(self)
         if default:
@@ -104,7 +104,7 @@ class Agent:
 
         self.happiness = max(0, min(self.happiness + delta, 100))
         self.update_color(self.happiness)
-        #print self.happiness
+        ##print self.happiness
 
 
     def on_enter_personal_space(self, player):
@@ -112,9 +112,9 @@ class Agent:
 
             if self.attitude == Attitude["avoiding"]:
                 self.fadeaway = True
-                #print len(self.cluster.starting_positions)
+                ##print len(self.cluster.starting_positions)
                 #self.cluster.starting_positions.remove([self.x, self.y])
-                #print len(self.cluster.starting_positions)
+                ##print len(self.cluster.starting_positions)
                 self.set_default_path(movements.do_nothing)
                 game.main_game.action_queue.add(self.cluster.regroup, {"dx": 20, "dy": 30},
                                                 20)
@@ -128,7 +128,7 @@ class Agent:
 
         elif self.attitude == Attitude["friendly"]:
             if player.trying_to_communicate:
-                print "going happy"
+                #print "going happy"
                 try:
                     game.main_game.action_queue.add(self.set_path, {"movement": movements.make_happy},
                                                     24)
@@ -147,7 +147,7 @@ class Agent:
             self.runaway = 0
 
     def become_friends(self):
-        print "Let's become friends!"
+        #print "Let's become friends!"
         if self.attitude == Attitude["friendly"]:
             self.change_attitude(Attitude["friends"])
             self.runaway = 0
@@ -192,7 +192,7 @@ class Player(Agent):
         #self.update_color()
 
     def update_color(self,doweneedthis=False):
-        #print min(255,max(0,260 - (self.happiness * 2)))
+        ##print min(255,max(0,260 - (self.happiness * 2)))
         try:
             self.color.hsva = (min(255,max(0,260 - (self.happiness * 2))), self.happiness, 90, 0)
         except ValueError:
@@ -231,7 +231,7 @@ class Player(Agent):
     def on_collision(self, other):
         if self.path == [[0, 0]]:
             if other.attitude == Attitude["friendly"]:
-                print "HAPPY AND I KNOW IT"
+                #print "HAPPY AND I KNOW IT"
                 self.change_happiness(5)
                 other.change_happiness(5)
                 self.set_path(movements.happy_dance)

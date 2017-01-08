@@ -71,8 +71,7 @@ class Camera:
         self.draw_overlay(100 - self.world.player.happiness)
         for cluster in self.world.clusters:
             if self.position.top <= cluster.start_position:
-               # print "Clustno = ", cluster.number
-               # print "members = ", len(cluster.members)
+
                 for agent in cluster.members:
                     if self.check_visibility(agent.rect):
                         new_rect = self.adjust_agent(agent)
