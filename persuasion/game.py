@@ -40,7 +40,6 @@ class Game:
         self.screen = screen
         self.in_editor_mode = False
         self.cluster_starts = []
-
         self.action_queue = utils.ActionQueue()
 
     def add_player(self, player):

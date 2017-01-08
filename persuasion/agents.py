@@ -16,10 +16,10 @@ personal_space_reactions = [movements.do_nothing, movements.avoid, movements.do_
 class Agent:
     def __init__(self, x, y, happiness, cluster=None, movement=movements.idle, attitude=Attitude["neutral"]):
         self.happiness = happiness
-
+        self.x = x
+        self.y = y
         self.color = pygame.Color('black')
         self.color.hsva = (260 - (self.happiness * 2),0,80,100)
-
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
@@ -112,7 +112,12 @@ class Agent:
 
             if self.attitude == Attitude["avoiding"]:
                 self.fadeaway = True
+                #print len(self.cluster.starting_positions)
+                #self.cluster.starting_positions.remove([self.x, self.y])
+                #print len(self.cluster.starting_positions)
                 self.set_default_path(movements.do_nothing)
+                game.main_game.action_queue.add(self.cluster.regroup, {"dx": 20, "dy": 30},
+                                                20)
 
             self.set_path(personal_space_reactions[self.attitude])
             self.event = True
