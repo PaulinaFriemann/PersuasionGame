@@ -7,6 +7,7 @@ import utils
 def idle(agent):
     return [[0,0]]
 
+
 def do_nothing(agent):
     if not agent.path:
         return default(agent)
@@ -14,7 +15,10 @@ def do_nothing(agent):
 
 
 def default(agent):
-    return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
+    if agent.default_movement != do_nothing:
+        return agent.default_movement(agent)   ### ??? not sure if the (agent) is needed
+    else:
+        return idle(agent)
 
 
 def bounce_back(agent, size=6):

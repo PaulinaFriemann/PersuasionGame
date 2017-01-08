@@ -239,8 +239,12 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-        if self.camera.position.top == -4100:
+        if self.camera.position.top == -4000:
+            pygame.mixer.music.fadeout(1000)
+        elif self.camera.position.top == -4100:
             self.load_phase(3)
+        elif self.camera.position.top == -2600:
+            pygame.mixer.music.fadeout(1000)
         elif self.camera.position.top == -2700:
             self.load_phase(2)
 
