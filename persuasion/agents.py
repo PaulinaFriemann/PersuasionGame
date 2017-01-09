@@ -67,7 +67,6 @@ class Agent:
         if self.attitude == Attitude["neutral"]:
             self.color = pygame.Color(90, 20, 150, 100)
 
-
     def direction_to(self, rect):
         return [a - b for a, b in zip(self.rect.center, rect.center)]
 
@@ -171,7 +170,6 @@ class Agent:
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
-            self.speed_modificator = 4
             game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
                                             len(self.path))
             game.main_game.action_queue.add(self.change_speed, {"speed": 4},
@@ -187,19 +185,21 @@ class Agent:
         #print "Let's become friends!"
         if self.attitude == Attitude["friendly"]:
             self.change_attitude(Attitude["friends"])
-            self.speed_modificator = 4
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
             self.runaway = 0
+            print len(self.path)
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path)+20)
+                                      120)
 
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
-                                      len(self.path)+20)
+                                      120)
+
+            self.speed_modificator = 4
 
 
     def change_attitude(self, attitude):
@@ -251,9 +251,9 @@ class Player(Agent):
             if other.attitude == Attitude["friends"]:
                 self.change_happiness(0.05)
                 other.change_happiness(0.05)
-            elif other.attitude != Attitude["friends"]:
-                self.change_happiness(-6)
-                other.change_happiness(-6)
+            elif other.attitude == Attitude["avoiding"]:
+                self.change_happiness(-1 * len(other.cluster.members))
+                other.change_happiness(0)
                 other.has_interacted = True
 
     def on_bounce(self, other_attitude):

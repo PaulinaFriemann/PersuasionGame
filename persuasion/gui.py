@@ -5,7 +5,6 @@ import utils
 from pygame import Rect, freetype
 import game
 
-
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location, camera_width, camera_height):
         pygame.sprite.Sprite.__init__(self)

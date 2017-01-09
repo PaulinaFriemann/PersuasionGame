@@ -71,7 +71,8 @@ class Game:
         clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
         #print "FIRSTIE FIRST"
 
-        #pygame.mixer.music.play(-1)
+        self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
+        pygame.mixer.music.play(-1)
 
         self.reset_clusters(clusters)
         #self.calc_starts()
@@ -247,12 +248,10 @@ class Game:
         if self.camera.position.top == -3950:
             pygame.mixer.music.fadeout(2000)
         elif self.camera.position.top == -4100:
-            self.music = pygame.mixer.music.load("resources/" + str(3) + ".mp3")
             self.load_phase(3)
         elif self.camera.position.top == -2550:
             pygame.mixer.music.fadeout(2000)
         elif self.camera.position.top == -2700:
-            self.music = pygame.mixer.music.load("resources/" + str(2) + ".mp3")
             self.load_phase(2)
 
         self.action_queue.step()
