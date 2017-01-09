@@ -42,6 +42,7 @@ class Agent:
         self.goal_b = [-999, -999]
         self.frozen = False
         self.runaway = 0
+        self.colliding = False
 
         self.set_color()
 
@@ -149,6 +150,9 @@ class Agent:
 
             self.set_path(personal_space_reactions[self.attitude])
             self.event = True
+
+    def set_colliding(self, colliding = True):
+        self.colliding = colliding
 
     def while_in_personal_space(self, player):
         if self.attitude == Attitude["neutral"]:
@@ -285,7 +289,9 @@ class Player(Agent):
                 other.change_happiness(5)
                 self.set_path(movements.old_happy_dance)
                 other.set_path(movements.make_happy)
-            elif other.attitude != Attitude["friends"]:
+            elif other.attitude != Attitude["friends"] and not other.colliding:
                 self.change_happiness(-5)
                 other.change_happiness(-5)
                 self.on_bounce(other.attitude)
+                other.set_colliding()
+                game.main_game.action_queue.add(other.set_colliding, {"colliding": False}, 10)
