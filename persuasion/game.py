@@ -73,7 +73,7 @@ class Game:
         #print "FIRSTIE FIRST"
         if phase != 1:
             self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
- #           pygame.mixer.music.play(-1)
+            pygame.mixer.music.play(-1)
 
         self.reset_clusters(clusters)
         #self.calc_starts()
