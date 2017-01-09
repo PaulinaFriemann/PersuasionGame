@@ -16,7 +16,8 @@ go through depression at some point.
 You are not alone.""", """When you hit rock bottom,
 the only way left is up.""", """No one wants to be alone.
 Go out there, make a friend.
-I am sure, you will feel much better.""", """Being lonely can lead to depression
+I am sure, you will feel much better.
+Press Space to communicate with others.""", """Being lonely can lead to depression
 and worse. It increases mortality
 by 26%.""", """So go out there, and
 save someone's life.
@@ -34,9 +35,6 @@ class Camera:
         self.screen = screen
         self.bar = gui.NarratorBar(Rect(0, 350, self.width, 350))
         self.event_num = 0
-
-        #self.music = pygame.mixer.music.load("resources/phase1.mpeg")
-        #pygame.mixer.music.play(-1)
 
         self.bar.set_text("""Hello """ + game.player_name + """!
         Welcome to the world of cubes.

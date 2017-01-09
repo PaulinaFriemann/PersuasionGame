@@ -67,7 +67,7 @@ class TextArea(Rect):
                 rect = utils.center_h(self.font.get_rect(line), self)
                 if absolute:
                     rect.move_ip([0, self.top])
-                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i +30),line, fgcolor=self.text_color)
+                self.font.render_to(screen, (rect.center[0], rect.center[1] + self.font.size * i +0),line, fgcolor=self.text_color)
 
     def draw(self, screen):
         screen.blit(self.s, self.topleft)
@@ -104,7 +104,9 @@ class StartScreen:
 
         self.background = Background("resources/bankbig.jpg", [0, 0], self.width, self.height)
 
-        self.start_button = Button(Rect(270, 342, 100, 30), text="Start Game")
+        self.start_button = TextArea(Rect(270, 342, 100, 30), fgcolor=(255,255,255),bgcolor=(50,50,50))
+        print self.start_button
+        self.start_button.set_text("Start Game")
         self.start_text = TextArea(Rect(screen.get_width() / 2 - 400/ 2, 100, 400, 100))
 
         self.start_text.set_text(
