@@ -19,7 +19,6 @@ class Agent:
         self.x = x
         self.y = y
         self.color = pygame.Color('black')
-        self.color.hsva = (260 - (self.happiness * 2),0,80,100)
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
@@ -44,6 +43,9 @@ class Agent:
         self.frozen = False
         self.runaway = 0
 
+        self.set_color()
+
+
         if self.default_movement == movements.from_to_rand:
             while utils.pos_distance(self.goal_a, self.goal_b) <= 15:
                 self.goal_a = [random.randint(-40, 40) + x, random.randint(-40, 40) + y]
@@ -56,6 +58,14 @@ class Agent:
             self.set_path(self.default_movement)
             self.set_default_path(movements.idle)
 
+    def set_color(self):
+
+        if self.attitude == Attitude["friendly"]:
+            self.color.hsva = (260 - (self.happiness * 2), 0, 80, 100)
+        if self.attitude == Attitude["avoiding"]:
+            self.color.hsva = (0,0,50,100)
+        if self.attitude == Attitude["neutral"]:
+            self.color = pygame.Color(75, 0, 130, 100)
 
 
     def direction_to(self, rect):
@@ -83,7 +93,14 @@ class Agent:
         self.runaway = min(self.runaway + 0.1, 100)
 
     def update_color(self,player_happiness):
-        self.color.hsva = (260 - (self.happiness * 2), player_happiness, 90, 0)
+        cur_h, cur_s, cur_v, cur_a = self.color.hsva
+
+        if self.attitude == Attitude["avoiding"]:
+            self.color.hsva = (cur_h,cur_s,player_happiness/2,cur_a)
+        if self.attitude == Attitude["neutral"]:
+            self.color.hsva = (cur_h,player_happiness,cur_v,cur_a)
+        if self.attitude == Attitude["friendly"]:
+            self.color.hsva = (260 - (self.happiness * 2), player_happiness, cur_v, cur_a)
         self.s.fill(self.color)
         self.s.set_alpha(self.alpha)
 
