@@ -40,3 +40,12 @@
 {"name": "", "number": -1, "starting_positions": [[193, -190], [163, -169], [140, -146], [196, -144], [247, -146], [223, -174]], "attitude": 1, "start_position": -144, "movement": "idle"}
 {"name": "", "number": -1, "starting_positions": [[193, -190], [163, -169], [140, -146], [196, -144], [247, -146], [223, -174]], "attitude": 1, "start_position": -144, "movement": "idle"}
 {"name": "", "number": -1, "starting_positions": [[193, -190], [163, -169], [140, -146], [196, -144], [247, -146], [223, -174]], "attitude": 1, "start_position": -144, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[433, -3104]], "attitude": 2, "start_position": -3104, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[8, -3330]], "attitude": 2, "start_position": -3330, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[57, -3108]], "attitude": 2, "start_position": -3108, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[438, -3301]], "attitude": 2, "start_position": -3301, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[19, -4194], [39, -4172], [20, -4149]], "attitude": 2, "start_position": -4149, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[486, -4266], [464, -4245], [477, -4220]], "attitude": 2, "start_position": -4220, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[385, -4396], [397, -4420], [419, -4415], [420, -4389], [395, -4378]], "attitude": 2, "start_position": -4378, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[63, -4580], [61, -4548], [25, -4570], [84, -4606], [43, -4608], [101, -4562]], "attitude": 2, "start_position": -4548, "movement": "idle"}
+{"name": "", "number": -1, "starting_positions": [[211, -4786], [267, -4724], [216, -4665], [150, -4721], [166, -4757], [203, -4730], [394, -4798], [376, -4727], [408, -4702], [450, -4702], [475, -4730], [435, -4794]], "attitude": 2, "start_position": -4665, "movement": "idle"}

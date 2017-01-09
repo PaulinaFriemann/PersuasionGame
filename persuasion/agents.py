@@ -188,12 +188,12 @@ class Agent:
             self.runaway = 0
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path)+20)
+                                      len(self.path))
 
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
-                                      len(self.path)+20)
+                                      len(self.path))
 
 
     def change_attitude(self, attitude):
