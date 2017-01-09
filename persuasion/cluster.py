@@ -20,7 +20,8 @@ def serialize(model):
                 field = str(field).split(" ")[1]
                 #print "lala", attribute, field
             if attribute not in ["members", "add_cluster", "update_happiness", "regroup_wait",
-                                 "regroup", "update", "add_member", "remove_member", "save_cluster", "calc_start"]:
+                                 "regroup", "update", "add_member", "remove_member", "save_cluster", "calc_start",
+                                 "set_path"]:
                 #print attribute, type(attribute)
                 att_dict[attribute] = field
 
@@ -181,6 +182,13 @@ class Cluster:
             for j in range(len(self.members)):
                 self.members[i].happiness += (self.members[j].happiness - self.members[i].happiness)/100
 
+    def set_path(self, path, movement, fadeout=False):
+        self.movement = movement
+        for member in self.members:
+            member.set_path(movement, default=True)
+            #member.set_default_path(movement)
+            #member.path = path
+            member.fadeaway = fadeout
 
     def add_member(self,member):
         self.members.append(member)

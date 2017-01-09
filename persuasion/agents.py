@@ -121,9 +121,10 @@ class Agent:
                 ##print len(self.cluster.starting_positions)
                 #self.cluster.starting_positions.remove([self.x, self.y])
                 ##print len(self.cluster.starting_positions)
-                self.set_default_path(movements.do_nothing)
-                game.main_game.action_queue.add(self.cluster.regroup, {"dx": 20, "dy": 30},
-                                                20)
+                self.set_default_path(movements.avoid)
+                self.cluster.set_path(self.path, self.default_movement, fadeout=True)
+                #game.main_game.action_queue.add(self.cluster.regroup, {"dx": 20, "dy": 30},
+                 #                               20)
 
             self.set_path(personal_space_reactions[self.attitude])
             self.event = True
