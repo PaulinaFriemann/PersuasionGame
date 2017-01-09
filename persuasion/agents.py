@@ -69,7 +69,7 @@ class Agent:
         movements.move_path(self)
         if self.attitude == Attitude["friends"]:
             self.run_away()
-            ##print self.runaway
+            #print self.runaway
             if self.runaway == 100:
                 #print "change attitude"
                 self.cluster.remove_member(self)
@@ -164,17 +164,20 @@ class Agent:
         #print "Let's become friends!"
         if self.attitude == Attitude["friendly"]:
             self.change_attitude(Attitude["friends"])
+            self.speed_modificator = 4
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
             self.runaway = 0
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path))
+                                      len(self.path)+20)
+
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},
-                                      len(self.path)+50)
+                                      len(self.path)+20)
+
 
     def change_attitude(self, attitude):
         if attitude != self.attitude:
