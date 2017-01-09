@@ -37,6 +37,7 @@ class TextArea(Rect):
         super(TextArea, self).__init__(rect)
         self.text = [text]
         self.font = freetype.SysFont(freetype.get_default_font(), fontsize)
+        print self.font
         self.text_color = fgcolor
         self.centered = centered
         self.fontsize = fontsize
@@ -100,29 +101,29 @@ class EndScreen:
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
 
-        self.background = Background("resources/tree.jpg", [0, 0], self.width, self.height)
-
-        self.end_text = TextArea(Rect(screen.get_width() / 2 - 400/ 2, 0, 400, 100))
-
-        self.end_text.set_text(
-            """
-            We hope you enjoyed this game.
-
-            Programming done by Paulina Friemann & Marc de Groot
-            Music by Ewa Kielska
-            Theoretical background by Sanne Demir, Anouk Meerbeek, Moniek Oomen & Iris Tollenaar
-
-            Inspired by 'Loneliness' by Jordan Magnuson
-            necessarygames.com/my-games/loneliness/flash
-
-            if you or anyone you know is contemplating suicide
-            please visit www.113online.nl
-
-            Remember.
-
-            You are not alone.
-            Things will get better.
-            """)
+        self.background = Background("resources/tree_end_screen_small.jpg", [0, 0], self.width, self.height)
+        #
+        # self.end_text = TextArea(Rect(screen.get_width() / 2 - 400/ 2, 0, 400, 100))
+        #
+        # self.end_text.set_text(
+        #     """
+        #     We hope you enjoyed this game.
+        #
+        #     Programming done by Paulina Friemann & Marc de Groot
+        #     Music by Ewa Kielska
+        #     Theoretical background by Sanne Demir, Anouk Meerbeek, Moniek Oomen & Iris Tollenaar
+        #
+        #     Inspired by 'Loneliness' by Jordan Magnuson
+        #     necessarygames.com/my-games/loneliness/flash
+        #
+        #     if you or anyone you know is contemplating suicide
+        #     please visit www.113online.nl
+        #
+        #     Remember.
+        #
+        #     You are not alone.
+        #     Things will get better.
+        #     """)
 
     def end(self):
         while 1:
@@ -133,7 +134,6 @@ class EndScreen:
                     sys.exit()
 
             self.background.draw(self.screen, self.screen.get_rect())
-            self.end_text.render(self.screen)
             pygame.display.flip()
 
 

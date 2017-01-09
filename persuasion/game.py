@@ -246,7 +246,7 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-        if self.camera.position.top == -6000:
+        if self.camera.position.top < -6000:
             self.ended = True
             self.end_screen.end()
         if self.camera.position.top == -3950:
