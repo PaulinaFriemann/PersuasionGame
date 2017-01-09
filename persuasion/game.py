@@ -16,7 +16,7 @@ def init(width, height):
     screen = pygame.display.set_mode([screen_width, screen_height])
 
     pygame.mixer.music.load("resources/1.mp3")
-#    pygame.mixer.music.play(-1)
+    pygame.mixer.music.play(-1)
 
     player_name = start_screen()
     main_game = Game(600)
