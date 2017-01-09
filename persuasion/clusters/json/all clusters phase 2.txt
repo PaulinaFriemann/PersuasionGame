@@ -9,6 +9,6 @@
 {"name": "Bystanders", "number": 9, "starting_positions": [[231, -4209], [249, -4212], [266, -4221], [279, -4234], [288, -4251], [291, -4269], [279, -4305], [266, -4318], [249, -4327], [231, -4329], [212, -4327], [195, -4318], [182, -4305], [173, -4288], [171, -4270], [195, -4221], [212, -4209]], "attitude": 0, "start_position": -3709, "movement": "idle"}
 {"name": "Lonely square", "number": 10, "starting_positions": [[228, -4269]], "attitude": 2, "start_position": -3769, "movement": "idle"}
 {"name": "Bullies", "number": 11, "starting_positions": [[214, -4284], [237, -4254]], "attitude": 1, "start_position": -3754, "movement": "idle"}
-{"name": "Weak bystanders", "number": 9, "starting_positions": [[289, -4287], [175, -4251], [182, -4235]], "attitude": 1, "start_position": -3735, "movement": "idle"}
+{"name": "Weak bystanders", "number": 9, "starting_positions": [[289, -4287], [175, -4251], [182, -4235]], "attitude": 0, "start_position": -3735, "movement": "idle"}
 {"name": "people", "number": 12, "starting_positions": [[69, -3606], [45, -3619], [39, -3592]], "attitude": 0, "start_position": -3092, "movement": "make_happy"}
 {"name": "", "number": 13, "starting_positions": [[378, -3800]], "attitude": 2, "start_position": -3300, "movement": "from_to_rand"}
