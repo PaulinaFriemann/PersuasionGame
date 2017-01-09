@@ -10,11 +10,11 @@ def init():
     game.init(500, 480)
 
 
-def mainj():
+def main():
     init()
 
 
-def main():
+def mainj():
 
     #init()
 
@@ -27,7 +27,7 @@ def main():
     #cluster.move_cluster(clusters[-2], 0, -100)
     #cluster.move_cluster(clusters[-1], 0, -100)
 
-    cluster.save_all(clusters)
+    #cluster.save_all(clusters)
 
 
 if __name__ == '__main__':
