@@ -9,8 +9,8 @@ import movements
 Attitude = {'neutral': 0, 'avoiding': 1, 'friendly': 2, 'friends': 3}
 
 
-collision_reactions = [movements.bounce_back, movements.bounce_back, movements.make_happy, movements.bounce_back]
-personal_space_reactions = [movements.do_nothing, movements.avoid, movements.do_nothing, movements.make_happy]
+collision_reactions = [movements.bounce_back, movements.bounce_back, movements.old_happy_dance, movements.bounce_back]
+personal_space_reactions = [movements.do_nothing, movements.avoid, movements.do_nothing, movements.old_happy_dance]
 
 
 class Agent:
@@ -65,8 +65,7 @@ class Agent:
         if self.attitude == Attitude["avoiding"]:
             self.color.hsva = (0,0,30,100)
         if self.attitude == Attitude["neutral"]:
-            self.color = pygame.Color(75, 0, 90, 100)
-
+            self.color = pygame.Color(90, 20, 150, 100)
 
     def direction_to(self, rect):
         return [a - b for a, b in zip(self.rect.center, rect.center)]
@@ -78,14 +77,19 @@ class Agent:
     def update(self):
         movements.move_path(self)
         if self.attitude == Attitude["friends"]:
+            print "runway ",self.runaway
+        if self.attitude == Attitude["friends"]:
             self.run_away()
             #print self.runaway
-            if self.runaway == 100:
-                #print "change attitude"
+            if self.runaway >= 100:
+                print "change attitude"
                 self.cluster.remove_member(self)
-                self.cluster = cluster.Cluster(attitude=Attitude["friendly"], starting_positions=list(self.rect.center), start_position=self.rect.bottom)
+                self.cluster = cluster.Cluster(attitude=Attitude["friendly"], starting_positions=[list(self.rect.center)], start_position=self.rect.bottom)
                 game.main_game.add_clusters([self.cluster])
+
                 self.change_attitude(Attitude["friendly"])
+                self.set_path(movements.happy_dance, default=True)
+                self.cluster.add_cluster(happiness=self.happiness, movement=self.default_movement)
         if self.fadeaway:
             self.fade_away()
 
@@ -98,7 +102,7 @@ class Agent:
         if self.attitude == Attitude["avoiding"]:
             self.color.hsva = (cur_h,cur_s,player_happiness/3,cur_a)
         if self.attitude == Attitude["neutral"]:
-            self.color.hsva = (cur_h,player_happiness/2,cur_v,cur_a)
+            self.color.hsva = (cur_h,player_happiness,cur_v,cur_a)
         if self.attitude == Attitude["friendly"]:
             self.color.hsva = (260 - (self.happiness * 2), player_happiness, cur_v, cur_a)
         self.s.fill(self.color)
@@ -171,12 +175,17 @@ class Agent:
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
+            self.change_attitude(Attitude["friends"])
             game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
                                             len(self.path))
-            self.speed_modificator = 4
+            game.main_game.action_queue.add(self.change_speed, {"speed": 4},
+                                            len(self.path))
 
         if self.attitude == Attitude["friends"]:
             self.runaway = 0
+
+    def change_speed(self, speed=2):
+        self.speed_modificator=speed
 
     def become_friends(self):
         #print "Let's become friends!"
@@ -274,7 +283,7 @@ class Player(Agent):
                 #print "HAPPY AND I KNOW IT"
                 self.change_happiness(5)
                 other.change_happiness(5)
-                self.set_path(movements.happy_dance)
+                self.set_path(movements.old_happy_dance)
                 other.set_path(movements.make_happy)
             elif other.attitude != Attitude["friends"]:
                 self.change_happiness(-5)

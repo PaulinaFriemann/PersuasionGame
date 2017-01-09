@@ -39,9 +39,9 @@ def save_all(clusters, file_path = 'clusters/json/all clusters.txt'):
         for cluster in clusters:
             f.write(serialize(cluster)+"\n")
 
-def append_to_end(Cluster,file_path = 'clusters/json/all clusters.txt'):
+def append_to_end(Cluster, phase, file_path = 'clusters/json/all clusters phase .txt'):
     string = serialize(Cluster)
-    with open(file_path, 'a') as f:
+    with open(file_path + str(phase), 'a') as f:
         f.write(string + "\n")
 
 

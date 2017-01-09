@@ -13,6 +13,6 @@ setup(name='You Never Walk Alone',
       author='Marc, Paulina',
       author_email='',
       url='https://github.com/PaulinaFriemann/PersuasionGame',
-      install_requires=['pygame','nose'],
+      install_requires=['pygame'],
       packages=['persuasion'],
      )
