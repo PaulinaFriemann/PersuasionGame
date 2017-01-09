@@ -63,9 +63,9 @@ class Agent:
         if self.attitude == Attitude["friendly"]:
             self.color.hsva = (260 - (self.happiness * 2), 0, 80, 100)
         if self.attitude == Attitude["avoiding"]:
-            self.color.hsva = (0,0,50,100)
+            self.color.hsva = (0,0,30,100)
         if self.attitude == Attitude["neutral"]:
-            self.color = pygame.Color(65, 0, 130, 100)
+            self.color = pygame.Color(75, 0, 90, 100)
 
 
     def direction_to(self, rect):
@@ -96,9 +96,9 @@ class Agent:
         cur_h, cur_s, cur_v, cur_a = self.color.hsva
 
         if self.attitude == Attitude["avoiding"]:
-            self.color.hsva = (cur_h,cur_s,player_happiness/2,cur_a)
+            self.color.hsva = (cur_h,cur_s,player_happiness/3,cur_a)
         if self.attitude == Attitude["neutral"]:
-            self.color.hsva = (cur_h,player_happiness,cur_v,cur_a)
+            self.color.hsva = (cur_h,player_happiness/2,cur_v,cur_a)
         if self.attitude == Attitude["friendly"]:
             self.color.hsva = (260 - (self.happiness * 2), player_happiness, cur_v, cur_a)
         self.s.fill(self.color)
@@ -171,6 +171,7 @@ class Agent:
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
+            self.speed_modificator = 4
             game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
                                             len(self.path))
 
@@ -246,8 +247,8 @@ class Player(Agent):
                 self.change_happiness(0.05)
                 other.change_happiness(0.05)
             elif other.attitude != Attitude["friends"]:
-                self.change_happiness(-4)
-                other.change_happiness(-4)
+                self.change_happiness(-6)
+                other.change_happiness(-6)
                 other.has_interacted = True
 
     def on_bounce(self, other_attitude):
