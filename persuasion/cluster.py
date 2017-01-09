@@ -150,7 +150,7 @@ class Cluster:
 
     def calc_start(self):
         for pos in self.starting_positions:
-            if pos[1] > self.start_position:
+            if list(pos)[1] > self.start_position:
                 self.start_position = pos[1]
 
     def add_cluster(self, happiness=50, movement=movements.idle, game=None):

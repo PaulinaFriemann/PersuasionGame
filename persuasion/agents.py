@@ -68,6 +68,7 @@ class Agent:
             self.color = pygame.Color(75, 0, 90, 100)
 
 
+
     def direction_to(self, rect):
         return [a - b for a, b in zip(self.rect.center, rect.center)]
 
