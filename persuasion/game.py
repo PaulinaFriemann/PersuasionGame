@@ -16,7 +16,7 @@ def init(width, height):
     screen = pygame.display.set_mode([screen_width, screen_height])
 
     pygame.mixer.music.load("resources/1.mp3")
-    pygame.mixer.music.play(-1)
+#    pygame.mixer.music.play(-1)
 
     player_name = start_screen()
     main_game = Game(600)
@@ -73,7 +73,7 @@ class Game:
         #print "FIRSTIE FIRST"
         if phase != 1:
             self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
-            pygame.mixer.music.play(-1)
+ #           pygame.mixer.music.play(-1)
 
         self.reset_clusters(clusters)
         #self.calc_starts()
@@ -248,7 +248,7 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-        if self.camera.position.top < -8000:
+        if self.camera.position.top < -7100:
             self.ended = True
             self.end_screen.end()
         if self.camera.position.top == -4450:
