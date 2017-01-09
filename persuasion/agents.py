@@ -65,7 +65,7 @@ class Agent:
         if self.attitude == Attitude["avoiding"]:
             self.color.hsva = (0,0,50,100)
         if self.attitude == Attitude["neutral"]:
-            self.color = pygame.Color(75, 0, 130, 100)
+            self.color = pygame.Color(90, 20, 150, 100)
 
 
     def direction_to(self, rect):
