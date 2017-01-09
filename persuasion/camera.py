@@ -4,7 +4,7 @@ import gui
 import game
 
 
-event_positions = [-500, -1000, -1500, -2000, -2500, -3500]
+event_positions = [-1000, -1500, -2000, -2500, -3000, -3500, -4000]
 event_text = ["""Hey there.
 I see you're not feeling so well.
 Sometimes life can be rough, but
@@ -19,7 +19,9 @@ Go out there, make a friend.
 I am sure, you will feel much better.
 Press Space to communicate with others.""", """Being lonely can lead to depression
 and worse. It increases mortality
-by 26%.""", """So go out there, and
+by 26%.""", """Good friends need attention.
+ You need to stay in touch
+ with them.""", """So go out there, and
 save someone's life.
 Happiness is contagious."""]
 

@@ -67,13 +67,12 @@ def avoid(agent):
     direction = agent.direction_to(game.main_game.player.rect)
     #agent.speed = [int(round(dir / agent.distance_to_player)) for dir in direction]
     agent.goal = direction
-    print "avoid ", direction
     return path_direct(agent)
 
 def follow(agent):
-    pos = utils.random_point_circle(40 + int(agent.runaway), game.main_game.player.rect.center)
+    pos = utils.random_point_circle(30 + int(agent.runaway), game.main_game.player.rect.center)
     agent.goal = pos
-    print pos
+   # print pos
     return random_to_goal(agent)[:5]
 
 

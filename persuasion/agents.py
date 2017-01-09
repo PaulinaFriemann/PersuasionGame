@@ -77,14 +77,19 @@ class Agent:
     def update(self):
         movements.move_path(self)
         if self.attitude == Attitude["friends"]:
+            print "runway ",self.runaway
+        if self.attitude == Attitude["friends"]:
             self.run_away()
             #print self.runaway
-            if self.runaway == 100:
-                #print "change attitude"
+            if self.runaway >= 100:
+                print "change attitude"
                 self.cluster.remove_member(self)
-                self.cluster = cluster.Cluster(attitude=Attitude["friendly"], starting_positions=list(self.rect.center), start_position=self.rect.bottom)
+                self.cluster = cluster.Cluster(attitude=Attitude["friendly"], starting_positions=[list(self.rect.center)], start_position=self.rect.bottom)
                 game.main_game.add_clusters([self.cluster])
+
                 self.change_attitude(Attitude["friendly"])
+                self.set_path(movements.happy_dance, default=True)
+                self.cluster.add_cluster(happiness=self.happiness, movement=self.default_movement)
         if self.fadeaway:
             self.fade_away()
 
@@ -170,6 +175,7 @@ class Agent:
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
+            self.change_attitude(Attitude["friends"])
             game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
                                             len(self.path))
             game.main_game.action_queue.add(self.change_speed, {"speed": 4},

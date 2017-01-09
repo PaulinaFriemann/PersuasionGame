@@ -46,6 +46,7 @@ class Game:
         self.action_queue = utils.ActionQueue()
         self.player_cluster = cluster.Cluster(name="player_cluster", number=0, starting_positions=[list(self.player.rect.center)])
         self.player_cluster.members.append(self.player)
+        self.phase = 1
 
     def add_player(self, player):
         self.player = player
@@ -70,9 +71,9 @@ class Game:
         #print "loading phase " + str(phase)
         clusters = cluster.load_all('clusters/json/all clusters phase ' + str(phase) + '.txt' )
         #print "FIRSTIE FIRST"
-
-        self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
-        pygame.mixer.music.play(-1)
+        if phase != 1:
+            self.music = pygame.mixer.music.load("resources/" + str(phase) + ".mp3")
+            pygame.mixer.music.play(-1)
 
         self.reset_clusters(clusters)
         #self.calc_starts()
@@ -191,7 +192,8 @@ class Game:
 
                         new_cluster = cluster.Cluster(attitude=attitude,
                                                                starting_positions=[list(pos.center) for pos in agent_pos])
-                        cluster.append_to_end(new_cluster)
+                        cluster.append_to_end(new_cluster, self.phase)
+                        new_cluster.add_cluster()
 
 
 
@@ -203,7 +205,7 @@ class Game:
                                                                 starting_positions=[list(pos.center) for pos in agent_pos])
                         self.clusters.append(new_cluster)
 
-                        cluster.append_to_end(new_cluster)
+                        cluster.append_to_end(new_cluster, self.phase)
                         new_cluster.add_cluster()
                     self.in_editor_mode = False
 
@@ -245,13 +247,15 @@ class Game:
             pygame.display.flip()
 
     def update(self):
-        if self.camera.position.top == -3950:
+        if self.camera.position.top == -4450:
             pygame.mixer.music.fadeout(2000)
-        elif self.camera.position.top == -4100:
+        elif self.camera.position.top == -4600:
+            self.phase = 3
             self.load_phase(3)
-        elif self.camera.position.top == -2550:
+        elif self.camera.position.top == -3050:
             pygame.mixer.music.fadeout(2000)
-        elif self.camera.position.top == -2700:
+        elif self.camera.position.top == -3200:
+            self.phase = 2
             self.load_phase(2)
 
         self.action_queue.step()
