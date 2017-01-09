@@ -9,3 +9,6 @@
 {"name": "side_to_side", "number": 9, "starting_positions": [[380, -2581], [396, -2592], [396, -2575]], "attitude": 1, "start_position": -2075, "movement": "from_to_rand"}
 {"name": "", "number": 10, "starting_positions": [[179, -687], [195, -687], [180, -702], [162, -686], [162, -669], [179, -669], [196, -670], [142, -669], [211, -669]], "attitude": 1, "start_position": -169, "movement": "idle"}
 {"name": "", "number": 11, "starting_positions": [[386, -769], [356, -751], [322, -721], [385, -719], [417, -752], [448, -718]], "attitude": 1, "start_position": -218, "movement": "idle"}
+{"name": "", "number": 12, "starting_positions": [[321, -124], [346, -124], [372, -124], [394, -124], [419, -124], [446, -99], [447, -53], [446, -76], [445, -124], [320, -102], [321, -79], [322, -59]], "attitude": 1, "start_position": -53, "movement": "idle"}
+{"name": "", "number": 13, "starting_positions": [[177, -308], [188, -305], [178, -288]], "attitude": 1, "start_position": -288, "movement": "from_to_rand"}
+{"name": "", "number": 14, "starting_positions": [[132, -323], [128, -263], [203, -268], [213, -316]], "attitude": 1, "start_position": -263, "movement": "rand_circle"}
