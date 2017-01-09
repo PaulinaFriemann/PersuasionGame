@@ -23,7 +23,7 @@ class Agent:
         self.speed = [0, 0]
         self.width = 10
         self.rect = pygame.Rect(x - self.width / 2, y - self.width / 2, self.width, self.width)
-        self.speed_modificator = 1
+        self.speed_modificator = 2
         self.personalspace = self.width*4
         self.default_movement = movement
         self.attitude = attitude
@@ -147,14 +147,15 @@ class Agent:
                 self.become_friends()
 
     def on_collision(self, other):
+        self.set_path(collision_reactions[self.attitude])
+        self.event = True
 
         if self.attitude == Attitude["friendly"]:
             self.cluster.remove_member(self)
             self.cluster = game.main_game.player_cluster
             self.cluster.add_member(self)
-
-        self.set_path(collision_reactions[self.attitude])
-        self.event = True
+            game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
+                                            len(self.path))
 
         if self.attitude == Attitude["friends"]:
             self.runaway = 0
@@ -169,7 +170,7 @@ class Agent:
             self.runaway = 0
             try:
                 game.main_game.action_queue.add(self.set_path, {"movement": movements.follow, "default": True},
-                                      len(self.path)+50)
+                                      len(self.path))
             except TypeError:
                 game.main_game.action_queue.add(self.set_path,
                                       {"movement": movements.follow, "default": True},

@@ -50,7 +50,8 @@ def happy_dance(agent):
     path.extend([[-1,1]] * 4)
     path.extend([[0,-1]] * 4)
     path.extend([[0,1]] * 4)
-    path.extend([[0,-1]] * 4)
+    path.extend([[0,-1]] * 2)
+    path.extend([[0,1]] * 2)
     path.extend([[0,0]] * 10)
     return path
 

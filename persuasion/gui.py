@@ -180,7 +180,6 @@ class NarratorBar(TextArea):
             self.visibility_status = 0
 
     def draw(self, screen):
-        print self.visibility_status
         if self.popup or self.visibility_status != 0:
             self.get_visible(screen.get_height())
             self.render(screen, True)

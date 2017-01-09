@@ -46,7 +46,8 @@ class Camera:
         You can move around by using the arrow keys.""")
 
     def move(self, player_centery):
-        self.position.centery = player_centery
+        if self.world.player.path == [[0, 0]]:
+            self.position.centery = player_centery
 
         if self.event_num < len(event_positions):
             if event_positions[self.event_num] >= self.position.top >= event_positions[self.event_num] - 5:
