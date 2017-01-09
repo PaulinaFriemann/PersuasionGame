@@ -35,7 +35,7 @@ class Game:
 
         self.clusters = []
         self.end = end_height
-        self.background = gui.Background("resources/snowmarc.jpg", [0, 0], screen.get_width(), screen.get_height())
+        self.background = gui.Background("resources/grey.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen)
         self.player = None
         self.add_player(agents.Player(screen_width / 2, screen_height / 2, 50))

@@ -246,8 +246,8 @@ class Player(Agent):
                 self.change_happiness(0.05)
                 other.change_happiness(0.05)
             elif other.attitude != Attitude["friends"]:
-                self.change_happiness(-2)
-                other.change_happiness(-2)
+                self.change_happiness(-4)
+                other.change_happiness(-4)
                 other.has_interacted = True
 
     def on_bounce(self, other_attitude):
