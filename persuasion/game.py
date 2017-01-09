@@ -23,7 +23,6 @@ def init(width, height):
 
     main_game.start()
 
-
 def start_screen():
     start_screen = gui.StartScreen(screen)
     return start_screen.start()
@@ -35,6 +34,7 @@ class Game:
 
         self.clusters = []
         self.end = end_height
+        self.end_screen = gui.EndScreen(screen)
         self.background = gui.Background("resources/grey.jpg", [0, 0], screen.get_width(), screen.get_height())
         self.camera = Camera(screen.get_width(), screen.get_height(), self, screen)
         self.player = None
@@ -94,7 +94,8 @@ class Game:
         self.camera.bar.pop_up()
 
         clock = pygame.time.Clock()
-        while True:
+        self.ended = False
+        while not self.ended:
             clock.tick(30)
 
             pressed = pygame.key.get_pressed()
@@ -245,6 +246,9 @@ class Game:
             pygame.display.flip()
 
     def update(self):
+        if self.camera.position.top == -6000:
+            self.ended = True
+            self.end_screen.end()
         if self.camera.position.top == -3950:
             pygame.mixer.music.fadeout(2000)
         elif self.camera.position.top == -4100:

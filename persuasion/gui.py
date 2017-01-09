@@ -92,6 +92,50 @@ class TextField(TextArea):
     def delete_letter(self):
         self.text[-1] = self.text[-1][:-1]
 
+class EndScreen:
+
+    def __init__(self, screen):
+
+        self.screen = screen
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+
+        self.background = Background("resources/tree.jpg", [0, 0], self.width, self.height)
+
+        self.end_text = TextArea(Rect(screen.get_width() / 2 - 400/ 2, 0, 400, 100))
+
+        self.end_text.set_text(
+            """
+            We hope you enjoyed this game.
+
+            Programming done by Paulina Friemann & Marc de Groot
+            Music by Ewa Kielska
+            Theoretical background by Sanne Demir, Anouk Meerbeek, Moniek Oomen & Iris Tollenaar
+
+            Inspired by 'Loneliness' by Jordan Magnuson
+            necessarygames.com/my-games/loneliness/flash
+
+            if you or anyone you know is contemplating suicide
+            please visit www.113online.nl
+
+            Remember.
+
+            You are not alone.
+            Things will get better.
+            """)
+
+    def end(self):
+        while 1:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT \
+                        or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    sys.exit()
+
+            self.background.draw(self.screen, self.screen.get_rect())
+            self.end_text.render(self.screen)
+            pygame.display.flip()
+
 
 class StartScreen:
 
